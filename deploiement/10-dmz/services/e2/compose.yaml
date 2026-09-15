@@ -4,6 +4,7 @@ services:
     pull_policy: never
     container_name: cache-dmz01
     restart: unless-stopped
+    mem_limit: 128m
     ports:
       - "192.168.10.50:443:443"
     volumes:

@@ -59,6 +59,9 @@ rel() {
   printf '%s\n' "${1#"$REPO_ROOT"/}"
 }
 
+require_condition "preflight default RAM floor is 6144 MiB" \
+  "$(grep -q 'MIN_RAM_MB="${MV_PREFLIGHT_MIN_RAM_MB:-6144}"' "$PREFLIGHT"; echo $?)"
+
 # code_lines <file>
 # Print <file> with full comment lines (trimmed content starting with '#')
 # and any line documenting an absence in prose (containing "never" or

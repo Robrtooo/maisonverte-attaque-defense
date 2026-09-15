@@ -13,7 +13,7 @@ SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 # shellcheck source=../lib/common.sh
 . "$SCRIPT_DIR/../lib/common.sh"
 
-MIN_RAM_MB="${MV_PREFLIGHT_MIN_RAM_MB:-8192}"
+MIN_RAM_MB="${MV_PREFLIGHT_MIN_RAM_MB:-6144}"
 MIN_DISK_MB="${MV_PREFLIGHT_MIN_DISK_MB:-20480}"
 
 # Single mandatory public bind (ARCHITECTURE.md: "L'unique publication

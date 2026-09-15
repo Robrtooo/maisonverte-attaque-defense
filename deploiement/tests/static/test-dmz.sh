@@ -411,7 +411,21 @@ for f in "${COMPOSE_FILES[@]}"; do
     "$(grep -q 'network_mode: host' "$f"; echo $((1 - $?)))"
   require_condition "$(rel "$f") does not mount docker.sock" \
     "$(grep -q 'docker.sock' "$f"; echo $((1 - $?)))"
+  require_condition "$(rel "$f") defines memory limits" \
+    "$(grep -q 'mem_limit:' "$f"; echo $?)"
 done
+
+require_condition "DMZ total configured memory budget stays at or below 2048 MiB" \
+  "$(awk '
+    /mem_limit:/ {
+      value=$2
+      gsub(/"/, "", value)
+      if (value ~ /[mM]$/) { sub(/[mM]$/, "", value); total += value }
+      else if (value ~ /[gG]$/) { sub(/[gG]$/, "", value); total += value * 1024 }
+      else { invalid=1 }
+    }
+    END { exit (invalid || total > 2048 || total == 0) }
+  ' "${COMPOSE_FILES[@]}"; echo $?)"
 
 # --- Summary -----------------------------------------------------------------
 

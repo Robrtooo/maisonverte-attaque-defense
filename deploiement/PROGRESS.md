@@ -9,6 +9,11 @@ Derniere mise a jour : 15/09/2026, Task 3 fermee apres relecture independante
 et un tour de correctifs. Les validations statiques locales sont vertes ;
 aucun script de deploiement ni conteneur n'a ete execute.
 
+Mesure terrain : `vulndb` dispose de 7.95 Gio de RAM, tandis que `poste` et
+`nsm` disposent chacun de 3.9 Gio. La DMZ est plafonnee a 1.984 Gio et les
+chaines devront etre activees une par une. Le registre local ne contient pas
+encore toutes les images requises, notamment WordPress 4.6 et Tomcat 8.5.19.
+
 ## Comment reprendre
 
 1. `git fetch origin && git worktree add .worktrees/deployment-scripts -b feat/deployment-scripts origin/feat/deployment-scripts` (ou `git checkout feat/deployment-scripts` si pas de worktree existant).

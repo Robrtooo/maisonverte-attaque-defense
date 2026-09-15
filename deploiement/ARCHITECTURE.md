@@ -148,6 +148,14 @@ Docker tournent a `10m x 3`.
 
 ## Offline et ressources
 
+Mesures du lab au 15/09/2026 : `vulndb` dispose de 7.95 Gio de RAM et heberge
+les projets Compose ; `poste` et `nsm` disposent chacun de 3.9 Gio. NSM reste
+reserve a Suricata/EveBox et le poste au pivot.
+
+La DMZ est plafonnee a 1.984 Gio. Garder au moins 2 Gio de marge sur `vulndb`.
+En exploitation, conserver la DMZ et activer une seule chaine A, B ou C a la
+fois. ELK envoie Filebeat directement vers Elasticsearch, sans Logstash.
+
 - Toutes les images sont epinglees dans `config/images.lock` et utilisent
   `pull_policy: never`.
 - `prepare-offline-bundle.sh` s'execute uniquement sur une machine connectee

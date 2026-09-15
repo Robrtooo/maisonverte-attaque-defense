@@ -6,6 +6,7 @@ services:
     pull_policy: never
     container_name: market-dmz01
     restart: unless-stopped
+    mem_limit: 512m
     volumes:
       - ../../../state/services/e5/flag.txt:/opt/maisonverte/flag.txt:ro
     networks:
