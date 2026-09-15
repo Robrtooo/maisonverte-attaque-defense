@@ -13,6 +13,9 @@ Mesure terrain : `vulndb` dispose de 7.95 Gio de RAM, tandis que `poste` et
 `nsm` disposent chacun de 3.9 Gio. La DMZ est plafonnee a 1.984 Gio et les
 chaines devront etre activees une par une. Le registre local ne contient pas
 encore toutes les images requises, notamment WordPress 4.6 et Tomcat 8.5.19.
+Le premier deploiement a cree reseaux/TLS et lance E4/E5. E3 a revele puis
+corrige un POST d'installation WordPress sans `?step=2`; relancer E3 apres
+copie du correctif. E2 reste volontairement non lance jusqu'a E3 sain.
 
 ## Comment reprendre
 

@@ -26,7 +26,7 @@ if [[ "$table_exists" != "1" ]]; then
     --data-urlencode "admin_password2=$MV_E3_ADMIN_PASSWORD" \
     --data-urlencode "admin_email=admin@maisonverte.fr" \
     --data-urlencode "Submit=Installer WordPress" \
-    http://127.0.0.1/wp-admin/install.php >/dev/null
+    'http://127.0.0.1/wp-admin/install.php?step=2' >/dev/null
 fi
 
 mv_compose "$PROJECT" "$COMPOSE_FILE" exec -T mysql \

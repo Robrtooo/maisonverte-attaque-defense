@@ -314,6 +314,8 @@ for f in "${E3_FILES[@]}"; do
   require_condition "$(rel "$f") never patches/updates PHPMailer or WordPress core" \
     "$(grep -Eiq 'phpmailer|wp core update|wp-cli.*update' <(code_lines "$f"); echo $((1 - $?)))"
 done
+require_condition "E3 seed submits the WordPress 4.6 installer step 2" \
+  "$(grep -q 'wp-admin/install.php?step=2' "$E3_SEED"; echo $?)"
 
 # --- 10. E3 MySQL backend stays private on mv-e3-db -------------------------
 
