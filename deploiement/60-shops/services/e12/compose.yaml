@@ -1,0 +1,100 @@
+services:
+  mysql:
+    image: mysql:5.7
+    pull_policy: never
+    container_name: pos-consol-shops01-db
+    restart: unless-stopped
+    mem_limit: 512m
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MV_E12_DB_PASSWORD:-runtime-secret-required}
+      MYSQL_DATABASE: xxl_job
+    volumes:
+      - e12-mysql-data:/var/lib/mysql
+    networks:
+      - mv-e12-db
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$$MYSQL_ROOT_PASSWORD --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  admin:
+    image: vulhub/xxl-job:2.2.0-admin
+    pull_policy: never
+    container_name: pos-consol-shops01-admin
+    restart: unless-stopped
+    mem_limit: 512m
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      PARAMS: "--spring.datasource.url=jdbc:mysql://mysql:3306/xxl_job?Unicode=true&characterEncoding=UTF-8 --spring.datasource.username=root --spring.datasource.password=${MV_E12_DB_PASSWORD:-runtime-secret-required}"
+    volumes:
+      - ./content:/opt/maisonverte/content:ro
+      - ../../../state/services/e12/flag.txt:/opt/maisonverte/flag.txt:ro
+      - ../../../state/services/e12/e11-mongo-express-credential.txt:/opt/maisonverte/e11-mongo-express-credential.txt:ro
+    expose:
+      - "8080"
+    networks:
+      - mv-b-core
+      - mv-b-data
+      - mv-e12-db
+    healthcheck:
+      test: ["CMD-SHELL", "test -r /opt/maisonverte/e11-mongo-express-credential.txt && kill -0 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 12
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  executor:
+    image: vulhub/xxl-job:2.2.0-executor
+    pull_policy: never
+    container_name: pos-consol-shops01
+    restart: unless-stopped
+    mem_limit: 256m
+    depends_on:
+      admin:
+        condition: service_healthy
+    environment:
+      PARAMS: "--xxl.job.admin.addresses=http://pos-consol-shops01-admin:8080/xxl-job-admin --xxl.job.executor.ip=pos-consol-shops01 --xxl.job.executor.port=9999 --xxl.job.executor.appname=mv-sales-consolidation"
+    volumes:
+      - ./content:/opt/maisonverte/content:ro
+      - ../../../state/services/e12/flag.txt:/opt/maisonverte/flag.txt:ro
+      - ../../../state/services/e12/e11-mongo-express-credential.txt:/opt/maisonverte/e11-mongo-express-credential.txt:ro
+    expose:
+      - "9999"
+    networks:
+      - mv-b-core
+      - mv-b-data
+    healthcheck:
+      test: ["CMD-SHELL", "test -r /opt/maisonverte/e11-mongo-express-credential.txt && kill -0 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 12
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  e12-mysql-data:
+
+networks:
+  mv-b-core:
+    external: true
+    name: mv-b-core
+  mv-b-data:
+    external: true
+    name: mv-b-data
+  mv-e12-db:
+    internal: true

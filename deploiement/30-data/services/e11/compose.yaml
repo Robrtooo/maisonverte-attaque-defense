@@ -1,0 +1,65 @@
+services:
+  web:
+    image: vulhub/mongo-express:0.53.0
+    pull_policy: never
+    container_name: clients-data01
+    restart: unless-stopped
+    mem_limit: 256m
+    depends_on:
+      mongo:
+        condition: service_healthy
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongo
+      ME_CONFIG_MONGODB_PORT: "27017"
+      ME_CONFIG_MONGODB_ENABLE_ADMIN: "true"
+      ME_CONFIG_BASICAUTH_USERNAME: ${MV_E11_BASIC_USER:-runtime-secret-required}
+      ME_CONFIG_BASICAUTH_PASSWORD: ${MV_E11_BASIC_PASSWORD:-runtime-secret-required}
+      ME_CONFIG_OPTIONS_EDITORTHEME: maisonverte
+    volumes:
+      - ../../../state/services/e11/flag.txt:/opt/maisonverte/flag.txt:ro
+    expose:
+      - "8081"
+    networks:
+      - mv-b-data
+      - mv-e11-db
+    healthcheck:
+      test: ["CMD-SHELL", "node -e 'require(\"http\").get(\"http://127.0.0.1:8081/\", function(r){process.exit(r.statusCode ? 0 : 1)}).on(\"error\", function(){process.exit(1)})'"]
+      interval: 15s
+      timeout: 5s
+      retries: 12
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  mongo:
+    image: mongo:3.4
+    pull_policy: never
+    container_name: clients-data01-mongo
+    restart: unless-stopped
+    mem_limit: 384m
+    volumes:
+      - e11-mongo-data:/data/db
+    networks:
+      - mv-e11-db
+    healthcheck:
+      test: ["CMD-SHELL", "mongo --quiet --eval 'db.adminCommand({ ping: 1 }).ok' | grep -q 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  e11-mongo-data:
+
+networks:
+  mv-b-data:
+    external: true
+    name: mv-b-data
+  mv-e11-db:
+    internal: true

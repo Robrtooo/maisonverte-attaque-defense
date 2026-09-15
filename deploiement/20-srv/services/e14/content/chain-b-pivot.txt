@@ -1,0 +1,6 @@
+MaisonVerte Jenkins deployment note
+
+The sales consolidation scheduler has moved behind the Chain B core segment.
+Continue only to http://pos-consol-shops01-admin:8080/xxl-job-admin/ and validate executor reachability at http://pos-consol-shops01:9999/.
+
+No other internal host is required for this route.

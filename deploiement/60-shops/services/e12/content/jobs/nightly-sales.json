@@ -1,0 +1,6 @@
+{
+  "job": "mv-sales-consolidation",
+  "executor": "pos-consol-shops01:9999",
+  "allowed_action": "read local consolidation notes",
+  "credential_note": "/opt/maisonverte/e11-mongo-express-credential.txt"
+}

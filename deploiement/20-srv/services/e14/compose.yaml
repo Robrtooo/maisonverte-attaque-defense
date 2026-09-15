@@ -1,0 +1,43 @@
+services:
+  jenkins:
+    image: vulhub/jenkins:2.441
+    pull_policy: never
+    container_name: deploy-srv01
+    restart: unless-stopped
+    mem_limit: 768m
+    init: true
+    environment:
+      JENKINS_OPTS: "--httpPort=8080 --prefix=/jenkins"
+      JAVA_OPTS: "-Djenkins.install.runSetupWizard=false -Djenkins.CLI.disabled=false"
+      MV_E14_ADMIN_PASSWORD: ${MV_E14_ADMIN_PASSWORD:-runtime-secret-required}
+    volumes:
+      - e14-jenkins-home:/var/jenkins_home
+      - ./init.groovy.d:/usr/share/jenkins/ref/init.groovy.d:ro
+      - ./content:/opt/maisonverte:ro
+      - ../../../state/services/e14/flag.txt:/opt/maisonverte/flag.txt:ro
+    expose:
+      - "8080"
+    networks:
+      - mv-b-edge
+      - mv-b-core
+    healthcheck:
+      test: ["CMD-SHELL", "test -f /var/jenkins_home/jenkins.install.UpgradeWizard.state || test -d /var/jenkins_home/jobs"]
+      interval: 15s
+      timeout: 5s
+      retries: 12
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  e14-jenkins-home:
+
+networks:
+  mv-b-edge:
+    external: true
+    name: mv-b-edge
+  mv-b-core:
+    external: true
+    name: mv-b-core
