@@ -179,9 +179,14 @@ if [[ "$COMMON_SOURCED" -eq 1 ]]; then
   if [[ -f "$CONFIG_DIR/flags.map" && -f "$FLAGS_CSV" ]]; then
     e2_flag_id="$(awk -F'=' '$1=="E2"{print $2; exit}' "$CONFIG_DIR/flags.map" 2>/dev/null || true)"
     if [[ -n "$e2_flag_id" ]]; then
-      expected_value="$(awk -F',' -v id="$e2_flag_id" 'NR>1 && $1==id {print $2; exit}' "$FLAGS_CSV" 2>/dev/null || true)"
+      csv_value="$(awk -F',' -v id="$e2_flag_id" 'NR>1 && $1==id {print $2; exit}' "$FLAGS_CSV" 2>/dev/null || true)"
+      expected_value="${csv_value%$'\r'}"
       actual_value="$(mv_flag_value E2 2>/dev/null || true)"
-      require_condition "mv_flag_value E2 returns the exact CSV value for flag_id $e2_flag_id" \
+      expected_bytes="$(printf '%s' "$expected_value" | od -An -tx1 | tr -d '[:space:]')"
+      actual_bytes="$(printf '%s' "$actual_value" | od -An -tx1 | tr -d '[:space:]')"
+      require_condition "mv_flag_value E2 returns the exact CR-free CSV bytes for flag_id $e2_flag_id" \
+        "$([[ -n "$expected_bytes" && "$actual_bytes" == "$expected_bytes" ]]; echo $?)"
+      require_condition "mv_flag_value E2 output has no carriage-return byte" \
         "$([[ -n "$expected_value" && "$actual_value" == "$expected_value" ]]; echo $?)"
     else
       fail "mv_flag_value E2 returns the exact CSV value (no E2 mapping in flags.map)"

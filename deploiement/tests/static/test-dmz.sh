@@ -33,6 +33,10 @@ COMPOSE_FILES=("$E2_COMPOSE" "$E3_COMPOSE" "$E4_COMPOSE" "$E5_COMPOSE")
 
 E3_SEED="$E3_DIR/seed-wordpress.sh"
 E5_DOCKERFILE="$E5_DIR/Dockerfile"
+E2_CACHE_CONF="$E2_DIR/conf.d/cache.conf"
+E2_SHOP_CONF="$E2_DIR/conf.d/shop.conf"
+E2_API_CONF="$E2_DIR/conf.d/api.conf"
+E2_VENDOR_CONF="$E2_DIR/conf.d/vendors.conf"
 
 CHECKS=0
 FAILURES=0
@@ -186,6 +190,15 @@ done
 require_condition "exactly one 192.168.10.50:443:443 bind across all four Compose files" \
   "$([[ "$total_bind" -eq 1 ]]; echo $?)"
 
+total_published_ports="$(awk '
+  /^[[:space:]]+ports:[[:space:]]*$/ { in_ports=1; next }
+  in_ports && /^[[:space:]]+-[[:space:]]/ { count++; next }
+  in_ports && !/^[[:space:]]*$/ { in_ports=0 }
+  END { print count + 0 }
+' "${COMPOSE_FILES[@]}")"
+require_condition "exactly one published port entry exists across all four Compose files" \
+  "$([[ "$total_published_ports" -eq 1 ]]; echo $?)"
+
 for f in "$E3_COMPOSE" "$E4_COMPOSE" "$E5_COMPOSE"; do
   [[ -f "$f" ]] || { fail "no ports: block (file missing): $(rel "$f")"; continue; }
   require_condition "$(rel "$f") has no ports: entry at all" \
@@ -222,6 +235,25 @@ if [[ -d "$E2_DIR/conf.d" ]]; then
     "$(grep -rq 'mobile-dmz01' "$E2_DIR/conf.d"; echo $?)"
   require_condition "E2 conf.d proxies to market-dmz01 (E5)" \
     "$(grep -rq 'market-dmz01' "$E2_DIR/conf.d"; echo $?)"
+
+  declare -A PROXY_CONFIGS=(
+    [E3]="$E2_SHOP_CONF"
+    [E4]="$E2_API_CONF"
+    [E5]="$E2_VENDOR_CONF"
+  )
+  for ref in E3 E4 E5; do
+    require_condition "E2 preserves raw Host independently for $ref" \
+      "$(grep -q 'proxy_set_header Host \$http_host' "${PROXY_CONFIGS[$ref]}"; echo $?)"
+  done
+
+  poc_host='target(any -froot@localhost -be ${run{/bin/true}} null)'
+  require_condition "E2 routes a PoC-shaped non-DNS Host by shop TLS SNI and preserves it" \
+    "$([[ "$poc_host" != "shop.maisonverte.fr" ]] \
+      && grep -q 'map \$ssl_server_name \$mv_sni_backend' "$E2_SHOP_CONF" \
+      && grep -q 'shop\.maisonverte\.fr shop-dmz01:80' "$E2_SHOP_CONF" \
+      && grep -q 'listen 443 ssl default_server' "$E2_SHOP_CONF" \
+      && grep -q 'proxy_pass http://\$mv_sni_backend' "$E2_SHOP_CONF" \
+      && grep -q 'proxy_set_header Host \$http_host' "$E2_SHOP_CONF"; echo $?)"
 else
   fail "E2 conf.d vhost checks (directory missing)"
 fi
@@ -239,6 +271,27 @@ fi
 
 require_condition "E2 stores a search runbook outside the public webroot" \
   "$([[ -f "$E2_DIR/content/runbook/runbook.txt" ]]; echo $?)"
+if [[ -f "$E2_COMPOSE" ]]; then
+  sensitive_mount="/srv/maisonverte/runbook"
+  sensitive_target="$sensitive_mount/runbook.txt"
+  flag_target="/srv/maisonverte/flag.txt"
+  direct_alias_target="$(realpath -m /home/runbook/runbook.txt)"
+  traversal_alias_target="$(realpath -m /home/../srv/maisonverte/runbook/runbook.txt)"
+  direct_flag_target="$(realpath -m /home/flag.txt)"
+  traversal_flag_target="$(realpath -m /home/../srv/maisonverte/flag.txt)"
+  require_condition "E2 sensitive mounts are outside the directly exposed /home alias" \
+    "$(grep -Eq ':/home/(ops|cache)' "$E2_COMPOSE"; echo $((1 - $?)))"
+  require_condition "E2 direct /files/runbook path cannot resolve to the runbook mount" \
+    "$([[ "$direct_alias_target" != "$sensitive_target" ]]; echo $?)"
+  require_condition "E2 intended /files../ traversal resolves to the runbook mount" \
+    "$([[ "$traversal_alias_target" == "$sensitive_target" ]] \
+      && grep -q ":$sensitive_mount:ro" "$E2_COMPOSE"; echo $?)"
+  require_condition "E2 direct /files/flag path cannot resolve to the flag mount" \
+    "$([[ "$direct_flag_target" != "$flag_target" ]]; echo $?)"
+  require_condition "E2 intended /files../ traversal resolves to the flag mount" \
+    "$([[ "$traversal_flag_target" == "$flag_target" ]] \
+      && grep -q ":$flag_target:ro" "$E2_COMPOSE"; echo $?)"
+fi
 if [[ -d "$E2_DIR/conf.d" && -f "$E2_DIR/content/runbook/runbook.txt" ]]; then
   token="$(grep -oE 'X-MV-Search-Token: [A-Za-z0-9-]+' "$E2_DIR/content/runbook/runbook.txt" | head -n1 | awk '{print $2}')"
   require_condition "runbook documents a non-empty search token" \
@@ -280,8 +333,11 @@ fi
 if [[ -f "$E5_DOCKERFILE" ]]; then
   require_condition "E5 Dockerfile derives FROM vulhub/tomcat:8.5.19" \
     "$(grep -q 'FROM vulhub/tomcat:8.5.19' "$E5_DOCKERFILE"; echo $?)"
-  require_condition "E5 Dockerfile sets readonly=false (write-enabled default servlet)" \
-    "$(grep -q 'readonly' "$E5_DOCKERFILE" && grep -q 'value>false' "$E5_DOCKERFILE"; echo $?)"
+  require_condition "E5 Dockerfile inserts readonly=false inside the default servlet" \
+    "$(grep -q '<servlet-name>default<\\/servlet-name>/{in_default=1}' "$E5_DOCKERFILE" \
+      && grep -q 'in_default && /<load-on-startup>1/{print NR; exit}' "$E5_DOCKERFILE" \
+      && grep -q 'in_default && /<\\/servlet>/{exit 1}' "$E5_DOCKERFILE" \
+      && grep -q '<param-name>readonly</param-name><param-value>false</param-value>' "$E5_DOCKERFILE"; echo $?)"
 fi
 if [[ -f "$E5_COMPOSE" ]]; then
   require_condition "E5 compose builds locally (no pre-built vulnerable image reference beyond the Dockerfile FROM)" \
@@ -307,6 +363,16 @@ fi
 for j in catalogue stocks commandes fidelite; do
   require_condition "E4 exposes $j.json" "$([[ -f "$E4_DIR/html/$j.json" ]]; echo $?)"
 done
+if [[ -f "$E4_COMPOSE" ]]; then
+  e4_healthcheck="$(awk '/healthcheck:/{f=1} f{print} f && /retries:/{exit}' "$E4_COMPOSE")"
+  require_condition "E4 healthcheck verifies the live nginx process and /health response definition" \
+    "$(grep -q 'kill -0 1' <<<"$e4_healthcheck" \
+      && grep -q 'location = /health' <<<"$e4_healthcheck" \
+      && grep -q 'status.*ok' <<<"$e4_healthcheck"; echo $?)"
+  require_condition "E4 healthcheck validates representative catalogue JSON content" \
+    "$(grep -q '/usr/share/nginx/html/catalogue.json' <<<"$e4_healthcheck" \
+      && grep -q 'products' <<<"$e4_healthcheck"; echo $?)"
+fi
 
 # --- 13. Flag resolution: E2/E3/E5 resolve their flag, E4 does not --------
 

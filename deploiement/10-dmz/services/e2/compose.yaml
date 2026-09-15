@@ -10,8 +10,8 @@ services:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - ./conf.d:/etc/nginx/conf.d:ro
       - ./content/public:/usr/share/nginx/html:ro
-      - ./content/runbook:/home/ops:ro
-      - ../../../state/services/e2/flag.txt:/home/cache/flag.txt:ro
+      - ./content/runbook:/srv/maisonverte/runbook:ro
+      - ../../../state/services/e2/flag.txt:/srv/maisonverte/flag.txt:ro
       - ../../../state/tls/maisonverte.crt:/etc/nginx/tls/maisonverte.crt:ro
       - ../../../state/tls/maisonverte.key:/etc/nginx/tls/maisonverte.key:ro
     networks:

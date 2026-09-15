@@ -5,28 +5,35 @@ ledger `.superpowers/sdd/PLAN/progress.md` (local, non versionne, sert de
 scratch pendant une session), ce fichier EST versionne : c'est la source de
 verite pour reprendre le travail depuis n'importe quelle machine.
 
-Derniere mise a jour : 15/09/2026, session interrompue par une limite
-d'usage cote assistant. Reprise volontaire a un point de coupure propre.
+Derniere mise a jour : 15/09/2026, Task 3 en attente de relecture apres le
+premier tour de correctifs. Les validations statiques locales sont vertes ;
+aucun script de deploiement ni conteneur n'a ete execute et rien n'a ete
+pousse pour ce tour.
 
 ## Comment reprendre
 
 1. `git fetch origin && git worktree add .worktrees/deployment-scripts -b feat/deployment-scripts origin/feat/deployment-scripts` (ou `git checkout feat/deployment-scripts` si pas de worktree existant).
 2. Lire `deploiement/ARCHITECTURE.md` puis `deploiement/PLAN.md` (le plan en 9 taches, format checklist, prevu pour etre execute avec le skill `superpowers:subagent-driven-development`).
-3. Si vous avez le skill Superpowers disponible : invoquez `superpowers:subagent-driven-development` sur `deploiement/PLAN.md`, il recree son propre ledger de travail (`.superpowers/sdd/PLAN/progress.md`, gitignore, normal qu'il n'existe pas au depart sur une machine neuve) et reprend a la Task 3 (les Tasks 1 et 2 sont fermees, ne pas les redispatcher).
-4. Sinon : reprendre manuellement a la Task 3 telle que decrite ci-dessous.
+3. Relire le commit de correctifs Task 3 qui contient cette mise a jour, avec
+   `3d455ec` comme base de comparaison. Verifier en particulier le routage
+   SNI du Host PHPMailer, le traversal E2, le healthcheck E4 et la mutation
+   du servlet Tomcat.
+4. Si la relecture est propre, fermer la Task 3 puis reprendre a la Task 4.
 
 ## Etat exact
 
 - **Branche** : `feat/deployment-scripts`, remote `git@github.com:Robrtooo/maisonverte-attaque-defense.git` (le push HTTPS echoue sur cette machine faute de credential — utiliser SSH ou `gh auth login` si vous reprenez ailleurs).
-- **Task 1 (socle commun)** : ferme, revu (1 tour de correctifs), pousse. Commits `88b412d..8be5bba`.
+- **Task 1 (socle commun)** : ferme, revu (1 tour de correctifs), pousse. Commits `88b412d..8be5bba`. Le premier tour de correctifs Task 3 ajoute une correction centrale de `mv_flag_value` pour normaliser les fins de ligne CRLF du CSV ; cette correction est validee par comparaison exacte des octets.
 - **Task 2 (reseaux/TLS/offline/OPNsense)** : ferme, revu (1 tour de correctifs), pousse. Commits `8be5bba..6b7df9a`.
-- **Task 3 (services DMZ E2-E5)** : **EN COURS, interrompue volontairement en phase RED.**
-  - Un seul fichier existe : `deploiement/tests/static/test-dmz.sh` (test statique attendu-en-echec, TDD step 1), pas encore verifie comme etant reellement en echec, pas encore implemente.
-  - Aucun `install-eX-*.sh`, aucun `compose.yaml` de service DMZ n'existe encore.
-  - Rien n'est commite pour cette tache au moment de la redaction de ce fichier (un commit WIP explicite a ete demande a l'agent implementeur en cours de route — verifier `git log --oneline -5` sur la branche pour voir si ce commit WIP existe; s'il existe son message commence par `wip(task-3):`).
+- **Task 3 (services DMZ E2-E5)** : **REVUE EN ATTENTE APRES CORRECTIFS ROUND 1.**
+  - Implementation initiale commitee dans `3d455ec` (`feat: add MaisonVerte DMZ services`).
+  - E2 route E3, E4 et E5 sur l'unique bind TLS. Le Host non-DNS du PoC PHPMailer est route vers E3 par le SNI `shop.maisonverte.fr` tout en preservant le Host brut.
+  - Le runbook et le flag E2 sont montes hors de `/home` : le chemin direct `/files/...` ne les atteint pas, tandis que le traversal intentionnel `/files../srv/...` reste exploitable.
+  - E4 controle processus, configuration `/health` et contenu JSON representatif. E5 insere `readonly=false` dans le servlet `default` uniquement.
+  - Suites locales vertes au point de reprise : foundation, infra, DMZ, `bash -n` et rendu de tous les Compose. Relecture independante encore requise avant fermeture.
 - **Tasks 4 a 9** : non commencees.
 
-## Point ouvert a trancher en reprenant la Task 3
+## Decision appliquee pour la Task 3
 
 `ARCHITECTURE.md` liste 4 hotes publics tous routes par E2 sur le seul port 443
 ("E2 preserve les methodes, URI, corps et en-tetes necessaires aux exploits

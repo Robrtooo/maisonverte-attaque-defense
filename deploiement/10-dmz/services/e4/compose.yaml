@@ -10,7 +10,15 @@ services:
     networks:
       - net-dmz
     healthcheck:
-      test: ["CMD", "nginx", "-t"]
+      test:
+        - CMD-SHELL
+        - >-
+          nginx -t &&
+          kill -0 1 &&
+          grep -q 'location = /health' /etc/nginx/nginx.conf &&
+          grep -q 'status.*ok' /etc/nginx/nginx.conf &&
+          test -s /usr/share/nginx/html/catalogue.json &&
+          grep -q 'products' /usr/share/nginx/html/catalogue.json
       interval: 10s
       timeout: 3s
       retries: 6

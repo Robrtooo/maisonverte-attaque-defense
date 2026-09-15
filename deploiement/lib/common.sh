@@ -117,7 +117,7 @@ mv_flag_value() {
 
   local flag_value
   flag_value="$(awk -F',' -v id="$flag_id" \
-    'NR>1 && $1==id {print $2; exit}' "$MV_FLAGS_CSV")"
+    'NR>1 && $1==id {sub(/\r$/, "", $2); print $2; exit}' "$MV_FLAGS_CSV")"
   if [[ -z "$flag_value" ]]; then
     mv_die "no flag value in $MV_FLAGS_CSV for flag_id: $flag_id (service $service_ref)"
   fi
