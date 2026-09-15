@@ -1,0 +1,37 @@
+services:
+  postgres:
+    image: vulhub/postgres:10.7
+    pull_policy: never
+    container_name: catalog-data01
+    restart: unless-stopped
+    mem_limit: 640m
+    environment:
+      POSTGRES_USER: ${E10_DB_USER:-mv_catalog_admin}
+      POSTGRES_PASSWORD: ${E10_DB_PASS:?E10_DB_PASS is required}
+      POSTGRES_DB: ${E10_DB_NAME:-maisonverte}
+    expose:
+      - "5432"
+    volumes:
+      - e10_pgdata:/var/lib/postgresql/data
+      - ./init:/docker-entrypoint-initdb.d:ro
+      - ../../../state/services/e10/flag.txt:/opt/maisonverte/flag.txt:ro
+    networks:
+      - mv-a-data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${E10_DB_USER:-mv_catalog_admin} -d ${E10_DB_NAME:-maisonverte}"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  e10_pgdata:
+
+networks:
+  mv-a-data:
+    external: true
+    name: mv-a-data

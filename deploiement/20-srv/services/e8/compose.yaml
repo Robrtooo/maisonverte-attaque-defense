@@ -1,0 +1,37 @@
+services:
+  redis:
+    image: vulhub/redis:4.0.14
+    pull_policy: never
+    container_name: cache-srv01
+    restart: unless-stopped
+    mem_limit: 128m
+    command: ["redis-server", "--appendonly", "yes"]
+    expose:
+      - "6379"
+    volumes:
+      - e8_redis:/data
+      - ../../../state/services/e8/flag.txt:/opt/maisonverte/flag.txt:ro
+    networks:
+      - mv-a-core
+      - mv-a-data
+    healthcheck:
+      test: ["CMD", "redis-cli", "PING"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  e8_redis:
+
+networks:
+  mv-a-core:
+    external: true
+    name: mv-a-core
+  mv-a-data:
+    external: true
+    name: mv-a-data
