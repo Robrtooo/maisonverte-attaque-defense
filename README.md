@@ -4,11 +4,45 @@ Depot prive de suivi pour le projet MaisonVerte, profil e-commerce/retail.
 
 Objectif : centraliser les enonces, le cadrage, les schemas et les futurs scripts de deploiement versionnes.
 
+## Regle imperative
+
+Toute modification de script de deploiement doit etre commit et push sur GitHub.
+
+Pas de script local non versionne : si un script est cree, modifie, corrige ou teste avec succes, il doit etre pousse dans ce depot.
+
 ## Structure
 
 - `enonce/` : documents fournis par l'encadrement et fichiers de reference du lab.
 - `suivi/` : documents de cadrage equipe, checklist et schema draw.io.
 - `deploiement/` : futurs scripts d'installation, segmentes par zone et par service.
+
+```text
+maisonverte-attaque-defense/
+├── README.md
+├── enonce/
+│   ├── 01-catalogue-vulhub.pdf
+│   ├── 01-enonce.pdf
+│   ├── 02-catalogue-des-profils.pdf
+│   ├── 02-grille-recette.pdf
+│   ├── 03-socle-technique.pdf
+│   ├── 04-guide-builder.pdf
+│   ├── CDC-E-ecommerce.pdf
+│   ├── flags-G04.csv
+│   └── schema-infra-maisonverte.html
+├── suivi/
+│   ├── CHECKLIST.md
+│   ├── SUIVI.md
+│   └── schema-maisonverte.drawio
+└── deploiement/
+    ├── README.md
+    ├── 00-infra/
+    ├── 10-dmz/
+    ├── 20-srv/
+    ├── 30-data/
+    ├── 50-admin/
+    ├── 60-shops/
+    └── 90-orchestration/
+```
 
 ## Regle de deploiement
 
