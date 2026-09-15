@@ -24,16 +24,26 @@ mv_require_command sha256sum
 # Refuse to run on a host that looks like it is on the lab network (LAN
 # 192.168.10.0/24, or the OPNsense WAN publication 10.85.4.0/24): this
 # script must only ever run on the connected build host, never inside the
-# isolated lab.
+# isolated lab. This check must fail CLOSED: if no tool on this host can
+# list its own IPv4 addresses, we cannot prove we're off the lab network,
+# so we refuse to proceed rather than silently skipping the guard.
 LAB_PATTERNS=('192\.168\.10\.' '10\.85\.4\.')
+host_addrs=""
 if command -v ip >/dev/null 2>&1; then
   host_addrs="$(ip -4 -o addr show 2>/dev/null | awk '{print $4}')"
-  for pattern in "${LAB_PATTERNS[@]}"; do
-    if grep -qE "$pattern" <<<"$host_addrs"; then
-      mv_die "refusing to run on a host with a lab address (matched: $pattern) — CONNECTED_HOST_ONLY=1"
-    fi
-  done
+elif command -v hostname >/dev/null 2>&1 && hostname -I >/dev/null 2>&1; then
+  host_addrs="$(hostname -I 2>/dev/null)"
+elif command -v ifconfig >/dev/null 2>&1; then
+  host_addrs="$(ifconfig 2>/dev/null | grep -oE 'inet[[:space:]]+[0-9.]+' | awk '{print $2}')"
+else
+  mv_die "cannot verify this host's IP addresses (no 'ip', 'hostname -I' or 'ifconfig' available) — refusing to run without lab-address verification (CONNECTED_HOST_ONLY=1, fail-closed)"
 fi
+
+for pattern in "${LAB_PATTERNS[@]}"; do
+  if grep -qE "$pattern" <<<"$host_addrs"; then
+    mv_die "refusing to run on a host with a lab address (matched: $pattern) — CONNECTED_HOST_ONLY=1"
+  fi
+done
 
 images_lock="$MV_CONFIG_DIR/images.lock"
 mv_require_file "$images_lock"

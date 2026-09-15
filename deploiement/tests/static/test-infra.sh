@@ -300,6 +300,141 @@ else
   fail "prepare-runtime-secrets.sh checks (file missing)"
 fi
 
+# --- 10. Functional checks with a mocked openssl ----------------------------
+#
+# Sections 6 and 9 above only grep for the *presence* of the right guard
+# logic in generate-tls.sh / prepare-runtime-secrets.sh; they cannot catch
+# a regression in how that logic actually behaves. The plan's global
+# constraints explicitly allow "tests unitaires utilisant des commandes
+# simulees" (unit tests using simulated commands) for exactly this case.
+#
+# This section runs the REAL generate-tls.sh and prepare-runtime-secrets.sh
+# scripts unmodified, but:
+#   - against a throwaway copy of deploiement/lib + deploiement/00-infra
+#     under a temp directory, so mv_state_dir resolves under that temp
+#     tree and the real deploiement/state/ is never touched;
+#   - with a minimal stub `openssl` placed first on PATH, so no real
+#     openssl, docker or network call happens anywhere in this section
+#     (this also makes the check work even though this sandbox has no
+#     real openssl installed at all).
+
+FUNC_TMP="$(mktemp -d "${TMPDIR:-/tmp}/mv-test-infra-func.XXXXXX")"
+trap 'rm -rf "$FUNC_TMP"' EXIT
+
+mkdir -p "$FUNC_TMP/repo/deploiement/lib" "$FUNC_TMP/repo/deploiement/00-infra" "$FUNC_TMP/bin"
+
+if [[ -f "$LIB_DIR/common.sh" && -f "$GENERATE_TLS" && -f "$PREPARE_SECRETS" ]]; then
+  cp "$LIB_DIR/common.sh" "$FUNC_TMP/repo/deploiement/lib/common.sh"
+  cp "$GENERATE_TLS" "$FUNC_TMP/repo/deploiement/00-infra/generate-tls.sh"
+  cp "$PREPARE_SECRETS" "$FUNC_TMP/repo/deploiement/00-infra/prepare-runtime-secrets.sh"
+  chmod +x "$FUNC_TMP/repo/deploiement/00-infra/"*.sh
+
+  cat >"$FUNC_TMP/bin/openssl" <<'STUB'
+#!/usr/bin/env bash
+# Minimal stub openssl used only by test-infra.sh's mocked functional
+# checks. Not installed anywhere else, never on PATH outside this test.
+case "$1" in
+  req)
+    keyout=""
+    out=""
+    shift
+    while [[ $# -gt 0 ]]; do
+      case "$1" in
+        -keyout) keyout="$2"; shift 2 ;;
+        -out) out="$2"; shift 2 ;;
+        *) shift ;;
+      esac
+    done
+    [[ -n "$keyout" ]] && printf 'stub-key\n' >"$keyout"
+    [[ -n "$out" ]] && printf 'stub-cert\nsubjectAltName=DNS:*.maisonverte.fr\n' >"$out"
+    exit 0
+    ;;
+  rand)
+    printf 'c3R1Yi1zZWNyZXQtdmFsdWU=\n'
+    exit 0
+    ;;
+  *)
+    exit 0
+    ;;
+esac
+STUB
+  chmod +x "$FUNC_TMP/bin/openssl"
+
+  FUNC_GENERATE_TLS="$FUNC_TMP/repo/deploiement/00-infra/generate-tls.sh"
+  FUNC_PREPARE_SECRETS="$FUNC_TMP/repo/deploiement/00-infra/prepare-runtime-secrets.sh"
+  FUNC_STATE_TLS="$FUNC_TMP/repo/deploiement/state/tls"
+  FUNC_STATE_SECRETS="$FUNC_TMP/repo/deploiement/state/secrets"
+
+  run_stubbed() {
+    PATH="$FUNC_TMP/bin:$PATH" "$@"
+  }
+
+  # -- generate-tls.sh -------------------------------------------------
+  run_stubbed bash "$FUNC_GENERATE_TLS" >/dev/null 2>"$FUNC_TMP/gen1.stderr"
+  gen1_rc=$?
+  require_condition "generate-tls.sh (mocked openssl): first run creates cert+key" \
+    "$([[ "$gen1_rc" -eq 0 && -f "$FUNC_STATE_TLS/maisonverte.crt" && -f "$FUNC_STATE_TLS/maisonverte.key" ]]; echo $?)"
+
+  key_perm="$(stat -c '%a' "$FUNC_STATE_TLS/maisonverte.key" 2>/dev/null)"
+  require_condition "generate-tls.sh (mocked openssl): key file permissions are 600" \
+    "$([[ "$key_perm" == "600" ]]; echo $?)"
+
+  key_before="$(cat "$FUNC_STATE_TLS/maisonverte.key" 2>/dev/null)"
+  run_stubbed bash "$FUNC_GENERATE_TLS" >/dev/null 2>"$FUNC_TMP/gen2.stderr"
+  gen2_rc=$?
+  require_condition "generate-tls.sh (mocked openssl): second run without --force refuses (non-zero exit)" \
+    "$([[ "$gen2_rc" -ne 0 ]]; echo $?)"
+  key_after="$(cat "$FUNC_STATE_TLS/maisonverte.key" 2>/dev/null)"
+  require_condition "generate-tls.sh (mocked openssl): second run without --force leaves the key untouched (idempotent)" \
+    "$([[ "$key_before" == "$key_after" ]]; echo $?)"
+
+  printf 'tampered\n' >"$FUNC_STATE_TLS/maisonverte.key"
+  run_stubbed bash "$FUNC_GENERATE_TLS" --force >/dev/null 2>"$FUNC_TMP/gen3.stderr"
+  gen3_rc=$?
+  key_forced="$(cat "$FUNC_STATE_TLS/maisonverte.key" 2>/dev/null)"
+  require_condition "generate-tls.sh (mocked openssl): --force regenerates and overwrites an existing cert/key" \
+    "$([[ "$gen3_rc" -eq 0 && "$key_forced" == "stub-key" ]]; echo $?)"
+
+  run_stubbed bash "$FUNC_GENERATE_TLS" --bogus-flag >/dev/null 2>"$FUNC_TMP/gen4.stderr"
+  gen4_rc=$?
+  require_condition "generate-tls.sh (mocked openssl): an unknown argument is rejected (non-zero exit)" \
+    "$([[ "$gen4_rc" -ne 0 ]]; echo $?)"
+
+  # -- prepare-runtime-secrets.sh --------------------------------------
+  secret1="$(run_stubbed bash "$FUNC_PREPARE_SECRETS" test-secret 16 2>"$FUNC_TMP/sec1.stderr")"
+  sec1_rc=$?
+  require_condition "prepare-runtime-secrets.sh (mocked openssl): first run creates the secret and prints it" \
+    "$([[ "$sec1_rc" -eq 0 && -n "$secret1" && -f "$FUNC_STATE_SECRETS/test-secret" ]]; echo $?)"
+
+  sec_file_perm="$(stat -c '%a' "$FUNC_STATE_SECRETS/test-secret" 2>/dev/null)"
+  require_condition "prepare-runtime-secrets.sh (mocked openssl): secret file permissions are 600" \
+    "$([[ "$sec_file_perm" == "600" ]]; echo $?)"
+  sec_dir_perm="$(stat -c '%a' "$FUNC_STATE_SECRETS" 2>/dev/null)"
+  require_condition "prepare-runtime-secrets.sh (mocked openssl): secrets directory permissions are 700" \
+    "$([[ "$sec_dir_perm" == "700" ]]; echo $?)"
+
+  secret2="$(run_stubbed bash "$FUNC_PREPARE_SECRETS" test-secret 16 2>"$FUNC_TMP/sec2.stderr")"
+  require_condition "prepare-runtime-secrets.sh (mocked openssl): second run is idempotent (same value returned, not regenerated)" \
+    "$([[ -n "$secret2" && "$secret1" == "$secret2" ]]; echo $?)"
+
+  if run_stubbed bash "$FUNC_PREPARE_SECRETS" >/dev/null 2>"$FUNC_TMP/sec3.stderr"; then
+    fail "prepare-runtime-secrets.sh (mocked openssl): refuses to run without a secret name"
+  else
+    pass "prepare-runtime-secrets.sh (mocked openssl): refuses to run without a secret name"
+  fi
+
+  if run_stubbed bash "$FUNC_PREPARE_SECRETS" 'bad name!' >/dev/null 2>"$FUNC_TMP/sec4.stderr"; then
+    fail "prepare-runtime-secrets.sh (mocked openssl): refuses an invalid secret name"
+  else
+    pass "prepare-runtime-secrets.sh (mocked openssl): refuses an invalid secret name"
+  fi
+else
+  fail "generate-tls.sh / prepare-runtime-secrets.sh mocked functional checks (source file(s) missing)"
+fi
+
+rm -rf "$FUNC_TMP"
+trap - EXIT
+
 # --- Summary -----------------------------------------------------------------
 
 printf '[MaisonVerte] %d checks run, %d failed\n' "$CHECKS" "$FAILURES"
