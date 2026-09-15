@@ -1,0 +1,30 @@
+services:
+  struts2:
+    image: vulhub/struts2:2.3.30
+    pull_policy: never
+    container_name: wms-shops01
+    restart: unless-stopped
+    mem_limit: 512m
+    expose:
+      - "8080"
+    volumes:
+      - ./content:/opt/maisonverte/wms:ro
+      - ../../../state/services/e13/flag.txt:/opt/maisonverte/flag.txt:ro
+    networks:
+      - mv-c-spec
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c '</dev/tcp/127.0.0.1/8080'"]
+      interval: 15s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  mv-c-spec:
+    external: true
+    name: mv-c-spec

@@ -1,0 +1,6 @@
+MaisonVerte WMS
+
+Service: preparation et suivi des lots logistiques
+Interface: formulaire d'import sur /
+Format attendu: Content-Type multipart/form-data
+Responsable fonctionnel: equipe logistique magasins
