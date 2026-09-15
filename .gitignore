@@ -1,3 +1,8 @@
 .worktrees/
 .superpowers/
 
+# MaisonVerte deployment runtime files (generated on the lab host, never
+# committed): secrets, evidence bundles, generated certs, offline images.
+deploiement/state/
+deploiement/config/lab.env
+
