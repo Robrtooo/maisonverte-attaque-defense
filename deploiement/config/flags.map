@@ -2,20 +2,29 @@
 #
 # One-to-one mapping between the 12 vulnerable services and the flag_id
 # column of enonce/flags-G04.csv. Format: SERVICE_REF=flag_id, one mapping
-# per line. Order is ascending by service number, which places the three N1
-# entry points first (E2, E3, E5) followed by the remaining chain A/B/C
-# services (E6-E14). Read exactly by flag_id via lib/common.sh:mv_flag_value
-# — flag values are never duplicated here or anywhere else in the repo.
+# per line. Read exactly by flag_id via lib/common.sh:mv_flag_value — flag
+# values are never duplicated here or anywhere else in the repo.
+#
+# Order: the three N1 entry points first, in ARCHITECTURE.md's listed order
+# (E2, E3, E5), then each chain's pivots in the exact discovery order
+# ARCHITECTURE.md describes (flag discovery follows attack-chain
+# progression):
+#   Chain A: E2 leaks the route -> E7 reveals E8 -> E8 reveals the
+#            PostgreSQL account -> E10 holds the final flag.
+#   Chain B: E5 reveals the Jenkins path -> E14 reveals E12 -> E12 reveals
+#            the mongo-express account -> E11 holds the clients flag.
+#   Chain C: E3 reveals E6 -> E6 reveals the E9 share -> E9 holds the WMS
+#            procedure -> E13 holds the logistics flag.
 
 E2=1
 E3=2
 E5=3
-E6=4
-E7=5
-E8=6
-E9=7
-E10=8
+E7=4
+E8=5
+E10=6
+E14=7
+E12=8
 E11=9
-E12=10
-E13=11
-E14=12
+E6=10
+E9=11
+E13=12

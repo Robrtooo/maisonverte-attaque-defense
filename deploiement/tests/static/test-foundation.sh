@@ -91,6 +91,13 @@ else
   fail "common.sh sources without error (file missing)"
 fi
 
+# common.sh unconditionally sets `set -Eeuo pipefail` on load, which mutates
+# this calling shell's options too. This harness deliberately runs without
+# -e (every check below tallies PASS/FAIL and keeps going instead of
+# aborting on the first failure), so neutralize the leaked -e right away.
+# -u and pipefail are left as-is: both were already this file's own intent.
+set +e
+
 if [[ "$COMMON_SOURCED" -eq 1 ]]; then
   if grep -q 'set -Eeuo pipefail' "$LIB_DIR/common.sh"; then
     pass "common.sh uses set -Eeuo pipefail"
@@ -228,6 +235,24 @@ if [[ -f "$CONFIG_DIR/flags.map" ]]; then
   done
   require_condition "flags.map covers exactly the 12 vulnerable services (E2,E3,E5-E14)" \
     "$([[ "$missing_ref" -eq 0 && "${#seen_refs[@]}" -eq 12 ]]; echo $?)"
+
+  # Order is plan-mandated (controller ruling on Task 1 review): N1 entry
+  # points first in ARCHITECTURE.md's listed order (E2, E3, E5), then each
+  # chain's pivots in the exact discovery order ARCHITECTURE.md describes:
+  # chain A E7,E8,E10 ; chain B E14,E12,E11 ; chain C E6,E9,E13.
+  declare -A EXPECTED_FLAG_IDS=(
+    [E2]=1 [E3]=2 [E5]=3
+    [E7]=4 [E8]=5 [E10]=6
+    [E14]=7 [E12]=8 [E11]=9
+    [E6]=10 [E9]=11 [E13]=12
+  )
+  order_mismatch=0
+  for ref in "${!EXPECTED_FLAG_IDS[@]}"; do
+    actual_id="$(awk -F'=' -v r="$ref" '$1==r {print $2; exit}' "$CONFIG_DIR/flags.map" 2>/dev/null || true)"
+    [[ "$actual_id" == "${EXPECTED_FLAG_IDS[$ref]}" ]] || order_mismatch=1
+  done
+  require_condition "flags.map follows the mandated N1-then-chain-pivot order (E2=1 .. E13=12)" \
+    "$([[ "$order_mismatch" -eq 0 ]]; echo $?)"
 else
   fail "flags.map has exactly 12 mapping lines (file missing)"
 fi
