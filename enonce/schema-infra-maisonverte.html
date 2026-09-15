@@ -1,0 +1,778 @@
+<title>Schéma d'infrastructure — MaisonVerte (CDC E)</title>
+<style>
+  :root {
+    --paper: #F3F4F7;
+    --panel: #FFFFFF;
+    --ink: #1B1F2A;
+    --ink-dim: #5B6472;
+    --ink-faint: #8890A0;
+    --line: #D7DBE3;
+    --line-strong: #B7BEC9;
+    --brand: #4338CA;
+    --brand-ink: #FFFFFF;
+    --brand-tint: #EEEDFC;
+
+    --z-dmz: #C2410C;
+    --z-dmz-tint: #FBE9DF;
+    --z-srv: #2563EB;
+    --z-srv-tint: #E4ECFD;
+    --z-data: #7C3AED;
+    --z-data-tint: #EFE7FC;
+    --z-admin: #A16207;
+    --z-admin-tint: #F6EDDA;
+    --z-shops: #15803D;
+    --z-shops-tint: #E1F1E6;
+    --z-users: #64748B;
+    --z-users-tint: #E9ECF1;
+
+    --font-display: -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    --font-body: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-mono: ui-monospace, "SFMono-Regular", "JetBrains Mono", Menlo, Consolas, "Liberation Mono", monospace;
+
+    --radius: 10px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #10131A;
+      --panel: #171B24;
+      --ink: #E7E9EE;
+      --ink-dim: #9AA3B2;
+      --ink-faint: #6B7385;
+      --line: #262B36;
+      --line-strong: #333A48;
+      --brand: #9099F5;
+      --brand-ink: #10131A;
+      --brand-tint: #211F3B;
+
+      --z-dmz: #FB923C;      --z-dmz-tint: #33220F;
+      --z-srv: #60A5FA;      --z-srv-tint: #16233A;
+      --z-data: #B39DFB;     --z-data-tint: #241F3D;
+      --z-admin: #FBBF24;    --z-admin-tint: #332A10;
+      --z-shops: #4ADE80;    --z-shops-tint: #143222;
+      --z-users: #9AA6BC;    --z-users-tint: #1E2330;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #10131A; --panel: #171B24; --ink: #E7E9EE; --ink-dim: #9AA3B2; --ink-faint: #6B7385;
+    --line: #262B36; --line-strong: #333A48; --brand: #9099F5; --brand-ink: #10131A; --brand-tint: #211F3B;
+    --z-dmz: #FB923C; --z-dmz-tint: #33220F; --z-srv: #60A5FA; --z-srv-tint: #16233A;
+    --z-data: #B39DFB; --z-data-tint: #241F3D; --z-admin: #FBBF24; --z-admin-tint: #332A10;
+    --z-shops: #4ADE80; --z-shops-tint: #143222; --z-users: #9AA6BC; --z-users-tint: #1E2330;
+  }
+  :root[data-theme="light"] {
+    --paper: #F3F4F7; --panel: #FFFFFF; --ink: #1B1F2A; --ink-dim: #5B6472; --ink-faint: #8890A0;
+    --line: #D7DBE3; --line-strong: #B7BEC9; --brand: #4338CA; --brand-ink: #FFFFFF; --brand-tint: #EEEDFC;
+    --z-dmz: #C2410C; --z-dmz-tint: #FBE9DF; --z-srv: #2563EB; --z-srv-tint: #E4ECFD;
+    --z-data: #7C3AED; --z-data-tint: #EFE7FC; --z-admin: #A16207; --z-admin-tint: #F6EDDA;
+    --z-shops: #15803D; --z-shops-tint: #E1F1E6; --z-users: #64748B; --z-users-tint: #E9ECF1;
+  }
+
+  * { box-sizing: border-box; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    line-height: 1.45;
+  }
+
+  .kmx-page {
+    max-width: 1360px;
+    margin: 0 auto;
+    padding: clamp(1.25rem, 3vw, 2.75rem);
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+  }
+
+  /* ---- header ---- */
+  .kmx-head {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 1.25rem;
+  }
+  .kmx-eyebrow {
+    display: inline-flex;
+    align-self: flex-start;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--brand);
+    background: var(--brand-tint);
+    border: 1px solid color-mix(in srgb, var(--brand) 35%, transparent);
+    border-radius: 999px;
+    padding: 0.28em 0.75em;
+  }
+  .kmx-title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    font-size: clamp(1.5rem, 2.4vw, 2.1rem);
+    text-wrap: balance;
+    margin: 0;
+  }
+  .kmx-sub {
+    color: var(--ink-dim);
+    font-size: 0.95rem;
+    max-width: 62ch;
+    margin: 0;
+  }
+  .kmx-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    margin-top: 0.35rem;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--ink-faint);
+  }
+  .kmx-stats b { color: var(--ink); font-weight: 600; }
+
+  /* ---- perimeter row ---- */
+  .kmx-perimeter {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    flex-wrap: wrap;
+    position: relative;
+  }
+  .kmx-flowstep {
+    display: flex;
+    align-items: center;
+    gap: 0;
+  }
+  .kmx-chip {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--ink-dim);
+    background: var(--panel);
+    border: 1px dashed var(--line-strong);
+    border-radius: var(--radius);
+    padding: 0.6rem 0.9rem;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+  }
+  .kmx-arrow {
+    color: var(--ink-faint);
+    font-family: var(--font-mono);
+    padding: 0 0.5rem;
+    font-size: 0.9rem;
+  }
+  .kmx-opn {
+    background: var(--panel);
+    border: 1.5px solid var(--brand);
+    border-radius: var(--radius);
+    padding: 0.85rem 1.1rem;
+    min-width: 15rem;
+    box-shadow: 0 1px 0 color-mix(in srgb, var(--brand) 12%, transparent);
+  }
+  .kmx-opn-h {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 0.92rem;
+    color: var(--brand);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    margin-bottom: 0.35rem;
+  }
+  .kmx-opn-ip {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--ink-dim);
+    font-variant-numeric: tabular-nums;
+    margin-bottom: 0.5rem;
+  }
+  .kmx-opn ul {
+    margin: 0;
+    padding-left: 1.1rem;
+    font-size: 0.82rem;
+    color: var(--ink-dim);
+    display: grid;
+    gap: 0.2rem;
+  }
+  .kmx-tunnel-note {
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    color: var(--z-shops);
+    margin-top: 0.55rem;
+    padding-top: 0.5rem;
+    border-top: 1px dashed var(--line);
+  }
+  .kmx-probe {
+    border-color: var(--line-strong);
+    color: var(--ink-dim);
+  }
+  .kmx-probe .kmx-opn-h { color: var(--ink); }
+
+  .kmx-jump {
+    margin-left: auto;
+    align-self: flex-start;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 0.6rem 0.85rem;
+    font-size: 0.78rem;
+    color: var(--ink-dim);
+    max-width: 15rem;
+  }
+  .kmx-jump b { color: var(--ink); font-family: var(--font-mono); font-weight: 600; }
+
+  /* ---- host frame ---- */
+  .kmx-host {
+    border: 1.5px dashed var(--line-strong);
+    border-radius: 14px;
+    padding: 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .kmx-host-label {
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .kmx-host-label b { color: var(--ink-dim); font-variant-numeric: tabular-nums; }
+
+  .kmx-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 1rem;
+  }
+  .kmx-zone { grid-column: 1 / -1; }
+  .kmx-zone--srv { grid-column: span 5; }
+  .kmx-zone--data { grid-column: span 3; }
+  .kmx-zone--admin { grid-column: span 4; }
+  .kmx-zone--shops { grid-column: span 7; }
+  .kmx-zone--users { grid-column: span 5; }
+
+  @media (max-width: 920px) {
+    .kmx-zone--srv, .kmx-zone--data, .kmx-zone--admin, .kmx-zone--shops, .kmx-zone--users {
+      grid-column: 1 / -1;
+    }
+  }
+
+  .kmx-panel {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--zc);
+    border-radius: var(--radius);
+    padding: 0.9rem 1rem 1rem;
+    height: 100%;
+  }
+  .kmx-panel-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.7rem;
+    padding-bottom: 0.55rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .kmx-panel-title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--zc);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .kmx-panel-title span.kmx-dot {
+    width: 0.55em; height: 0.55em; border-radius: 50%;
+    background: var(--zc); display: inline-block;
+  }
+  .kmx-panel-meta {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--ink-faint);
+    font-variant-numeric: tabular-nums;
+  }
+  .kmx-panel-desc {
+    font-size: 0.78rem;
+    color: var(--ink-dim);
+    margin: -0.35rem 0 0.7rem;
+  }
+
+  .kmx-nodes {
+    display: grid;
+    gap: 0.55rem;
+  }
+  .kmx-node {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: start;
+    gap: 0 0.65rem;
+    padding: 0.5rem 0.6rem;
+    border-radius: 8px;
+    background: var(--zt);
+    border: 1px solid transparent;
+  }
+  .kmx-node-ref {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 0.72rem;
+    color: var(--zc);
+    background: var(--panel);
+    border: 1px solid color-mix(in srgb, var(--zc) 45%, transparent);
+    border-radius: 6px;
+    padding: 0.1em 0.42em;
+    align-self: center;
+  }
+  .kmx-node-main { min-width: 0; }
+  .kmx-node-name {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--ink);
+    word-break: break-word;
+  }
+  .kmx-node-role {
+    font-size: 0.78rem;
+    color: var(--ink-dim);
+    margin-top: 0.1rem;
+  }
+  .kmx-badge {
+    align-self: center;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--brand);
+    background: var(--brand-tint);
+    border: 1px solid color-mix(in srgb, var(--brand) 40%, transparent);
+    border-radius: 6px;
+    padding: 0.18em 0.5em;
+    white-space: nowrap;
+  }
+
+  .kmx-empty {
+    font-size: 0.8rem;
+    color: var(--ink-faint);
+    font-style: italic;
+  }
+
+  /* ---- flux matrix ---- */
+  .kmx-section-title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.05rem;
+    margin: 0 0 0.15rem;
+  }
+  .kmx-section-sub {
+    font-size: 0.85rem;
+    color: var(--ink-dim);
+    margin: 0 0 0.85rem;
+    max-width: 70ch;
+  }
+  .kmx-table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+  table.kmx-flux {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+    min-width: 760px;
+  }
+  table.kmx-flux th {
+    text-align: left;
+    font-family: var(--font-display);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--ink-faint);
+    background: var(--panel);
+    padding: 0.6rem 0.75rem;
+    border-bottom: 1px solid var(--line-strong);
+    position: sticky;
+    top: 0;
+  }
+  table.kmx-flux td {
+    padding: 0.55rem 0.75rem;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+    color: var(--ink);
+  }
+  table.kmx-flux tr:last-child td { border-bottom: none; }
+  table.kmx-flux td.mono, table.kmx-flux span.mono {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink-dim);
+  }
+  .kmx-zdot {
+    display: inline-block;
+    width: 0.55em; height: 0.55em; border-radius: 50%;
+    margin-right: 0.4em;
+    vertical-align: middle;
+  }
+
+  /* ---- legend ---- */
+  .kmx-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.5rem;
+    padding: 1rem 1.1rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--panel);
+  }
+  .kmx-legend-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .kmx-legend-label {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--ink-faint);
+  }
+  .kmx-legend-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1rem;
+  }
+  .kmx-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.78rem;
+    color: var(--ink-dim);
+  }
+  .kmx-note {
+    font-size: 0.78rem;
+    color: var(--ink-faint);
+    border-top: 1px solid var(--line);
+    margin-top: 0.85rem;
+    padding-top: 0.75rem;
+  }
+</style>
+
+<div class="kmx-page">
+
+  <header class="kmx-head">
+    <span class="kmx-eyebrow">KM-M1-CDC-E · MaisonVerte · Profil E</span>
+    <h1 class="kmx-title">Schéma d'infrastructure — Système d'information omnicanal</h1>
+    <p class="kmx-sub">Architecture cible conforme au cahier des charges : 6 zones réseau, tranche ferme E1–E16. Aucune vulnérabilité n'est encore placée sur ce schéma — c'est l'architecture « saine » avant la couche N1/N2/N3 du Guide builder.</p>
+    <div class="kmx-stats">
+      <span><b>16</b> services (tranche ferme)</span>
+      <span><b>6</b> zones réseau</span>
+      <span><b>1</b> passerelle (OPNsense)</span>
+      <span><b>3</b> services publiés en DMZ</span>
+      <span><b>maisonverte.lan</b> / public <b>maisonverte.fr</b></span>
+    </div>
+  </header>
+
+  <!-- PERIMETER -->
+  <section class="kmx-perimeter" aria-label="Bordure du SI">
+    <div class="kmx-flowstep">
+      <span class="kmx-chip">WAN / Internet</span>
+      <span class="kmx-arrow">→</span>
+    </div>
+    <div class="kmx-flowstep">
+      <div class="kmx-opn">
+        <div class="kmx-opn-h">E1 · OPNsense (fourni)</div>
+        <div class="kmx-opn-ip">bordure · 192.168.10.1</div>
+        <ul>
+          <li>routage, NAT, filtrage inter-zones</li>
+          <li>publication des services (443)</li>
+          <li>règle terminale : deny + log</li>
+        </ul>
+        <div class="kmx-tunnel-note">⇄ tunnel permanent → SHOPS</div>
+      </div>
+      <span class="kmx-arrow">→</span>
+    </div>
+    <div class="kmx-flowstep">
+      <div class="kmx-opn kmx-probe">
+        <div class="kmx-opn-h">Sonde Suricata</div>
+        <div class="kmx-opn-ip">192.168.10.30 · EveBox :5636</div>
+        <ul>
+          <li>capture passive de tout le trafic inter-zones</li>
+        </ul>
+      </div>
+      <span class="kmx-arrow">→</span>
+    </div>
+    <div class="kmx-flowstep">
+      <span class="kmx-chip">Hôte Docker · 192.168.10.50 · 6 réseaux</span>
+    </div>
+
+    <div class="kmx-jump">
+      <div><b>Jumpbox — accès équipe</b></div>
+      <div class="mono" style="font-family:var(--font-mono); margin-top:0.2rem;">10.85.4.20</div>
+      <div style="margin-top:0.3rem;">Point d'entrée SSH de l'équipe (WireGuard / LabAuto) — hors périmètre du SI simulé.</div>
+    </div>
+  </section>
+
+  <!-- HOST FRAME / ZONES -->
+  <section class="kmx-host" aria-label="Réseaux Docker de l'hôte">
+    <div class="kmx-host-label">Hôte Docker — <b>192.168.10.50</b> — chaque zone du CDC est un réseau Docker distinct, non routé entre eux par défaut</div>
+
+    <div class="kmx-grid">
+
+      <!-- DMZ -->
+      <div class="kmx-zone" style="--zc: var(--z-dmz); --zt: var(--z-dmz-tint);">
+        <div class="kmx-panel">
+          <div class="kmx-panel-head">
+            <span class="kmx-panel-title"><span class="kmx-dot"></span>DMZ — Publication</span>
+            <span class="kmx-panel-meta">net-dmz · 172.30.10.0/24</span>
+          </div>
+          <p class="kmx-panel-desc">Seule zone atteignable depuis Internet, via l'OPNsense.</p>
+          <div class="kmx-nodes">
+            <div class="kmx-node">
+              <span class="kmx-node-ref">E2</span>
+              <div class="kmx-node-main">
+                <div class="kmx-node-name">cache-dmz01</div>
+                <div class="kmx-node-role">Cache de diffusion &amp; reverse proxy — TLS, cache pages/médias, publie E3 et E4</div>
+              </div>
+              <span class="kmx-badge">Publié 443</span>
+            </div>
+            <div class="kmx-node">
+              <span class="kmx-node-ref">E3</span>
+              <div class="kmx-node-main">
+                <div class="kmx-node-name">shop-dmz01</div>
+                <div class="kmx-node-role">Boutique en ligne — catalogue, panier, tunnel de commande, espace client, avis</div>
+              </div>
+              <span class="kmx-badge">via E2</span>
+            </div>
+            <div class="kmx-node">
+              <span class="kmx-node-ref">E4</span>
+              <div class="kmx-node-main">
+                <div class="kmx-node-name">mobile-dmz01</div>
+                <div class="kmx-node-role">Interface de service mobile — API app iOS/Android : catalogue, stocks, commandes, fidélité</div>
+              </div>
+              <span class="kmx-badge">via E2</span>
+            </div>
+            <div class="kmx-node">
+              <span class="kmx-node-ref">E5</span>
+              <div class="kmx-node-main">
+                <div class="kmx-node-name">market-dmz01</div>
+                <div class="kmx-node-role">Portail vendeurs (place de marché) — inscription, dépôt catalogues, suivi des ventes</div>
+              </div>
+              <span class="kmx-badge">Publié 443</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SRV -->
+      <div class="kmx-zone kmx-zone--srv" style="--zc: var(--z-srv); --zt: var(--z-srv-tint);">
+        <div class="kmx-panel">
+          <div class="kmx-panel-head">
+            <span class="kmx-panel-title"><span class="kmx-dot"></span>SRV — Serveurs applicatifs</span>
+            <span class="kmx-panel-meta">net-srv · 172.30.20.0/24</span>
+          </div>
+          <p class="kmx-panel-desc">Back-office et logique métier — jamais publié directement.</p>
+          <div class="kmx-nodes">
+            <div class="kmx-node">
+              <span class="kmx-node-ref">E6</span>
+              <div class="kmx-node-main">
+                <div class="kmx-node-name">backoffice-srv01</div>
+                <div class="kmx-node-role">Back-office commerçant — catalogue, prix, promos, commandes/retours ; accès resp. magasin</div>
+              </div>
+            </div>
+            <div class="kmx-node">
+              <span class="kmx-node-ref">E7</span>
+              <div class="kmx-node-main">
+                <div class="kmx-node-name">search-srv01</div>
+                <div class="kmx-node-role">Moteur de recherche produits — navigation à facettes</div>
+              </div>
+            </div>
+            <div class="kmx-node">
+              <span class="kmx-node-ref">E8</span>
+              <div class="kmx-node-main">
+                <div class="kmx-node-name">cache-srv01</div>
+                <div class="kmx-node-role">Cache applicatif &amp; sessions — paniers, sessions clients</div>
+              </div>
+            </div>
+            <div class="kmx-node">
+              <span class="kmx-node-ref">E9</span>
+              <div class="kmx-node-main">
+                <div class="kmx-node-name">files-srv01</div>
+                <div class="kmx-node-role">Serveur de fichiers marketing — visuels, campagnes, exports comptables</div>
+              </div>
+            </div>
+            <div class="kmx-node">
+              <span class="kmx-node-ref">E14</span>
+              <div class="kmx-node-main">
+                <div class="kmx-node-name">deploy-srv01</div>
+                <div class="kmx-node-role">Serveur de déploiement — mise en prod boutique/interfaces</div>
+              </div>
+            </div>
+            <div class="kmx-node">
+              <span class="kmx-node-ref">E16</span>
+              <div class="kmx-node-main">
+                <div class="kmx-node-name">crm-srv01</div>
+                <div class="kmx-node-role">Outil relation client &amp; campagnes — segments, envois, historique</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DATA -->
+      <div class="kmx-zone kmx-zone--data" style="--zc: var(--z-data); --zt: var(--z-data-tint);">
+        <div class="kmx-panel">
+          <div class="kmx-panel-head">
+            <span class="kmx-panel-title"><span class="kmx-dot"></span>DATA</span>
+            <span class="kmx-panel-meta">net-data · 172.30.30.0/24</span>
+          </div>
+          <p class="kmx-panel-desc">E-SEC-02 : base clients distincte du catalogue.</p>
+          <div class="kmx-nodes">
+            <div class="kmx-node">
+              <span class="kmx-node-ref">E10</span>
+              <div class="kmx-node-main">
+                <div class="kmx-node-name">catalog-data01</div>
+                <div class="kmx-node-role">Base catalogue &amp; commandes — produits, stocks, commandes</div>
+              </div>
+            </div>
+            <div class="kmx-node">
+              <span class="kmx-node-ref">E11</span>
+              <div class="kmx-node-main">
+                <div class="kmx-node-name">clients-data01</div>
+                <div class="kmx-node-role">Base clients — comptes, adresses, fidélité</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ADMIN -->
+      <div class="kmx-zone kmx-zone--admin" style="--zc: var(--z-admin); --zt: var(--z-admin-tint);">
+        <div class="kmx-panel">
+          <div class="kmx-panel-head">
+            <span class="kmx-panel-title"><span class="kmx-dot"></span>ADMIN</span>
+            <span class="kmx-panel-meta">net-admin · 172.30.50.0/24</span>
+          </div>
+          <p class="kmx-panel-desc">E-RES-04 : inaccessible depuis toute autre zone, hors collecte de journaux.</p>
+          <div class="kmx-nodes">
+            <div class="kmx-node">
+              <span class="kmx-node-ref">E15</span>
+              <div class="kmx-node-main">
+                <div class="kmx-node-name">supervision-admin01</div>
+                <div class="kmx-node-role">Supervision &amp; métrologie — dispo boutique/caisses/interfaces, alertes</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SHOPS -->
+      <div class="kmx-zone kmx-zone--shops" style="--zc: var(--z-shops); --zt: var(--z-shops-tint);">
+        <div class="kmx-panel">
+          <div class="kmx-panel-head">
+            <span class="kmx-panel-title"><span class="kmx-dot"></span>SHOPS — Magasins &amp; logistique</span>
+            <span class="kmx-panel-meta">net-spec · 172.30.60.0/24</span>
+          </div>
+          <p class="kmx-panel-desc">Zone spécifique du CDC. Reliée au siège par tunnel permanent (E-RES-03) — l'encaissement reste fonctionnel en mode dégradé si le lien tombe.</p>
+          <div class="kmx-nodes">
+            <div class="kmx-node">
+              <span class="kmx-node-ref">E12</span>
+              <div class="kmx-node-main">
+                <div class="kmx-node-name">pos-consol-shops01</div>
+                <div class="kmx-node-role">Serveur de consolidation des ventes — agrège les tickets de caisse des 12 magasins → comptabilité</div>
+              </div>
+            </div>
+            <div class="kmx-node">
+              <span class="kmx-node-ref">E13</span>
+              <div class="kmx-node-main">
+                <div class="kmx-node-name">wms-shops01</div>
+                <div class="kmx-node-role">Système de gestion d'entrepôt — réception, stockage, préparation, expédition</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- USERS -->
+      <div class="kmx-zone kmx-zone--users" style="--zc: var(--z-users); --zt: var(--z-users-tint);">
+        <div class="kmx-panel">
+          <div class="kmx-panel-head">
+            <span class="kmx-panel-title"><span class="kmx-dot"></span>USERS — Postes</span>
+            <span class="kmx-panel-meta">net-users · 172.30.40.0/24</span>
+          </div>
+          <p class="kmx-panel-desc kmx-empty">Vide dans la tranche ferme. E19 (poste utilisateur du siège) est en tranche conditionnelle — réseau réservé si vous l'ajoutez.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FLUX MATRIX -->
+  <section aria-label="Matrice de flux">
+    <h2 class="kmx-section-title">Matrice de flux</h2>
+    <p class="kmx-section-sub">Livrable attendu au §9 du CDC (dossier d'architecture). Chaque ligne est une règle à justifier sur l'OPNsense ou un flux inter-zones à documenter.</p>
+    <div class="kmx-table-wrap">
+      <table class="kmx-flux">
+        <thead>
+          <tr>
+            <th>Source</th>
+            <th>Destination</th>
+            <th>Port</th>
+            <th>Motif</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>WAN</td><td class="mono">OPNsense</td><td class="mono">443/tcp</td><td>Entrée unique du SI (E-RES-01)</td></tr>
+          <tr><td>OPNsense</td><td><span class="kmx-zdot" style="background:var(--z-dmz)"></span>cache-dmz01 (E2)</td><td class="mono">443/tcp</td><td>Publication boutique + interface mobile</td></tr>
+          <tr><td>OPNsense</td><td><span class="kmx-zdot" style="background:var(--z-dmz)"></span>market-dmz01 (E5)</td><td class="mono">443/tcp</td><td>Publication portail vendeurs</td></tr>
+          <tr><td><span class="kmx-zdot" style="background:var(--z-dmz)"></span>cache-dmz01</td><td><span class="kmx-zdot" style="background:var(--z-dmz)"></span>shop-dmz01, mobile-dmz01</td><td class="mono">8080/tcp</td><td>Reverse proxy interne DMZ</td></tr>
+          <tr><td><span class="kmx-zdot" style="background:var(--z-dmz)"></span>DMZ (E3/E4/E5)</td><td><span class="kmx-zdot" style="background:var(--z-srv)"></span>backoffice-srv01 (E6)</td><td class="mono">—</td><td>Catalogue, commandes, retours</td></tr>
+          <tr><td><span class="kmx-zdot" style="background:var(--z-dmz)"></span>DMZ (E3/E4)</td><td><span class="kmx-zdot" style="background:var(--z-srv)"></span>search-srv01 (E7)</td><td class="mono">—</td><td>Requêtes de recherche produits</td></tr>
+          <tr><td><span class="kmx-zdot" style="background:var(--z-dmz)"></span>DMZ (E3/E4)</td><td><span class="kmx-zdot" style="background:var(--z-srv)"></span>cache-srv01 (E8)</td><td class="mono">—</td><td>Sessions, panier</td></tr>
+          <tr><td><span class="kmx-zdot" style="background:var(--z-srv)"></span>SRV (E6, E7, E8, E16)</td><td><span class="kmx-zdot" style="background:var(--z-data)"></span>catalog-data01 (E10)</td><td class="mono">—</td><td>Lecture/écriture référentiel produits &amp; commandes</td></tr>
+          <tr><td><span class="kmx-zdot" style="background:var(--z-srv)"></span>SRV (E6, E16)</td><td><span class="kmx-zdot" style="background:var(--z-data)"></span>clients-data01 (E11)</td><td class="mono">—</td><td>Comptes clients, fidélité</td></tr>
+          <tr><td><span class="kmx-zdot" style="background:var(--z-srv)"></span>deploy-srv01 (E14)</td><td><span class="kmx-zdot" style="background:var(--z-dmz)"></span>DMZ + <span class="kmx-zdot" style="background:var(--z-srv)"></span>SRV</td><td class="mono">—</td><td>Mise en production des services</td></tr>
+          <tr><td>OPNsense (tunnel)</td><td><span class="kmx-zdot" style="background:var(--z-shops)"></span>pos-consol-shops01 (E12)</td><td class="mono">—</td><td>Remontée de l'encaissement (E-RES-03)</td></tr>
+          <tr><td>OPNsense (tunnel)</td><td><span class="kmx-zdot" style="background:var(--z-shops)"></span>wms-shops01 (E13)</td><td class="mono">—</td><td>Consultation des stocks (descendant)</td></tr>
+          <tr><td><span class="kmx-zdot" style="background:var(--z-shops)"></span>pos-consol-shops01 (E12)</td><td><span class="kmx-zdot" style="background:var(--z-srv)"></span>files-srv01 (E9)</td><td class="mono">—</td><td>Transmission des ventes agrégées → comptabilité</td></tr>
+          <tr><td><span class="kmx-zdot" style="background:var(--z-srv)"></span>backoffice-srv01 (E6)</td><td><span class="kmx-zdot" style="background:var(--z-shops)"></span>wms-shops01 (E13)</td><td class="mono">—</td><td>Commandes en ligne → préparation entrepôt</td></tr>
+          <tr><td>Toutes zones</td><td><span class="kmx-zdot" style="background:var(--z-admin)"></span>supervision-admin01 (E15)</td><td class="mono">—</td><td>Collecte de journaux uniquement (E-RES-04)</td></tr>
+          <tr><td>Toutes zones (hôte)</td><td>Sonde Suricata</td><td class="mono">—</td><td>Capture passive de tout le trafic inter-zones</td></tr>
+          <tr><td>Jumpbox (équipe)</td><td>OPNsense / Hôte / Sonde</td><td class="mono">22/tcp</td><td>Administration via WireGuard — hors SI simulé</td></tr>
+          <tr><td>Tout le reste</td><td>—</td><td class="mono">—</td><td>Refus journalisé (règle terminale, E-RES-06)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- LEGEND -->
+  <footer class="kmx-legend" aria-label="Légende">
+    <div class="kmx-legend-group">
+      <span class="kmx-legend-label">Zones</span>
+      <div class="kmx-legend-row">
+        <span class="kmx-legend-item"><span class="kmx-zdot" style="background:var(--z-dmz)"></span>DMZ — publication</span>
+        <span class="kmx-legend-item"><span class="kmx-zdot" style="background:var(--z-srv)"></span>SRV — serveurs</span>
+        <span class="kmx-legend-item"><span class="kmx-zdot" style="background:var(--z-data)"></span>DATA — données</span>
+        <span class="kmx-legend-item"><span class="kmx-zdot" style="background:var(--z-admin)"></span>ADMIN</span>
+        <span class="kmx-legend-item"><span class="kmx-zdot" style="background:var(--z-shops)"></span>SHOPS — zone spécifique</span>
+        <span class="kmx-legend-item"><span class="kmx-zdot" style="background:var(--z-users)"></span>USERS</span>
+      </div>
+    </div>
+    <div class="kmx-legend-group">
+      <span class="kmx-legend-label">Badges</span>
+      <div class="kmx-legend-row">
+        <span class="kmx-legend-item"><span class="kmx-badge">Publié 443</span> accessible depuis WAN</span>
+        <span class="kmx-legend-item"><span class="kmx-badge">via E2</span> derrière le reverse proxy</span>
+      </div>
+    </div>
+    <p class="kmx-note">Réf. E1–E16 : tranche ferme, tous obligatoires (CDC §5). E17–E19 (tranche conditionnelle) ne figurent pas ici. Prochaine étape : choisir les 12 services vulnérables (3 N1 + 9 N2/N3) sur cette base — voir Guide builder.</p>
+  </footer>
+
+</div>
