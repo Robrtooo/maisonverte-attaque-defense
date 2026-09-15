@@ -13,12 +13,11 @@ Mesure terrain : `vulndb` dispose de 7.95 Gio de RAM, tandis que `poste` et
 `nsm` disposent chacun de 3.9 Gio. La DMZ est plafonnee a 1.984 Gio et les
 chaines devront etre activees une par une. Le registre local ne contient pas
 encore toutes les images requises, notamment WordPress 4.6 et Tomcat 8.5.19.
-Le premier deploiement a cree reseaux/TLS et lance E4/E5. E3 a revele puis
-corrige un POST d'installation WordPress sans `?step=2`; relancer E3 apres
-copie du correctif. E2 reste volontairement non lance jusqu'a E3 sain.
-Le POST corrige a cree les tables ; MySQL strict a ensuite impose les quatre
-colonnes texte sans valeur par defaut de `wp_posts`. Le seed les renseigne
-desormais explicitement.
+Premier deploiement effectue sur `vulndb` au commit `a5d6611` : 15 reseaux et
+TLS crees, E2/E3/E4/E5 sains, unique bind `192.168.10.50:443`. Les quatre
+vhosts sont routes ; l'API saine expose `/health` et ses fichiers JSON. RAM
+DMZ observee apres demarrage : environ 367 Mio. Le seed E3 a ete corrige et
+rejoue avec succes pour WordPress 4.6 et MySQL strict.
 
 ## Comment reprendre
 
