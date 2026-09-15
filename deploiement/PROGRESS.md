@@ -16,6 +16,9 @@ encore toutes les images requises, notamment WordPress 4.6 et Tomcat 8.5.19.
 Le premier deploiement a cree reseaux/TLS et lance E4/E5. E3 a revele puis
 corrige un POST d'installation WordPress sans `?step=2`; relancer E3 apres
 copie du correctif. E2 reste volontairement non lance jusqu'a E3 sain.
+Le POST corrige a cree les tables ; MySQL strict a ensuite impose les quatre
+colonnes texte sans valeur par defaut de `wp_posts`. Le seed les renseigne
+desormais explicitement.
 
 ## Comment reprendre
 

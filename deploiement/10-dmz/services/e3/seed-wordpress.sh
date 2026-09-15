@@ -32,12 +32,13 @@ fi
 mv_compose "$PROJECT" "$COMPOSE_FILE" exec -T mysql \
   mysql -uroot -p"$MV_E3_DB_PASSWORD" wordpress <<SQL
 INSERT INTO wp_posts
-  (post_author, post_date, post_date_gmt, post_content, post_title, post_status,
-   comment_status, ping_status, post_name, post_modified, post_modified_gmt, post_type)
+  (post_author, post_date, post_date_gmt, post_content, post_title, post_excerpt,
+   post_status, comment_status, ping_status, post_name, to_ping, pinged,
+   post_modified, post_modified_gmt, post_content_filtered, post_type)
 SELECT 1, NOW(), UTC_TIMESTAMP(),
        'Le back-office logistique communique avec backoffice-srv01 sur le segment prive.',
-       'Operations boutique MaisonVerte', 'publish', 'closed', 'closed',
-       'operations-maisonverte', NOW(), UTC_TIMESTAMP(), 'post'
+       'Operations boutique MaisonVerte', '', 'publish', 'closed', 'closed',
+       'operations-maisonverte', '', '', NOW(), UTC_TIMESTAMP(), '', 'post'
 WHERE NOT EXISTS (SELECT 1 FROM wp_posts WHERE post_name='operations-maisonverte');
 
 INSERT INTO wp_options (option_name, option_value, autoload)

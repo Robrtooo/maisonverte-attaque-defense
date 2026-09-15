@@ -316,6 +316,10 @@ for f in "${E3_FILES[@]}"; do
 done
 require_condition "E3 seed submits the WordPress 4.6 installer step 2" \
   "$(grep -q 'wp-admin/install.php?step=2' "$E3_SEED"; echo $?)"
+for required_column in post_excerpt to_ping pinged post_content_filtered; do
+  require_condition "E3 strict-MySQL seed supplies wp_posts.$required_column" \
+    "$(grep -q "$required_column" "$E3_SEED"; echo $?)"
+done
 
 # --- 10. E3 MySQL backend stays private on mv-e3-db -------------------------
 
