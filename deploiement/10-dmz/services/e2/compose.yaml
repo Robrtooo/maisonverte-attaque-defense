@@ -1,0 +1,37 @@
+services:
+  reverse-proxy:
+    image: vulhub/nginx:1
+    pull_policy: never
+    container_name: cache-dmz01
+    restart: unless-stopped
+    ports:
+      - "192.168.10.50:443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./conf.d:/etc/nginx/conf.d:ro
+      - ./content/public:/usr/share/nginx/html:ro
+      - ./content/runbook:/home/ops:ro
+      - ../../../state/services/e2/flag.txt:/home/cache/flag.txt:ro
+      - ../../../state/tls/maisonverte.crt:/etc/nginx/tls/maisonverte.crt:ro
+      - ../../../state/tls/maisonverte.key:/etc/nginx/tls/maisonverte.key:ro
+    networks:
+      - net-dmz
+      - mv-a-edge
+    healthcheck:
+      test: ["CMD", "nginx", "-t"]
+      interval: 10s
+      timeout: 3s
+      retries: 6
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  net-dmz:
+    external: true
+    name: net-dmz
+  mv-a-edge:
+    external: true
+    name: mv-a-edge

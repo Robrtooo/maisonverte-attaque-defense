@@ -1,0 +1,4 @@
+MaisonVerte - runbook recherche produits
+Route interne: /internal/search/_search
+En-tete requis: X-MV-Search-Token: mv-search-a7-route
+Backend attendu: search-srv01:9200

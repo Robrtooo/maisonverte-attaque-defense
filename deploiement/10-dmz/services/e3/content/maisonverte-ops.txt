@@ -1,0 +1,2 @@
+MaisonVerte boutique operations
+Le flux interne de reprise des commandes cible backoffice-srv01.

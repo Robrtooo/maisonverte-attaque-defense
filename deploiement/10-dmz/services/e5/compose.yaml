@@ -1,0 +1,31 @@
+services:
+  vendor-portal:
+    build:
+      context: .
+      pull: false
+    pull_policy: never
+    container_name: market-dmz01
+    restart: unless-stopped
+    volumes:
+      - ../../../state/services/e5/flag.txt:/opt/maisonverte/flag.txt:ro
+    networks:
+      - net-dmz
+      - mv-b-edge
+    healthcheck:
+      test: ["CMD-SHELL", "test -r /usr/local/tomcat/webapps/ROOT/index.html && kill -0 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 9
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  net-dmz:
+    external: true
+    name: net-dmz
+  mv-b-edge:
+    external: true
+    name: mv-b-edge

@@ -1,0 +1,26 @@
+services:
+  mobile-api:
+    image: vulhub/nginx:1
+    pull_policy: never
+    container_name: mobile-dmz01
+    restart: unless-stopped
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./html:/usr/share/nginx/html:ro
+    networks:
+      - net-dmz
+    healthcheck:
+      test: ["CMD", "nginx", "-t"]
+      interval: 10s
+      timeout: 3s
+      retries: 6
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  net-dmz:
+    external: true
+    name: net-dmz
