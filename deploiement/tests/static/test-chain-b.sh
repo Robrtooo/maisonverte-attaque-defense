@@ -103,7 +103,7 @@ require_condition "E11 web container is clients-data01" "$(grep -q 'container_na
 require_condition "E11 MongoDB container is clients-data01-mongo" "$(grep -q 'container_name: clients-data01-mongo' "$E11_COMPOSE"; echo $?)"
 require_condition "E11 web joins mv-b-data" "$(grep -q 'mv-b-data' "$E11_COMPOSE"; echo $?)"
 require_condition "E11 declares private Mongo backend mv-e11-db" "$(grep -q 'mv-e11-db' "$E11_COMPOSE"; echo $?)"
-mongo_block="$(awk '/^[[:space:]]{2}mongo:/{f=1} f{print}' "$E11_COMPOSE")"
+mongo_block="$(awk '/^[[:space:]]{2}mongo:/{f=1} f && /^[^[:space:]]/{exit} f{print}' "$E11_COMPOSE")"
 require_condition "E11 MongoDB stays off mv-b-data" "$(grep -q 'mv-e11-db' <<<"$mongo_block" && ! grep -q 'mv-b-data' <<<"$mongo_block"; echo $?)"
 require_condition "E11 configures mongo-express Basic Auth via runtime env" "$(grep -q 'ME_CONFIG_BASICAUTH_USERNAME' "$E11_COMPOSE" && grep -q 'ME_CONFIG_BASICAUTH_PASSWORD' "$E11_COMPOSE"; echo $?)"
 require_condition "E11 keeps mongo-express /checkValid vulnerable surface" "$(grep -q 'mongo-express:0.53.0' "$E11_COMPOSE" && grep -q '8081' "$E11_COMPOSE"; echo $?)"
