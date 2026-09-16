@@ -16,7 +16,7 @@ services:
       - mv-c-core
       - mv-c-spec
     healthcheck:
-      test: ["CMD-SHELL", "test -r /usr/local/samba/etc/smb.conf && test -d /home/share && kill -0 1"]
+      test: ["CMD-SHELL", "bash -c '</dev/tcp/127.0.0.1/445' && /usr/local/samba/bin/smbclient -N //127.0.0.1/myshare -c 'ls' >/dev/null"]
       interval: 10s
       timeout: 5s
       retries: 12

@@ -32,7 +32,29 @@ pass() { CHECKS=$((CHECKS + 1)); printf '[MaisonVerte] PASS: %s\n' "$1"; }
 fail() { CHECKS=$((CHECKS + 1)); FAILURES=$((FAILURES + 1)); printf '[MaisonVerte] FAIL: %s\n' "$1" >&2; }
 require_condition() { if [[ "$2" -eq 0 ]]; then pass "$1"; else fail "$1"; fi; }
 rel() { printf '%s\n' "${1#"$REPO_ROOT"/}"; }
-code_lines() { grep -v -E '^[[:space:]]*#' "$1" | grep -viE 'never|jamais|absence'; }
+code_lines() { grep -v -E '^[[:space:]]*#' "$1"; }
+compose_json() { docker compose -f "$1" config --format json 2>/dev/null; }
+compose_networks() {
+  compose_json "$1" | python3 -c 'import json,sys
+d=json.load(sys.stdin)
+names=[]
+for svc in d.get("services", {}).values():
+    nets=svc.get("networks", {})
+    names.extend(nets.keys() if isinstance(nets, dict) else nets)
+print(",".join(sorted(set(names))))'
+}
+compose_mem_bytes() {
+  compose_json "$1" | python3 -c 'import json,sys
+d=json.load(sys.stdin)
+total=0
+for svc in d.get("services", {}).values():
+    value=svc.get("mem_limit", 0)
+    try:
+        total += int(value)
+    except (TypeError, ValueError):
+        pass
+print(total)'
+}
 
 required_files=(
   "${INSTALL_SCRIPTS[@]}"
@@ -69,7 +91,7 @@ require_condition "E6 container is backoffice-srv01" "$(grep -q 'container_name:
 require_condition "E6 runs OFBiz without the image JDWP agent" "$(grep -q 'command:.*java.*-jar.*\./build/libs/ofbiz.jar' "$E6_COMPOSE" && ! grep -R -q 'agentlib:jdwp' "$E6_DIR"; echo $?)"
 require_condition "E6 never exposes or mentions port 5005" "$(grep -R -q '5005' "$E6_DIR"; echo $((1 - $?)))"
 require_condition "E6 exposes only HTTPS 8443 internally" "$(grep -q '"8443"' "$E6_COMPOSE" && [[ $(grep -cE '^[[:space:]]+- "[0-9]+"' "$E6_COMPOSE") -eq 1 ]]; echo $?)"
-require_condition "E6 joins exactly mv-c-edge and mv-c-core" "$(grep -q 'mv-c-edge' "$E6_COMPOSE" && grep -q 'mv-c-core' "$E6_COMPOSE" && ! grep -Eq 'mv-c-spec|net-srv|net-dmz' "$E6_COMPOSE"; echo $?)"
+require_condition "E6 joins exactly mv-c-edge and mv-c-core" "$([[ "$(compose_networks "$E6_COMPOSE")" == "mv-c-core,mv-c-edge" ]]; echo $?)"
 require_condition "E6 persists runtime data and flag" "$(grep -q 'e6-ofbiz-runtime:/usr/src/apache-ofbiz/runtime' "$E6_COMPOSE" && grep -q 'state/services/e6/flag.txt:/opt/maisonverte/flag.txt:ro' "$E6_COMPOSE"; echo $?)"
 require_condition "E6 first clue points only to E9" "$(grep -q 'files-srv01' "$E6_CLUE" && grep -q 'myshare' "$E6_CLUE" && ! grep -Eq 'wms-shops01|E13|8080' "$E6_CLUE"; echo $?)"
 require_condition "install-e6 resolves only the E6 flag" "$(grep -q 'mv_flag_value E6' "$INSTALL_E6" && ! grep -Eq 'mv_flag_value E(9|13)' "$INSTALL_E6"; echo $?)"
@@ -79,7 +101,8 @@ require_condition "E9 container is files-srv01" "$(grep -q 'container_name: file
 require_condition "E9 exposes only SMB 445 internally" "$(grep -q '"445"' "$E9_COMPOSE" && [[ $(grep -cE '^[[:space:]]+- "[0-9]+"' "$E9_COMPOSE") -eq 1 ]]; echo $?)"
 require_condition "E9 Samba daemon listens only on TCP 445" "$(grep -q 'smb ports = 445' "$E9_SMB_CONF"; echo $?)"
 require_condition "E9 never exposes or mentions bind-shell port 6699" "$(grep -R -q '6699' "$E9_DIR"; echo $((1 - $?)))"
-require_condition "E9 joins exactly mv-c-core and mv-c-spec" "$(grep -q 'mv-c-core' "$E9_COMPOSE" && grep -q 'mv-c-spec' "$E9_COMPOSE" && ! grep -Eq 'mv-c-edge|net-srv|net-spec' "$E9_COMPOSE"; echo $?)"
+require_condition "E9 joins exactly mv-c-core and mv-c-spec" "$([[ "$(compose_networks "$E9_COMPOSE")" == "mv-c-core,mv-c-spec" ]]; echo $?)"
+require_condition "E9 healthcheck probes TCP 445 and anonymous myshare" "$(grep -q '/dev/tcp/127.0.0.1/445' "$E9_COMPOSE" && grep -q 'smbclient -N //127.0.0.1/myshare' "$E9_COMPOSE"; echo $?)"
 require_condition "E9 keeps anonymous /home/share writable and executable" "$(grep -q 'path = /home/share' "$E9_SMB_CONF" && grep -q 'guest ok = yes' "$E9_SMB_CONF" && grep -q 'guest only = yes' "$E9_SMB_CONF" && grep -q 'read only = no' "$E9_SMB_CONF" && grep -q 'acl allow execute always = yes' "$E9_SMB_CONF"; echo $?)"
 require_condition "E9 persists the writable share and keeps flag outside it" "$(grep -q 'state/services/e9/share:/home/share' "$E9_COMPOSE" && grep -q 'state/services/e9/flag.txt:/opt/maisonverte/flag.txt:ro' "$E9_COMPOSE" && ! grep -q 'flag.txt:/home/share' "$E9_COMPOSE"; echo $?)"
 require_condition "E9 public share contains no flag artifact" "$({ ! find "$E9_DIR/content/share" -type f -iname '*flag*' -print -quit 2>/dev/null | grep -q .; } && ! grep -R -q 'FLAG{' "$E9_DIR/content/share" 2>/dev/null; echo $?)"
@@ -89,18 +112,24 @@ require_condition "install-e9 resolves only E9 and stages persistent share conte
 require_condition "E13 pins Struts2 2.3.30" "$(grep -q 'vulhub/struts2:2.3.30' "$E13_COMPOSE"; echo $?)"
 require_condition "E13 container is wms-shops01" "$(grep -q 'container_name: wms-shops01' "$E13_COMPOSE"; echo $?)"
 require_condition "E13 exposes only HTTP 8080 internally" "$(grep -q '"8080"' "$E13_COMPOSE" && [[ $(grep -cE '^[[:space:]]+- "[0-9]+"' "$E13_COMPOSE") -eq 1 ]]; echo $?)"
-require_condition "E13 joins only mv-c-spec" "$(grep -q 'mv-c-spec' "$E13_COMPOSE" && ! grep -Eq 'mv-c-edge|mv-c-core|net-spec' "$E13_COMPOSE"; echo $?)"
-require_condition "E13 preserves the vulnerable multipart app command" "$(grep -q 'multipart/form-data' "$E13_PROFILE" && ! grep -q '^[[:space:]]*command:' "$E13_COMPOSE"; echo $?)"
-require_condition "E13 never mounts source or Maven cache" "$(grep -Eq '/usr/src|/root/\.m2' "$E13_COMPOSE"; echo $((1 - $?)))"
+require_condition "E13 joins only mv-c-spec" "$([[ "$(compose_networks "$E13_COMPOSE")" == "mv-c-spec" ]]; echo $?)"
+require_condition "E13 preserves the vulnerable multipart app command" "$(grep -q 'multipart/form-data' "$E13_PROFILE" && ! grep -q '^[[:space:]]*command:' "$E13_COMPOSE" && ! grep -q '^[[:space:]]*entrypoint:' "$E13_COMPOSE"; echo $?)"
+require_condition "E13 never replaces app/source/Maven paths" "$(grep -Eq '/usr/local/tomcat|/usr/src|/root/\.m2' "$E13_COMPOSE"; echo $((1 - $?)))"
 require_condition "E13 persists its final flag outside decorative content" "$(grep -q 'state/services/e13/flag.txt:/opt/maisonverte/flag.txt:ro' "$E13_COMPOSE" && ! grep -R -q 'FLAG{' "$E13_DIR/content"; echo $?)"
 require_condition "install-e13 resolves only the E13 flag" "$(grep -q 'mv_flag_value E13' "$INSTALL_E13" && ! grep -Eq 'mv_flag_value E(6|9)([^0-9]|$)' "$INSTALL_E13"; echo $?)"
 
-mem_total="$(awk '/mem_limit:/ {value=$2; gsub(/[^0-9]/, "", value); total += value} END {print total + 0}' "${COMPOSE_FILES[@]}" 2>/dev/null)"
-if [[ "$mem_total" -gt 0 && "$mem_total" -le 2304 ]]; then
-  pass "chain C memory total is explicit and at most 2304 MiB ($mem_total MiB)"
+mem_total=0
+for f in "${COMPOSE_FILES[@]}"; do mem_total=$((mem_total + $(compose_mem_bytes "$f"))); done
+mem_limit_bytes=$((2304 * 1024 * 1024))
+if [[ "$mem_total" -gt 0 && "$mem_total" -le "$mem_limit_bytes" ]]; then
+  pass "chain C memory total is explicit and at most 2304 MiB ($mem_total bytes)"
 else
-  fail "chain C memory total is explicit and at most 2304 MiB (found $mem_total MiB)"
+  fail "chain C memory total is explicit and at most 2304 MiB (found $mem_total bytes)"
 fi
+
+for d in "$E6_DIR/content" "$E9_DIR/content" "$E13_DIR/content"; do
+  require_condition "$(rel "$d") never hardcodes a FLAG literal" "$(grep -R -q 'FLAG{' "$d" 2>/dev/null; echo $((1 - $?)))"
+done
 
 for f in "${COMPOSE_FILES[@]}" "${INSTALL_SCRIPTS[@]}"; do
   [[ -f "$f" ]] || continue
