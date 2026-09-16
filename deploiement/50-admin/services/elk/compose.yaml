@@ -80,7 +80,7 @@ services:
     networks:
       - net-admin
     healthcheck:
-      test: ["CMD-SHELL", "filebeat test output -e >/dev/null"]
+      test: ["CMD-SHELL", "filebeat test output --strict.perms=false -e >/dev/null"]
       interval: 30s
       timeout: 10s
       retries: 10

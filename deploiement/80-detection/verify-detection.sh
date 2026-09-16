@@ -30,7 +30,7 @@ else
   failures=$((failures + 1))
 fi
 
-if docker exec "$ELK_FILEBEAT_CONTAINER" filebeat test output -e >/dev/null 2>&1; then
+if docker exec "$ELK_FILEBEAT_CONTAINER" filebeat test output --strict.perms=false -e >/dev/null 2>&1; then
   mv_log "OK Filebeat output"
 else
   mv_log "MISS Filebeat output"
