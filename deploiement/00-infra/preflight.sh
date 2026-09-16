@@ -16,6 +16,24 @@ SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 MIN_RAM_MB="${MV_PREFLIGHT_MIN_RAM_MB:-6144}"
 MIN_DISK_MB="${MV_PREFLIGHT_MIN_DISK_MB:-20480}"
 
+declare -a REQUIRED_IMAGES=()
+case "${1:-}" in
+  "")
+    images_lock="$MV_CONFIG_DIR/images.lock"
+    mv_require_file "$images_lock"
+    mapfile -t REQUIRED_IMAGES < <(grep -Ev '^[[:space:]]*(#|$)' "$images_lock")
+    ;;
+  --images)
+    shift
+    REQUIRED_IMAGES=("$@")
+    ;;
+  --no-images)
+    ;;
+  *)
+    mv_die "usage: $0 [--images IMAGE ...|--no-images]"
+    ;;
+esac
+
 # Single mandatory public bind (ARCHITECTURE.md: "L'unique publication
 # externe est 10.85.4.10:443", NAT'd by OPNsense to E2 at 192.168.10.50:443).
 # Kibana's optional loopback bind (127.0.0.1:5601, Task 8) is not a public
@@ -90,16 +108,13 @@ for hostport in "${REQUIRED_PORTS[@]}"; do
 done
 
 # --- Images already present locally (never docker pull) --------------------
-images_lock="$MV_CONFIG_DIR/images.lock"
-mv_require_file "$images_lock"
-while IFS= read -r image; do
-  [[ -z "$image" || "$image" =~ ^# ]] && continue
+for image in "${REQUIRED_IMAGES[@]}"; do
   if docker image inspect "$image" >/dev/null 2>&1; then
     check "image present locally: $image" 0
   else
     check "image present locally: $image (run import-offline-images.sh)" 1
   fi
-done <"$images_lock"
+done
 
 mv_log "=== preflight: ${FAILURES} failure(s) ==="
 if ((FAILURES > 0)); then

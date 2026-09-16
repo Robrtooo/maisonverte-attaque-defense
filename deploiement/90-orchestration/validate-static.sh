@@ -9,5 +9,5 @@ for t in deploiement/tests/static/test-*.sh; do
 done
 
 find deploiement -name compose.yaml -print0 | while IFS= read -r -d '' compose; do
-  docker compose -f "$compose" config --quiet
+  E10_DB_PASS=static-validation-only docker compose -f "$compose" config --quiet
 done
