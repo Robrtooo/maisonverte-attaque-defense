@@ -20,6 +20,7 @@ grep -q 'chain-a | chain-b | chain-c' "${FILES[2]}" && ok "default avoids all ch
 ! grep -Eiq 'apt-get|docker pull|suricata-update|git clone|wget |curl -O' "${FILES[@]:1}" && ok "no online install command" || ko "no online install command"
 grep -q -- '--images' "${FILES[0]}" && ok "preflight supports explicit image selection" || ko "preflight supports explicit image selection"
 grep -q 'preflight.sh" --images' "${FILES[1]}" && ok "profiles preflight only their images" || ko "profiles preflight only their images"
+grep -q -- '--skip-port-check --images' "${FILES[1]}" && ok "non-DMZ profiles ignore occupied public port" || ko "non-DMZ profiles ignore occupied public port"
 grep -q 'E10_DB_PASS=static-validation-only' "${FILES[3]}" && ok "static compose validation supplies non-secret placeholder" || ko "static compose validation supplies non-secret placeholder"
 
 printf '[MaisonVerte] orchestration failures=%d\n' "$F"

@@ -17,22 +17,39 @@ MIN_RAM_MB="${MV_PREFLIGHT_MIN_RAM_MB:-6144}"
 MIN_DISK_MB="${MV_PREFLIGHT_MIN_DISK_MB:-20480}"
 
 declare -a REQUIRED_IMAGES=()
-case "${1:-}" in
-  "")
-    images_lock="$MV_CONFIG_DIR/images.lock"
-    mv_require_file "$images_lock"
-    mapfile -t REQUIRED_IMAGES < <(grep -Ev '^[[:space:]]*(#|$)' "$images_lock")
-    ;;
-  --images)
-    shift
-    REQUIRED_IMAGES=("$@")
-    ;;
-  --no-images)
-    ;;
-  *)
-    mv_die "usage: $0 [--images IMAGE ...|--no-images]"
-    ;;
-esac
+LOAD_ALL_IMAGES=1
+CHECK_PUBLIC_PORT=1
+while (( $# > 0 )); do
+  case "$1" in
+    --images)
+      LOAD_ALL_IMAGES=0
+      shift
+      before_count="${#REQUIRED_IMAGES[@]}"
+      while (( $# > 0 )) && [[ "$1" != --* ]]; do
+        REQUIRED_IMAGES+=("$1")
+        shift
+      done
+      (( ${#REQUIRED_IMAGES[@]} > before_count )) || mv_die "--images requires at least one image"
+      ;;
+    --no-images)
+      LOAD_ALL_IMAGES=0
+      shift
+      ;;
+    --skip-port-check)
+      CHECK_PUBLIC_PORT=0
+      shift
+      ;;
+    *)
+      mv_die "usage: $0 [--images IMAGE ...|--no-images] [--skip-port-check]"
+      ;;
+  esac
+done
+
+if (( LOAD_ALL_IMAGES == 1 )); then
+  images_lock="$MV_CONFIG_DIR/images.lock"
+  mv_require_file "$images_lock"
+  mapfile -t REQUIRED_IMAGES < <(grep -Ev '^[[:space:]]*(#|$)' "$images_lock")
+fi
 
 # Single mandatory public bind (ARCHITECTURE.md: "L'unique publication
 # externe est 10.85.4.10:443", NAT'd by OPNsense to E2 at 192.168.10.50:443).
@@ -94,18 +111,20 @@ else
 fi
 
 # --- Ports -----------------------------------------------------------------
-for hostport in "${REQUIRED_PORTS[@]}"; do
-  port="${hostport##*:}"
-  if command -v ss >/dev/null 2>&1; then
-    if ss -ltn 2>/dev/null | awk '{print $4}' | grep -q ":${port}\$"; then
-      check "port $hostport is free" 1
+if (( CHECK_PUBLIC_PORT == 1 )); then
+  for hostport in "${REQUIRED_PORTS[@]}"; do
+    port="${hostport##*:}"
+    if command -v ss >/dev/null 2>&1; then
+      if ss -ltn 2>/dev/null | awk '{print $4}' | grep -q ":${port}\$"; then
+        check "port $hostport is free" 1
+      else
+        check "port $hostport is free" 0
+      fi
     else
-      check "port $hostport is free" 0
+      check "port $hostport is free (ss not available, skipped)" 0
     fi
-  else
-    check "port $hostport is free (ss not available, skipped)" 0
-  fi
-done
+  done
+fi
 
 # --- Images already present locally (never docker pull) --------------------
 for image in "${REQUIRED_IMAGES[@]}"; do
