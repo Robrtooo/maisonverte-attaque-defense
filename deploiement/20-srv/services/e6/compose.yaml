@@ -6,7 +6,7 @@ services:
     restart: unless-stopped
     mem_limit: 1024m
     environment:
-      JAVA_TOOL_OPTIONS: "-Xms256m -Xmx768m"
+      JAVA_TOOL_OPTIONS: "-Xms256m -Xmx768m -Djava.security.egd=file:/dev/./urandom"
     command: ["java", "-jar", "./build/libs/ofbiz.jar"]
     expose:
       - "8443"
