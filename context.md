@@ -2,8 +2,9 @@
 
 ## Git
 
-- Branche : `work/integration-deploy`.
-- Remote : `origin/work/integration-deploy`.
+- Branche principale et branche GitHub par defaut : `main`.
+- `main` inclut `feat/deployment-scripts`, `work/current-task5`, `work/current-task6`, `work/current-task7` et `work/integration-deploy`.
+- `main` et `work/integration-deploy` sont synchronisees avant reprise de la chaine A.
 - Toute modification de script doit etre committee et poussee.
 - Documentation de travail : `documentation/` (drafts courts deja pousses).
 - Inventaire endpoints : `documentation/07-endpoints-et-verification.md`.
@@ -63,6 +64,7 @@
 - Exposition : `10.85.4.0/24`; firewall WAN `10.85.4.10`; poste `10.85.4.20`.
 - Interne : `192.168.10.0/24`; firewall LAN `192.168.10.1`; `vulndb` `192.168.10.50`.
 - NSM/EveBox : `192.168.10.30:5636`.
-- Acces local verifie le 2026-09-16 : WireGuard `conf_lab` actif; tunnel SSH actif; EveBox `127.0.0.1:5636`, OPNsense `127.0.0.1:8443` et registre `127.0.0.1:5001` repondent HTTP `200`.
+- Acces local verifie le 2026-09-16 : WireGuard `conf_lab` actif; tunnel SSH actif; EveBox `http://127.0.0.1:5636/`, OPNsense `https://127.0.0.1:8443/` et registre `http://127.0.0.1:5001/` repondent HTTP `200`. Interface EveBox ouverte avec 7 alertes visibles.
+- Blocage acces moteur Suricata : nouveau SSH vers `etudiant@10.85.4.20` refuse le mot de passe historique `Defense2600!`; tunnel EveBox existant reste actif. Confirmer credentials du poste avant `ssh_nsm`.
 - Orchestrateur : `deploiement/90-orchestration/deploy-maisonverte.sh`.
 - Verification : `deploiement/90-orchestration/check-all-services.sh` (`--list` pour endpoints seuls).
