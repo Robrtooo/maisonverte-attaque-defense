@@ -25,7 +25,9 @@ vulhub/tomcat:8.5.19
 vulhub/wordpress:4.6
 vulhub/xxl-job:2.2.0-admin
 vulhub/xxl-job:2.2.0-executor
-zabbix/zabbix-appliance:alpine-7.0.27
+mariadb:11.4
+zabbix/zabbix-server-mysql:alpine-7.0.27
+zabbix/zabbix-web-nginx-mysql:alpine-7.0.27
 docker.elastic.co/elasticsearch/elasticsearch:7.17.24
 docker.elastic.co/kibana/kibana:7.17.24
 docker.elastic.co/beats/filebeat:7.17.24

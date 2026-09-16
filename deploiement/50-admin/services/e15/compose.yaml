@@ -1,30 +1,93 @@
 services:
-  zabbix:
-    image: zabbix/zabbix-appliance:alpine-7.0.27
+  db:
+    image: mariadb:11.4
     pull_policy: never
-    container_name: supervision-admin01
+    container_name: supervision-admin01-db
     restart: unless-stopped
-    mem_limit: 1024m
-    expose:
-      - "80"
-      - "10051"
+    mem_limit: 384m
+    environment:
+      MARIADB_DATABASE: zabbix
+      MARIADB_USER: zabbix
+      MARIADB_PASSWORD: ${MV_E15_DB_PASSWORD:-runtime-secret-required}
+      MARIADB_ROOT_PASSWORD: ${MV_E15_DB_ROOT_PASSWORD:-runtime-secret-required}
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_bin", "--log-bin-trust-function-creators=1"]
     volumes:
-      - e15-zabbix-data:/var/lib/zabbix
       - e15-zabbix-mysql:/var/lib/mysql
-      - ./config/zabbix_server.conf:/etc/zabbix/zabbix_server.conf.d/maisonverte.conf:ro
     networks:
-      - net-admin
+      - mv-e15-db
     healthcheck:
-      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1/ && test -r /etc/zabbix/zabbix_server.conf.d/maisonverte.conf"]
-      interval: 20s
+      test: ["CMD-SHELL", "mariadb-admin ping -h 127.0.0.1 -uroot -p$$MARIADB_ROOT_PASSWORD --silent"]
+      interval: 10s
       timeout: 5s
-      retries: 15
-      start_period: 90s
-    logging:
+      retries: 20
+      start_period: 30s
+    logging: &logging
       driver: json-file
       options:
         max-size: "10m"
         max-file: "3"
+
+  server:
+    image: zabbix/zabbix-server-mysql:alpine-7.0.27
+    pull_policy: never
+    container_name: supervision-admin01-server
+    restart: unless-stopped
+    mem_limit: 384m
+    environment:
+      DB_SERVER_HOST: db
+      MYSQL_DATABASE: zabbix
+      MYSQL_USER: zabbix
+      MYSQL_PASSWORD: ${MV_E15_DB_PASSWORD:-runtime-secret-required}
+    depends_on:
+      db:
+        condition: service_healthy
+    expose:
+      - "10051"
+    volumes:
+      - e15-zabbix-data:/var/lib/zabbix
+      - ./config/zabbix_server.conf:/etc/zabbix/zabbix_server.conf.d/maisonverte.conf:ro
+    networks:
+      - net-admin
+      - mv-e15-db
+    healthcheck:
+      test: ["CMD-SHELL", "pgrep zabbix_server >/dev/null"]
+      interval: 15s
+      timeout: 5s
+      retries: 20
+      start_period: 60s
+    logging: *logging
+
+  web:
+    image: zabbix/zabbix-web-nginx-mysql:alpine-7.0.27
+    pull_policy: never
+    container_name: supervision-admin01
+    restart: unless-stopped
+    mem_limit: 256m
+    environment:
+      ZBX_SERVER_HOST: server
+      ZBX_SERVER_NAME: MaisonVerte
+      DB_SERVER_HOST: db
+      MYSQL_DATABASE: zabbix
+      MYSQL_USER: zabbix
+      MYSQL_PASSWORD: ${MV_E15_DB_PASSWORD:-runtime-secret-required}
+      PHP_TZ: Europe/Paris
+    depends_on:
+      db:
+        condition: service_healthy
+      server:
+        condition: service_healthy
+    expose:
+      - "8080"
+    networks:
+      - net-admin
+      - mv-e15-db
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:8080/"]
+      interval: 15s
+      timeout: 5s
+      retries: 20
+      start_period: 60s
+    logging: *logging
 
 volumes:
   e15-zabbix-data:
@@ -34,3 +97,5 @@ networks:
   net-admin:
     external: true
     name: net-admin
+  mv-e15-db:
+    internal: true

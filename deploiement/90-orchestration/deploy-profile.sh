@@ -52,7 +52,7 @@ case "$profile" in
     run "$MV_DEPLOY_DIR/60-shops/install-e13-wms.sh"
     ;;
   business)
-    run "$MV_DEPLOY_DIR/00-infra/preflight.sh" --skip-port-check --images nginx:1.27.4-alpine zabbix/zabbix-appliance:alpine-7.0.27
+    run "$MV_DEPLOY_DIR/00-infra/preflight.sh" --skip-port-check --images nginx:1.27.4-alpine mariadb:11.4 zabbix/zabbix-server-mysql:alpine-7.0.27 zabbix/zabbix-web-nginx-mysql:alpine-7.0.27
     run "$MV_DEPLOY_DIR/50-admin/install-e15-zabbix.sh"
     run "$MV_DEPLOY_DIR/20-srv/install-e16-crm.sh"
     run "$MV_DEPLOY_DIR/70-business/seed-all.sh"

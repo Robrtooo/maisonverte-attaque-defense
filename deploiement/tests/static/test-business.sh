@@ -108,25 +108,28 @@ else
 fi
 
 if [[ -f "$E15_COMPOSE" && -f "$E16_COMPOSE" ]]; then
-  require_condition "E15 uses a pinned Zabbix appliance image" "$(grep -Eq 'image: zabbix/zabbix-appliance:[^[:space:]]+' "$E15_COMPOSE" && ! grep -q ':latest' "$E15_COMPOSE"; echo $?)"
+  require_condition "E15 uses pinned Zabbix server and web images" "$(grep -q 'zabbix/zabbix-server-mysql:alpine-7.0.27' "$E15_COMPOSE" && grep -q 'zabbix/zabbix-web-nginx-mysql:alpine-7.0.27' "$E15_COMPOSE" && ! grep -q ':latest' "$E15_COMPOSE"; echo $?)"
   require_condition "E16 uses a pinned nginx image" "$(grep -Eq 'image: nginx:[^[:space:]]+' "$E16_COMPOSE" && ! grep -q ':latest' "$E16_COMPOSE"; echo $?)"
   require_condition "E15 joins only net-admin" "$(grep -q 'net-admin' "$E15_COMPOSE" && ! grep -Eq 'net-(dmz|srv|data|users|spec)|mv-[abc]-' "$E15_COMPOSE"; echo $?)"
   require_condition "E16 joins only net-srv" "$(grep -q 'net-srv' "$E16_COMPOSE" && ! grep -Eq 'net-(dmz|admin|data|users|spec)|mv-[abc]-' "$E16_COMPOSE"; echo $?)"
   require_condition "E15 and E16 publish no host ports" "$(! grep -q '^[[:space:]]*ports:' "$E15_COMPOSE" "$E16_COMPOSE"; echo $?)"
   require_condition "E15 and E16 declare healthchecks" "$(grep -q 'healthcheck:' "$E15_COMPOSE" && grep -q 'healthcheck:' "$E16_COMPOSE"; echo $?)"
-  require_condition "E15 persists its appliance database" "$(grep -q ':/var/lib/mysql' "$E15_COMPOSE"; echo $?)"
+  require_condition "E15 persists its MariaDB database" "$(grep -q 'e15-zabbix-mysql:/var/lib/mysql' "$E15_COMPOSE"; echo $?)"
   require_condition "E15 and E16 use restart, pull policy and log rotation" "$(for compose in "$E15_COMPOSE" "$E16_COMPOSE"; do grep -q 'restart: unless-stopped' "$compose" && grep -q 'pull_policy: never' "$compose" && grep -q 'max-size: "10m"' "$compose" && grep -q 'max-file: "3"' "$compose" || exit 1; done; echo $?)"
   memory_total="$(awk '/mem_limit:/ {value=$2; gsub(/[^0-9]/, "", value); total += value} END {print total + 0}' "$E15_COMPOSE" "$E16_COMPOSE")"
   [[ "$memory_total" -eq 1152 ]] && pass "E15 and E16 total memory is exactly 1152 MiB" || fail "E15 and E16 total memory is exactly 1152 MiB"
-  require_condition "each E15/E16 container stays at or below 1024 MiB" "$(awk '/mem_limit:/ {value=$2; gsub(/[^0-9]/, "", value); value += 0; if (value > 1024) exit 1; found++} END {if (found != 2) exit 1}' "$E15_COMPOSE" "$E16_COMPOSE"; echo $?)"
+  require_condition "each E15/E16 container stays at or below 1024 MiB" "$(awk '/mem_limit:/ {value=$2; gsub(/[^0-9]/, "", value); value += 0; if (value > 1024) exit 1; found++} END {if (found != 4) exit 1}' "$E15_COMPOSE" "$E16_COMPOSE"; echo $?)"
   require_condition "healthy services contain no flag, CVE or vulnerable primitive" "$(! grep -Eiq 'FLAG\{|mv_flag_value|CVE-|privileged:|network_mode:[[:space:]]*host|docker.sock' "$E15_COMPOSE" "$E16_COMPOSE" "$E15_INSTALL" "$E16_INSTALL"; echo $?)"
 else
   fail "E15 and E16 Compose files are available for policy validation"
 fi
 
 if [[ -f "$DEPLOY_DIR/config/images.lock" && -f "$E15_COMPOSE" ]]; then
-  e15_image="$(awk '/^[[:space:]]*image:/ {print $2; exit}' "$E15_COMPOSE")"
-  grep -Fxq "$e15_image" "$DEPLOY_DIR/config/images.lock" && pass "E15 image is pinned in images.lock" || fail "E15 image is pinned in images.lock"
+  missing_e15_image=0
+  while read -r e15_image; do
+    grep -Fxq "$e15_image" "$DEPLOY_DIR/config/images.lock" || missing_e15_image=1
+  done < <(awk '/^[[:space:]]*image:/ {print $2}' "$E15_COMPOSE")
+  [[ "$missing_e15_image" -eq 0 ]] && pass "E15 images are pinned in images.lock" || fail "E15 images are pinned in images.lock"
 else
   fail "E15 image inventory can be validated"
 fi
