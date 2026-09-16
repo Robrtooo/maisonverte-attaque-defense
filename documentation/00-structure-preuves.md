@@ -13,7 +13,7 @@
 
 - Rester factuel : distinguer ce qui est scripte, deployee, verifie statiquement et verifie en lab.
 - Ne pas dupliquer de secrets ni de flags ; referencer `config/flags.map` et `enonce/flags-G04.csv`.
-- Ne pas ecrire qu'une image Vulhub ne porte qu'une seule vulnerabilite. Documenter seulement les failles intentionnelles et recettees.
+- Ne pas affirmer l'exclusivite d'une image Vulhub. Documenter seulement les failles intentionnelles et recettees.
 - Noter les limites de visibilite : Suricata voit le trafic qui traverse le pont L2, pas forcement les flux intra-hote Docker.
 - Ajouter les preuves terrain apres execution, avec date, operateur, profil lance et commit teste.
 
