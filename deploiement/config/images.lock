@@ -2,14 +2,16 @@
 #
 # Pinned image references for the 12 Vulhub scenarios vendored under
 # deploiement/vendor/vulhub (commit see vendor/vulhub/UPSTREAM_COMMIT), plus
-# the auxiliary database images those scenarios require. One image per
-# line, no 'latest' tag. Consumed offline by 00-infra/preflight.sh and
+# the auxiliary database images those scenarios require and the pinned
+# healthy-service images for E15/E16. One image per line, no 'latest' tag.
+# Consumed offline by 00-infra/preflight.sh and
 # 90-orchestration/prepare-offline-bundle.sh (Task 2) with pull_policy:
 # never — no image here is ever pulled by a lab deployment script.
 
 mysql:5
 mysql:5.7
 mongo:3.4
+nginx:1.27.4-alpine
 vulhub/elasticsearch:1.4.2
 vulhub/jenkins:2.441
 vulhub/mongo-express:0.53.0
@@ -23,3 +25,4 @@ vulhub/tomcat:8.5.19
 vulhub/wordpress:4.6
 vulhub/xxl-job:2.2.0-admin
 vulhub/xxl-job:2.2.0-executor
+zabbix/zabbix-appliance:alpine-7.0.27

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="420" viewBox="0 0 640 420" role="img" aria-labelledby="title desc">
+  <title id="title">Raccord laiton</title>
+  <desc id="desc">Visuel catalogue MaisonVerte MV-P016</desc>
+  <rect width="640" height="420" fill="#dce4ed"/>
+  <rect x="38" y="38" width="564" height="344" rx="6" fill="#ffffff" stroke="#224d72" stroke-width="4"/>
+  <circle cx="320" cy="176" r="82" fill="#cf7437" opacity="0.92"/>
+  <path d="M320 244 C270 205 258 148 320 92 C382 148 370 205 320 244Z" fill="#224d72"/>
+  <path d="M320 118V245 M320 168L278 140 M320 190L364 156" stroke="#ffffff" stroke-width="10" stroke-linecap="round"/>
+  <text x="320" y="306" text-anchor="middle" font-family="Arial,sans-serif" font-size="28" fill="#224d72">Raccord laiton</text>
+  <text x="320" y="344" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" fill="#526655">MV-P016 - MaisonVerte</text>
+</svg>

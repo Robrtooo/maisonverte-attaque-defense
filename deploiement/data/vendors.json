@@ -1,0 +1,246 @@
+{
+  "schema_version": "1.0.0",
+  "generated_on": "2026-09-15",
+  "vendors": [
+    {
+      "vendor_id": "VND001",
+      "name": "Partenaire Jardin 1",
+      "status": "active",
+      "contact_email": "vendeur1@example.test",
+      "catalog": [
+        "MV-P001",
+        "MV-P002",
+        "MV-P003",
+        "MV-P004",
+        "MV-P005"
+      ],
+      "sales": [
+        {
+          "month": "2026-06",
+          "orders": 13,
+          "revenue_eur": 933.5
+        },
+        {
+          "month": "2026-07",
+          "orders": 16,
+          "revenue_eur": 1067.25
+        },
+        {
+          "month": "2026-08",
+          "orders": 19,
+          "revenue_eur": 1219.75
+        }
+      ]
+    },
+    {
+      "vendor_id": "VND002",
+      "name": "Partenaire Jardin 2",
+      "status": "active",
+      "contact_email": "vendeur2@example.test",
+      "catalog": [
+        "MV-P006",
+        "MV-P007",
+        "MV-P008",
+        "MV-P009",
+        "MV-P010"
+      ],
+      "sales": [
+        {
+          "month": "2026-06",
+          "orders": 14,
+          "revenue_eur": 1047
+        },
+        {
+          "month": "2026-07",
+          "orders": 17,
+          "revenue_eur": 1194.5
+        },
+        {
+          "month": "2026-08",
+          "orders": 20,
+          "revenue_eur": 1359.5
+        }
+      ]
+    },
+    {
+      "vendor_id": "VND003",
+      "name": "Partenaire Jardin 3",
+      "status": "active",
+      "contact_email": "vendeur3@example.test",
+      "catalog": [
+        "MV-P011",
+        "MV-P012",
+        "MV-P013",
+        "MV-P014",
+        "MV-P015"
+      ],
+      "sales": [
+        {
+          "month": "2026-06",
+          "orders": 15,
+          "revenue_eur": 1160.5
+        },
+        {
+          "month": "2026-07",
+          "orders": 18,
+          "revenue_eur": 1321.75
+        },
+        {
+          "month": "2026-08",
+          "orders": 21,
+          "revenue_eur": 1499.25
+        }
+      ]
+    },
+    {
+      "vendor_id": "VND004",
+      "name": "Partenaire Jardin 4",
+      "status": "active",
+      "contact_email": "vendeur4@example.test",
+      "catalog": [
+        "MV-P016",
+        "MV-P017",
+        "MV-P018",
+        "MV-P019",
+        "MV-P020"
+      ],
+      "sales": [
+        {
+          "month": "2026-06",
+          "orders": 16,
+          "revenue_eur": 1274
+        },
+        {
+          "month": "2026-07",
+          "orders": 19,
+          "revenue_eur": 1449
+        },
+        {
+          "month": "2026-08",
+          "orders": 22,
+          "revenue_eur": 1639
+        }
+      ]
+    },
+    {
+      "vendor_id": "VND005",
+      "name": "Partenaire Jardin 5",
+      "status": "active",
+      "contact_email": "vendeur5@example.test",
+      "catalog": [
+        "MV-P021",
+        "MV-P022",
+        "MV-P023",
+        "MV-P024",
+        "MV-P025"
+      ],
+      "sales": [
+        {
+          "month": "2026-06",
+          "orders": 17,
+          "revenue_eur": 1387.5
+        },
+        {
+          "month": "2026-07",
+          "orders": 20,
+          "revenue_eur": 1576.25
+        },
+        {
+          "month": "2026-08",
+          "orders": 23,
+          "revenue_eur": 1778.75
+        }
+      ]
+    },
+    {
+      "vendor_id": "VND006",
+      "name": "Partenaire Jardin 6",
+      "status": "active",
+      "contact_email": "vendeur6@example.test",
+      "catalog": [
+        "MV-P026",
+        "MV-P027",
+        "MV-P028",
+        "MV-P029",
+        "MV-P030"
+      ],
+      "sales": [
+        {
+          "month": "2026-06",
+          "orders": 18,
+          "revenue_eur": 1501
+        },
+        {
+          "month": "2026-07",
+          "orders": 21,
+          "revenue_eur": 1703.5
+        },
+        {
+          "month": "2026-08",
+          "orders": 24,
+          "revenue_eur": 1918.5
+        }
+      ]
+    },
+    {
+      "vendor_id": "VND007",
+      "name": "Partenaire Jardin 7",
+      "status": "active",
+      "contact_email": "vendeur7@example.test",
+      "catalog": [
+        "MV-P031",
+        "MV-P032",
+        "MV-P033",
+        "MV-P034",
+        "MV-P035"
+      ],
+      "sales": [
+        {
+          "month": "2026-06",
+          "orders": 19,
+          "revenue_eur": 1614.5
+        },
+        {
+          "month": "2026-07",
+          "orders": 22,
+          "revenue_eur": 1830.75
+        },
+        {
+          "month": "2026-08",
+          "orders": 25,
+          "revenue_eur": 2058.25
+        }
+      ]
+    },
+    {
+      "vendor_id": "VND008",
+      "name": "Partenaire Jardin 8",
+      "status": "active",
+      "contact_email": "vendeur8@example.test",
+      "catalog": [
+        "MV-P036",
+        "MV-P037",
+        "MV-P038",
+        "MV-P039",
+        "MV-P040"
+      ],
+      "sales": [
+        {
+          "month": "2026-06",
+          "orders": 20,
+          "revenue_eur": 1728
+        },
+        {
+          "month": "2026-07",
+          "orders": 23,
+          "revenue_eur": 1958
+        },
+        {
+          "month": "2026-08",
+          "orders": 26,
+          "revenue_eur": 2198
+        }
+      ]
+    }
+  ]
+}

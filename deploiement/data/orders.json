@@ -1,0 +1,546 @@
+{
+  "schema_version": "1.0.0",
+  "generated_on": "2026-09-15",
+  "orders": [
+    {
+      "order_id": "CMD-001",
+      "client_id": "CLI-001",
+      "product_id": "MV-P001",
+      "quantity": 1,
+      "status": "payee",
+      "created_at": "2026-06-01",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-002",
+      "client_id": "CLI-002",
+      "product_id": "MV-P002",
+      "quantity": 2,
+      "status": "preparee",
+      "created_at": "2026-06-02",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-003",
+      "client_id": "CLI-003",
+      "product_id": "MV-P003",
+      "quantity": 3,
+      "status": "expediee",
+      "created_at": "2026-06-03",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-004",
+      "client_id": "CLI-004",
+      "product_id": "MV-P004",
+      "quantity": 4,
+      "status": "retour",
+      "created_at": "2026-06-04",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-005",
+      "client_id": "CLI-005",
+      "product_id": "MV-P005",
+      "quantity": 1,
+      "status": "litige",
+      "created_at": "2026-06-05",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-006",
+      "client_id": "CLI-006",
+      "product_id": "MV-P006",
+      "quantity": 2,
+      "status": "payee",
+      "created_at": "2026-06-06",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-007",
+      "client_id": "CLI-007",
+      "product_id": "MV-P007",
+      "quantity": 3,
+      "status": "preparee",
+      "created_at": "2026-06-07",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-008",
+      "client_id": "CLI-008",
+      "product_id": "MV-P008",
+      "quantity": 4,
+      "status": "expediee",
+      "created_at": "2026-06-08",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-009",
+      "client_id": "CLI-009",
+      "product_id": "MV-P009",
+      "quantity": 1,
+      "status": "retour",
+      "created_at": "2026-06-09",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-010",
+      "client_id": "CLI-010",
+      "product_id": "MV-P010",
+      "quantity": 2,
+      "status": "litige",
+      "created_at": "2026-06-10",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-011",
+      "client_id": "CLI-011",
+      "product_id": "MV-P011",
+      "quantity": 3,
+      "status": "payee",
+      "created_at": "2026-06-11",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-012",
+      "client_id": "CLI-012",
+      "product_id": "MV-P012",
+      "quantity": 4,
+      "status": "preparee",
+      "created_at": "2026-06-12",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-013",
+      "client_id": "CLI-013",
+      "product_id": "MV-P013",
+      "quantity": 1,
+      "status": "expediee",
+      "created_at": "2026-06-13",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-014",
+      "client_id": "CLI-014",
+      "product_id": "MV-P014",
+      "quantity": 2,
+      "status": "retour",
+      "created_at": "2026-06-14",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-015",
+      "client_id": "CLI-015",
+      "product_id": "MV-P015",
+      "quantity": 3,
+      "status": "litige",
+      "created_at": "2026-06-15",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-016",
+      "client_id": "CLI-016",
+      "product_id": "MV-P016",
+      "quantity": 4,
+      "status": "payee",
+      "created_at": "2026-06-16",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-017",
+      "client_id": "CLI-017",
+      "product_id": "MV-P017",
+      "quantity": 1,
+      "status": "preparee",
+      "created_at": "2026-06-17",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-018",
+      "client_id": "CLI-018",
+      "product_id": "MV-P018",
+      "quantity": 2,
+      "status": "expediee",
+      "created_at": "2026-06-18",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-019",
+      "client_id": "CLI-019",
+      "product_id": "MV-P019",
+      "quantity": 3,
+      "status": "retour",
+      "created_at": "2026-06-19",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-020",
+      "client_id": "CLI-020",
+      "product_id": "MV-P020",
+      "quantity": 4,
+      "status": "litige",
+      "created_at": "2026-06-20",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-021",
+      "client_id": "CLI-021",
+      "product_id": "MV-P021",
+      "quantity": 1,
+      "status": "payee",
+      "created_at": "2026-07-01",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-022",
+      "client_id": "CLI-022",
+      "product_id": "MV-P022",
+      "quantity": 2,
+      "status": "preparee",
+      "created_at": "2026-07-02",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-023",
+      "client_id": "CLI-023",
+      "product_id": "MV-P023",
+      "quantity": 3,
+      "status": "expediee",
+      "created_at": "2026-07-03",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-024",
+      "client_id": "CLI-024",
+      "product_id": "MV-P024",
+      "quantity": 4,
+      "status": "retour",
+      "created_at": "2026-07-04",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-025",
+      "client_id": "CLI-025",
+      "product_id": "MV-P025",
+      "quantity": 1,
+      "status": "litige",
+      "created_at": "2026-07-05",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-026",
+      "client_id": "CLI-026",
+      "product_id": "MV-P026",
+      "quantity": 2,
+      "status": "payee",
+      "created_at": "2026-07-06",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-027",
+      "client_id": "CLI-027",
+      "product_id": "MV-P027",
+      "quantity": 3,
+      "status": "preparee",
+      "created_at": "2026-07-07",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-028",
+      "client_id": "CLI-028",
+      "product_id": "MV-P028",
+      "quantity": 4,
+      "status": "expediee",
+      "created_at": "2026-07-08",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-029",
+      "client_id": "CLI-029",
+      "product_id": "MV-P029",
+      "quantity": 1,
+      "status": "retour",
+      "created_at": "2026-07-09",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-030",
+      "client_id": "CLI-030",
+      "product_id": "MV-P030",
+      "quantity": 2,
+      "status": "litige",
+      "created_at": "2026-07-10",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-031",
+      "client_id": "CLI-001",
+      "product_id": "MV-P031",
+      "quantity": 3,
+      "status": "payee",
+      "created_at": "2026-07-11",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-032",
+      "client_id": "CLI-002",
+      "product_id": "MV-P032",
+      "quantity": 4,
+      "status": "preparee",
+      "created_at": "2026-07-12",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-033",
+      "client_id": "CLI-003",
+      "product_id": "MV-P033",
+      "quantity": 1,
+      "status": "expediee",
+      "created_at": "2026-07-13",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-034",
+      "client_id": "CLI-004",
+      "product_id": "MV-P034",
+      "quantity": 2,
+      "status": "retour",
+      "created_at": "2026-07-14",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-035",
+      "client_id": "CLI-005",
+      "product_id": "MV-P035",
+      "quantity": 3,
+      "status": "litige",
+      "created_at": "2026-07-15",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-036",
+      "client_id": "CLI-006",
+      "product_id": "MV-P036",
+      "quantity": 4,
+      "status": "payee",
+      "created_at": "2026-07-16",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-037",
+      "client_id": "CLI-007",
+      "product_id": "MV-P037",
+      "quantity": 1,
+      "status": "preparee",
+      "created_at": "2026-07-17",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-038",
+      "client_id": "CLI-008",
+      "product_id": "MV-P038",
+      "quantity": 2,
+      "status": "expediee",
+      "created_at": "2026-07-18",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-039",
+      "client_id": "CLI-009",
+      "product_id": "MV-P039",
+      "quantity": 3,
+      "status": "retour",
+      "created_at": "2026-07-19",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-040",
+      "client_id": "CLI-010",
+      "product_id": "MV-P040",
+      "quantity": 4,
+      "status": "litige",
+      "created_at": "2026-07-20",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-041",
+      "client_id": "CLI-011",
+      "product_id": "MV-P001",
+      "quantity": 1,
+      "status": "payee",
+      "created_at": "2026-08-01",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-042",
+      "client_id": "CLI-012",
+      "product_id": "MV-P002",
+      "quantity": 2,
+      "status": "preparee",
+      "created_at": "2026-08-02",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-043",
+      "client_id": "CLI-013",
+      "product_id": "MV-P003",
+      "quantity": 3,
+      "status": "expediee",
+      "created_at": "2026-08-03",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-044",
+      "client_id": "CLI-014",
+      "product_id": "MV-P004",
+      "quantity": 4,
+      "status": "retour",
+      "created_at": "2026-08-04",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-045",
+      "client_id": "CLI-015",
+      "product_id": "MV-P005",
+      "quantity": 1,
+      "status": "litige",
+      "created_at": "2026-08-05",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-046",
+      "client_id": "CLI-016",
+      "product_id": "MV-P006",
+      "quantity": 2,
+      "status": "payee",
+      "created_at": "2026-08-06",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-047",
+      "client_id": "CLI-017",
+      "product_id": "MV-P007",
+      "quantity": 3,
+      "status": "preparee",
+      "created_at": "2026-08-07",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-048",
+      "client_id": "CLI-018",
+      "product_id": "MV-P008",
+      "quantity": 4,
+      "status": "expediee",
+      "created_at": "2026-08-08",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-049",
+      "client_id": "CLI-019",
+      "product_id": "MV-P009",
+      "quantity": 1,
+      "status": "retour",
+      "created_at": "2026-08-09",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-050",
+      "client_id": "CLI-020",
+      "product_id": "MV-P010",
+      "quantity": 2,
+      "status": "litige",
+      "created_at": "2026-08-10",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-051",
+      "client_id": "CLI-021",
+      "product_id": "MV-P011",
+      "quantity": 3,
+      "status": "payee",
+      "created_at": "2026-08-11",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-052",
+      "client_id": "CLI-022",
+      "product_id": "MV-P012",
+      "quantity": 4,
+      "status": "preparee",
+      "created_at": "2026-08-12",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-053",
+      "client_id": "CLI-023",
+      "product_id": "MV-P013",
+      "quantity": 1,
+      "status": "expediee",
+      "created_at": "2026-08-13",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-054",
+      "client_id": "CLI-024",
+      "product_id": "MV-P014",
+      "quantity": 2,
+      "status": "retour",
+      "created_at": "2026-08-14",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-055",
+      "client_id": "CLI-025",
+      "product_id": "MV-P015",
+      "quantity": 3,
+      "status": "litige",
+      "created_at": "2026-08-15",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-056",
+      "client_id": "CLI-026",
+      "product_id": "MV-P016",
+      "quantity": 4,
+      "status": "payee",
+      "created_at": "2026-08-16",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-057",
+      "client_id": "CLI-027",
+      "product_id": "MV-P017",
+      "quantity": 1,
+      "status": "preparee",
+      "created_at": "2026-08-17",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-058",
+      "client_id": "CLI-028",
+      "product_id": "MV-P018",
+      "quantity": 2,
+      "status": "expediee",
+      "created_at": "2026-08-18",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-059",
+      "client_id": "CLI-029",
+      "product_id": "MV-P019",
+      "quantity": 3,
+      "status": "retour",
+      "created_at": "2026-08-19",
+      "channel": "boutique"
+    },
+    {
+      "order_id": "CMD-060",
+      "client_id": "CLI-030",
+      "product_id": "MV-P020",
+      "quantity": 4,
+      "status": "litige",
+      "created_at": "2026-08-20",
+      "channel": "boutique"
+    }
+  ]
+}
