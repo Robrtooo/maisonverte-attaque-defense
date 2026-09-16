@@ -14,7 +14,7 @@ services:
       - e14-jenkins-home:/var/jenkins_home
       - ./init.groovy.d:/usr/share/jenkins/ref/init.groovy.d:ro
       - ./content:/opt/maisonverte:ro
-      - ../../../state/services/e14/flag.txt:/opt/maisonverte/flag.txt:ro
+      - ../../../state/services/e14:/run/maisonverte:ro
     expose:
       - "8080"
     networks:

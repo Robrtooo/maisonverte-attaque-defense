@@ -69,6 +69,7 @@ require_condition "E14 container is deploy-srv01" "$(grep -q 'container_name: de
 require_condition "E14 joins mv-b-edge" "$(grep -q 'mv-b-edge' "$E14_COMPOSE"; echo $?)"
 require_condition "E14 joins mv-b-core" "$(grep -q 'mv-b-core' "$E14_COMPOSE"; echo $?)"
 require_condition "E14 persists Jenkins home" "$(grep -q 'e14-jenkins-home:/var/jenkins_home' "$E14_COMPOSE"; echo $?)"
+require_condition "E14 runtime flag mount does not overlap read-only content mount" "$(grep -q 'state/services/e14:/run/maisonverte:ro' "$E14_COMPOSE"; echo $?)"
 require_condition "E14 keeps CLI enabled" "$(grep -q 'jenkins.CLI.disabled=false' "$E14_COMPOSE"; echo $?)"
 require_condition "E14 does not expose DEBUG" "$(grep -R -q 'DEBUG=1' "$E14_DIR"; echo $((1 - $?)))"
 require_condition "E14 does not expose JDWP 5005" "$(grep -R -q '5005' "$E14_DIR"; echo $((1 - $?)))"
