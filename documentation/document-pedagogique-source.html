@@ -64,7 +64,7 @@ pre.small { font-size: 7.6pt; background: #fbfbfd; border: 0.75pt solid #e2e3ee;
 <div class="page">
 
 <div class="callout">
-<b>État du document (16/09/2026).</b> Sections 1, 2, 3, 6 et 7 renseignées à partir de l'infrastructure réellement déployée et vérifiée (branche <code>work/integration-deploy</code>, 26 conteneurs sains sur <code>vulndb</code>, NAT OPNsense posé et testé depuis l'extérieur, 23 règles Suricata écrites et déployées sur <code>nsm</code>). Section 4/5 : chaîne A rejouée à 3/4 (preuve réelle) le 16/09/2026, chaîne B amorcée (E5), chaîne C reste à rejouer. Section 8 (répartition nominative) renseignée.
+<b>État du document (16/09/2026).</b> Sections 1, 2, 3, 6 et 7 renseignées à partir de l'infrastructure réellement déployée et vérifiée (branche <code>work/integration-deploy</code>, 26 conteneurs sains sur <code>vulndb</code>, NAT OPNsense posé et testé depuis l'extérieur, 23 règles Suricata écrites et déployées sur <code>nsm</code>). Section 4/5 : chaîne A rejouée à 3/4 (preuve réelle) le 16/09/2026, chaîne B amorcée (E5), chaîne C arrêtée à E3 (indice E6 connu, exploitation pwnscriptum non aboutie). Section 8 (répartition nominative) renseignée.
 </div>
 
 <div class="sec">
@@ -178,7 +178,7 @@ pre.small { font-size: 7.6pt; background: #fbfbfd; border: 0.75pt solid #e2e3ee;
 <table>
 <tr><th>Réf</th><th>Service</th><th>Image Vulhub</th><th>CVE / faille</th><th>Niveau</th><th>Vecteur d'attaque</th><th>Exploit validé</th><th>Emplacement du flag</th></tr>
 <tr><td>E2</td><td>Reverse proxy / cache</td><td>nginx/insecure-configuration</td><td>fuite d'info (alias mal configuré)</td><td>N1</td><td>Traversal / LFI via alias nginx, révèle la route de recherche interne</td><td>Oui — voir §5 chaîne A</td><td>flag_id=1 (<code>flags.map</code>), conteneur <code>cache-dmz01</code></td></tr>
-<tr><td>E3</td><td>Boutique WordPress</td><td>wordpress/pwnscriptum</td><td>RCE non authentifiée</td><td>N1</td><td>Exploit pwnscriptum, indice vers back-office E6</td><td class="pending">à renseigner</td><td>flag_id=2, conteneur <code>shop-dmz01</code></td></tr>
+<tr><td>E3</td><td>Boutique WordPress</td><td>wordpress/pwnscriptum</td><td>RCE non authentifiée</td><td>N1</td><td>Exploit pwnscriptum, indice vers back-office E6</td><td class="pending">Tenté, non abouti — voir §5</td><td>flag_id=2, conteneur <code>shop-dmz01</code></td></tr>
 <tr><td>E5</td><td>Portail vendeurs Tomcat</td><td>tomcat/CVE-2017-12615</td><td>CVE-2017-12615</td><td>N1</td><td>PUT JSP non authentifié → webshell, indice Jenkins</td><td>Oui — voir §5 chaîne B</td><td>flag_id=3, conteneur <code>market-dmz01</code></td></tr>
 <tr><td>E7</td><td>Recherche produits</td><td>elasticsearch/CVE-2015-1427</td><td>CVE-2015-1427</td><td>N2</td><td>RCE Groovy non authentifiée, indice vers Redis</td><td>Oui — voir §5 chaîne A</td><td>flag_id=4, conteneur <code>search-srv01</code></td></tr>
 <tr><td>E8</td><td>Cache sessions</td><td>redis/4-unacc</td><td>accès non authentifié</td><td>N2</td><td>Redis sans mot de passe, lecture d'un secret PostgreSQL</td><td>Lecture confirmée — RCE en cours (équipe attaque)</td><td>flag_id=5, conteneur <code>cache-srv01</code></td></tr>
@@ -217,15 +217,15 @@ pre.small { font-size: 7.6pt; background: #fbfbfd; border: 0.75pt solid #e2e3ee;
 </table>
 
 <h3>Chaîne C — boutique → back-office → fichiers → entrepôt</h3>
-<p><code>E3 → E6 → E9 → E13</code></p>
+<p><code>E3 → E6 → E9 → E13</code> — <b>arrêtée à l'étape E3</b> le 16/09/2026 (détail complet : <code>documentation/04-exploitation.md</code>).</p>
 <table>
-<tr><th>Étape</th><th>Précondition</th><th>Information / accès obtenu</th><th>Mène à</th></tr>
-<tr><td>E3</td><td><code>shop.maisonverte.fr</code> publié via E2</td><td>Exploitation WordPress, indice back-office</td><td>E6</td></tr>
-<tr><td>E6</td><td>Indice E3 validé</td><td>Accès OFBiz, référence au partage Samba</td><td>E9</td></tr>
-<tr><td>E9</td><td>Référence E6 validée</td><td>Procédure WMS / compte limité</td><td>E13</td></tr>
-<tr><td>E13</td><td>Information E9 validée</td><td>Flag logistique</td><td>fin de chaîne</td></tr>
+<tr><th>Étape</th><th>Précondition</th><th>Résultat obtenu</th><th>Mène à</th></tr>
+<tr><td>E3</td><td><code>shop.maisonverte.fr</code> publié via E2</td><td>Indice back-office trouvé par simple lecture du site (article public, sans exploit). Exploitation pwnscriptum tentée (injection Host/PHPMailer-Exim) mais non concluante après plusieurs essais.</td><td>E6</td></tr>
+<tr><td>E6</td><td>Indice E3 (connu)</td><td class="pending">Non atteint — E6 n'est joignable que depuis un conteneur du réseau <code>mv-c-edge</code> (E3 uniquement)</td><td>E9</td></tr>
+<tr><td>E9</td><td>—</td><td class="pending">Non atteint</td><td>E13</td></tr>
+<tr><td>E13</td><td>—</td><td class="pending">Non atteint</td><td>fin de chaîne</td></tr>
 </table>
-<p class="pending">Chaîne C : preuves à ajouter après rejeu terrain.</p>
+<p class="pending">Blocage documenté : le vecteur pwnscriptum ne déclenche pas l'exécution attendue sur cette image (hypothèses : MTA incompatible avec la syntaxe Exim utilisée, timing de queue mail). Piste à reprendre pour débloquer la suite de la chaîne.</p>
 </div>
 
 <div class="sec">
