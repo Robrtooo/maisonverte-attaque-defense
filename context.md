@@ -65,5 +65,6 @@
 - Interne : `192.168.10.0/24`; firewall LAN `192.168.10.1`; `vulndb` `192.168.10.50`.
 - NSM/EveBox : `192.168.10.30:5636`.
 - Acces local verifie le 2026-09-16 : WireGuard `conf_lab` actif; tunnel SSH actif; EveBox `http://127.0.0.1:5636/`, OPNsense `https://127.0.0.1:8443/` et registre `http://127.0.0.1:5001/` repondent HTTP `200`. Interface EveBox ouverte avec 7 alertes visibles.
+- Blocage acces moteur Suricata : nouveau SSH vers `etudiant@10.85.4.20` refuse le mot de passe historique `Defense2600!`; tunnel EveBox existant reste actif. Confirmer credentials du poste avant `ssh_nsm`.
 - Orchestrateur : `deploiement/90-orchestration/deploy-maisonverte.sh`.
 - Verification : `deploiement/90-orchestration/check-all-services.sh` (`--list` pour endpoints seuls).
