@@ -1,0 +1,4 @@
+cluster.name: maisonverte-defense
+network.host: 0.0.0.0
+xpack.security.enabled: false
+indices.lifecycle.poll_interval: 5m

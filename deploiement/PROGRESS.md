@@ -1,83 +1,83 @@
-# MaisonVerte — Etat d'avancement des scripts de deploiement
+# MaisonVerte - avancement deploiement
 
-Fichier de reprise, tenu a jour a chaque point d'arret. Contrairement au
-ledger `.superpowers/sdd/PLAN/progress.md` (local, non versionne, sert de
-scratch pendant une session), ce fichier EST versionne : c'est la source de
-verite pour reprendre le travail depuis n'importe quelle machine.
+Derniere mise a jour : 16/09/2026.
 
-Derniere mise a jour : 15/09/2026, Task 3 fermee apres relecture independante
-et un tour de correctifs. Les validations statiques locales sont vertes ;
-aucun script de deploiement ni conteneur n'a ete execute.
+Branche de reprise conseillee : `work/integration-deploy`.
 
-Mesure terrain : `vulndb` dispose de 7.95 Gio de RAM, tandis que `poste` et
-`nsm` disposent chacun de 3.9 Gio. La DMZ est plafonnee a 1.984 Gio et les
-chaines devront etre activees une par une. Le registre local ne contient pas
-encore toutes les images requises, notamment WordPress 4.6 et Tomcat 8.5.19.
-Premier deploiement effectue sur `vulndb` au commit `a5d6611` : 15 reseaux et
-TLS crees, E2/E3/E4/E5 sains, unique bind `192.168.10.50:443`. Les quatre
-vhosts sont routes ; l'API saine expose `/health` et ses fichiers JSON. RAM
-DMZ observee apres demarrage : environ 367 Mio. Le seed E3 a ete corrige et
-rejoue avec succes pour WordPress 4.6 et MySQL strict.
+## Etat court
 
-## Comment reprendre
+- Tasks 1-3 : fermees, revues, poussees. DMZ deja deployee sur `vulndb` au commit `a5d6611` : 15 reseaux, TLS, E2/E3/E4/E5 OK, bind unique `192.168.10.50:443`.
+- Task 4 : chaine A E7/E8/E10 scriptee.
+- Task 5 : chaine B E14/E12/E11 scriptee. Test statique corrige sur `work/current-task5`.
+- Task 6 : chaine C E6/E9/E13 scriptee. Test statique renforce sur `work/current-task6`.
+- Task 7 : services sains E15/E16 + donnees metier + workflows R-03/R-04/R-05 scriptes sur `work/current-task7`.
+- Task 8 : ELK defensif + scripts detection NSM/Suricata ajoutes sur `work/integration-deploy`.
+- Task 9 : orchestration RAM-aware ajoutee sur `work/integration-deploy`.
 
-1. `git fetch origin && git worktree add .worktrees/deployment-scripts -b feat/deployment-scripts origin/feat/deployment-scripts` (ou `git checkout feat/deployment-scripts` si pas de worktree existant).
-2. Lire `deploiement/ARCHITECTURE.md` puis `deploiement/PLAN.md` (le plan en 9 taches, format checklist, prevu pour etre execute avec le skill `superpowers:subagent-driven-development`).
-3. Reprendre a la Task 4 (chaine A E7-E8-E10). Les Tasks 1 a 3 sont fermees,
-   revues et poussees : ne pas les redispatcher.
-4. Continuer la methode implementeur, reviewer, correctifs, validation, push.
+## RAM / strategie
 
-## Etat exact
+`vulndb` mesure environ 7.95 Gio RAM. `poste` et `nsm` environ 3.9 Gio.
 
-- **Branche** : `feat/deployment-scripts`, remote `git@github.com:Robrtooo/maisonverte-attaque-defense.git` (le push HTTPS echoue sur cette machine faute de credential — utiliser SSH ou `gh auth login` si vous reprenez ailleurs).
-- **Task 1 (socle commun)** : ferme, revu (1 tour de correctifs), pousse. Commits `88b412d..8be5bba`. Le premier tour de correctifs Task 3 ajoute une correction centrale de `mv_flag_value` pour normaliser les fins de ligne CRLF du CSV ; cette correction est validee par comparaison exacte des octets.
-- **Task 2 (reseaux/TLS/offline/OPNsense)** : ferme, revu (1 tour de correctifs), pousse. Commits `8be5bba..6b7df9a`.
-- **Task 3 (services DMZ E2-E5)** : **FERMEE, REVUE, 1 TOUR DE CORRECTIFS.**
-  - Implementation initiale commitee dans `3d455ec` (`feat: add MaisonVerte DMZ services`).
-  - Correctifs commites dans `ccd30da` (`fix: harden DMZ exploit paths and validation`).
-  - E2 route E3, E4 et E5 sur l'unique bind TLS. Le Host non-DNS du PoC PHPMailer est route vers E3 par le SNI `shop.maisonverte.fr` tout en preservant le Host brut.
-  - Le runbook et le flag E2 sont montes hors de `/home` : le chemin direct `/files/...` ne les atteint pas, tandis que le traversal intentionnel `/files../srv/...` reste exploitable.
-  - E4 controle processus, configuration `/health` et contenu JSON representatif. E5 insere `readonly=false` dans le servlet `default` uniquement.
-  - Relecture independante approuvee sans finding residuel. Suites locales vertes : foundation 66/66, infra 95/95, DMZ 134/134, `bash -n`, rendu de tous les Compose et `git diff --check`.
-- **Task 4 (chaine A E7-E8-E10)** : prochaine tache, phase RED non commencee.
-- **Tasks 5 a 9** : non commencees.
+Ne pas tout demarrer par defaut. Mode conseille :
 
-## Decision appliquee pour la Task 3
+```bash
+deploiement/90-orchestration/deploy-maisonverte.sh poc
+deploiement/90-orchestration/deploy-maisonverte.sh chain-a
+# ou chain-b / chain-c selon recette
+```
 
-`ARCHITECTURE.md` liste 4 hotes publics tous routes par E2 sur le seul port 443
-("E2 preserve les methodes, URI, corps et en-tetes necessaires aux exploits
-de E3 et E5"), ce qui suggere que E2 fait aussi office de reverse-proxy pour
-E5 (`vendeurs.maisonverte.fr`), pas seulement pour E3/E4. Un brouillon plus
-ancien de PLAN.md semblait sous-entendre que seuls E3/E4 passaient par E2.
-**Trancher en faveur d'ARCHITECTURE.md** (le document qui fait autorite) :
-E2 route bien vers E3, E4 ET E5. E3/E4/E5 ne publient aucun port hote — seul
-E2 publie `192.168.10.50:443:443`.
+`full-risky` existe mais peut saturer selon images et JVM.
 
-## Regles deja tranchees a ne pas re-discuter
+## Commandes utiles
 
-- `create-networks.sh` (Task 2) cree les 6 reseaux de zone + les 9
-  micro-segments de chaine (15 reseaux externes au total). Les reseaux
-  prives par service (ex. `mv-e3-db` pour WordPress/MySQL) sont declares
-  DANS le compose.yaml de chaque service, pas ici.
-- Noms de reseaux exacts (fixes par Task 2, a reutiliser tels quels) :
-  `net-dmz`, `net-srv`, `net-data`, `net-users`, `net-admin`, `net-spec`,
-  `mv-a-edge`, `mv-a-core`, `mv-a-data`, `mv-b-edge`, `mv-b-core`,
-  `mv-b-data`, `mv-c-edge`, `mv-c-core`, `mv-c-spec`.
-- `deploiement/config/flags.map` (Task 1) : ordre des flag_id fixe a
-  E2=1, E3=2, E5=3, E7=4, E8=5, E10=6, E14=7, E12=8, E11=9, E6=10, E9=11,
-  E13=12 (ordre N1 puis chaines A/B/C dans leur ordre de pivot).
-- Sous-reseaux des 9 micro-segments (172.31.x.0/28, alloues par Task 2) :
-  choix interne arbitraire, sans source amont, documente dans
-  `create-networks.sh` — ne pas les re-questionner sauf collision reelle
-  constatee.
-- Snapshot Vulhub vendu dans `deploiement/vendor/vulhub/` au commit exact
-  `aeaf65793f147f29bd50841ef77f4e9cad07ecc7` (Task 1) — ne pas re-cloner,
-  la copie est deja mecanique et complete pour les 12 scenarios retenus.
+Validation statique rapide :
 
-## Methode a suivre (deja appliquee sur Tasks 1-2, a repeter)
+```bash
+deploiement/90-orchestration/validate-static.sh
+```
 
-Un agent implementeur par tache (`superpowers:subagent-driven-development`),
-puis un agent reviewer independant (spec + qualite), boucle de correctifs
-si besoin (max 5 tours, reprise du meme implementeur pour les 3 premiers),
-puis push seulement apres revue propre. Aucune execution reelle sur le lab
-avant la revue finale de toute la branche (Task 9 terminee).
+Profils :
+
+```bash
+deploiement/90-orchestration/deploy-profile.sh foundation
+deploiement/90-orchestration/deploy-profile.sh dmz
+deploiement/90-orchestration/deploy-profile.sh business
+deploiement/90-orchestration/deploy-profile.sh detection
+deploiement/90-orchestration/deploy-profile.sh chain-a
+deploiement/90-orchestration/deploy-profile.sh chain-b
+deploiement/90-orchestration/deploy-profile.sh chain-c
+deploiement/90-orchestration/deploy-profile.sh stop-heavy
+```
+
+## Images
+
+Les scripts ne font aucun `docker pull`. Images attendues dans `deploiement/config/images.lock`.
+ELK ajoute :
+
+- `docker.elastic.co/elasticsearch/elasticsearch:7.17.24`
+- `docker.elastic.co/kibana/kibana:7.17.24`
+- `docker.elastic.co/beats/filebeat:7.17.24`
+
+Si absentes du lab, preparer/importer bundle hors-lab avant execution detection.
+
+## Detection
+
+- Suricata/EveBox existe sur NSM : `http://192.168.10.30:5636` depuis pivot interne.
+- Suricata voit le trafic qui traverse le pont L2 vers `vulndb`.
+- Le trafic Docker intra-hote peut ne pas traverser la sonde : ELK collecte donc les logs Docker JSON.
+- Kibana publie uniquement `127.0.0.1:5601:5601`.
+- E7 vulnerable et ELK defensif sont separes : reseau, volumes, cluster name.
+
+## A verifier en lab
+
+- Presence images ELK.
+- Healthchecks JVM lents : E6/E14/E15/ELK peuvent demander 2-4 min.
+- Filebeat: verifier ingestion apres premiers logs applicatifs.
+- Orchestration `poc`, puis une seule chaine a la fois.
+
+## Regles fixes
+
+- Reseaux externes : `net-dmz`, `net-srv`, `net-data`, `net-users`, `net-admin`, `net-spec`, `mv-a-edge`, `mv-a-core`, `mv-a-data`, `mv-b-edge`, `mv-b-core`, `mv-b-data`, `mv-c-edge`, `mv-c-core`, `mv-c-spec`.
+- Flags : E2=1, E3=2, E5=3, E7=4, E8=5, E10=6, E14=7, E12=8, E11=9, E6=10, E9=11, E13=12.
+- OPNsense/VLAN/NAT faits main. Scripts ne modifient pas OPNsense.
+- E2 seul bind public : `192.168.10.50:443:443`. Kibana loopback seulement.

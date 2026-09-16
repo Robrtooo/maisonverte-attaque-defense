@@ -1,0 +1,20 @@
+filebeat.inputs:
+  - type: container
+    enabled: true
+    paths:
+      - /var/lib/docker/containers/*/*.log
+    processors:
+      - add_fields:
+          target: maisonverte
+          fields:
+            lab: G04
+            source: docker-json
+
+output.elasticsearch:
+  hosts: ["http://elasticsearch:9200"]
+  index: "maisonverte-docker-%{+yyyy.MM.dd}"
+
+setup.template.name: "maisonverte-docker"
+setup.template.pattern: "maisonverte-docker-*"
+setup.ilm.enabled: false
+logging.to_files: false
