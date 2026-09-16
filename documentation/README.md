@@ -11,6 +11,7 @@ Documentation equipe pour la recette et la restitution MaisonVerte.
 5. `04-exploitation.md` : chemins d'attaque attendus.
 6. `05-detection.md` : Suricata/EveBox, ELK, SID et journaux.
 7. `06-recette.md` : matrice de verification.
+8. `07-endpoints-et-verification.md` : URLs, ports et controle global.
 
 ## Sources de reference
 
