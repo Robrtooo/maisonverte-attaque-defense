@@ -1,30 +1,34 @@
-# 02 - Architecture
+# 02 · Architecture
 
-## Topologie lab
+*Ce document décrit la topologie réelle du lab, le modèle de publication externe, le découpage réseau Docker et l'inventaire complet des 16 services.*
 
-| Element | Adresse / role |
+---
+
+## Topologie du lab
+
+| Élément | Adresse / rôle |
 |---|---|
-| Reseau exposition | `10.85.4.0/24` |
+| Réseau exposition | `10.85.4.0/24` |
 | OPNsense WAN | `10.85.4.10` |
 | Poste / pivot | `10.85.4.20` |
-| Reseau interne | `192.168.10.0/24` |
+| Réseau interne | `192.168.10.0/24` |
 | OPNsense LAN | `192.168.10.1` |
 | NSM / EveBox | `192.168.10.30:5636` |
-| Hote Docker `vulndb` | `192.168.10.50` |
+| Hôte Docker `vulndb` | `192.168.10.50` |
 
-Suricata est place sur un pont L2 entre VLAN 10 et VLAN 11. Il observe le
-trafic qui traverse ce pont vers `vulndb`. Les flux intra-hote entre bridges
-Docker peuvent echapper a cette sonde ; ELK couvre alors les logs applicatifs.
+Suricata est placé sur un pont L2 entre VLAN 10 et VLAN 11. Il observe le trafic qui traverse ce pont vers `vulndb`.
+
+> **Limite de visibilité** — les flux intra-hôte entre bridges Docker peuvent échapper à cette sonde. ELK couvre alors les logs applicatifs pour combler cet angle mort (voir [`05-detection.md`](05-detection.md)).
 
 ## Publication externe
 
-Une seule publication externe est prevue :
+Une seule publication externe est prévue :
 
 ```text
-10.85.4.10:443 -> OPNsense NAT -> 192.168.10.50:443 -> E2
+10.85.4.10:443 → OPNsense NAT → 192.168.10.50:443 → E2
 ```
 
-E2 termine TLS et route selon SNI/Host :
+E2 termine le TLS et route selon le SNI/Host :
 
 | Nom public | Destination | Statut TP |
 |---|---|---|
@@ -33,12 +37,13 @@ E2 termine TLS et route selon SNI/Host :
 | `vendeurs.maisonverte.fr` | E5 Tomcat | N1 |
 | `cache.maisonverte.fr` | E2 nginx | N1 |
 
-Le document attaquant devra ajouter ces noms vers `10.85.4.10` dans
-`/etc/hosts`. Aucun backend N2/N3 ne doit etre publie directement.
+Le document attaquant devra ajouter ces noms vers `10.85.4.10` dans `/etc/hosts`. Aucun backend N2/N3 ne doit être publié directement.
 
-## Reseaux Docker
+## Réseaux Docker
 
-| Zone | Reseau | Sous-reseau |
+### Zones
+
+| Zone | Réseau | Sous-réseau |
 |---|---|---|
 | DMZ | `net-dmz` | `172.30.10.0/24` |
 | SRV | `net-srv` | `172.30.20.0/24` |
@@ -47,17 +52,17 @@ Le document attaquant devra ajouter ces noms vers `10.85.4.10` dans
 | ADMIN | `net-admin` | `172.30.50.0/24` |
 | SHOPS | `net-spec` | `172.30.60.0/24` |
 
-Micro-segments de chaines :
+### Micro-segments de chaîne
 
-| Chaine | Micro-segments | Maillons |
+| Chaîne | Micro-segments | Maillons |
 |---|---|---|
-| A | `mv-a-edge`, `mv-a-core`, `mv-a-data` | E2-E7, E7-E8, E8-E10 |
-| B | `mv-b-edge`, `mv-b-core`, `mv-b-data` | E5-E14, E14-E12, E12-E11 |
-| C | `mv-c-edge`, `mv-c-core`, `mv-c-spec` | E3-E6, E6-E9, E9-E13 |
+| A | `mv-a-edge`, `mv-a-core`, `mv-a-data` | E2 → E7, E7 → E8, E8 → E10 |
+| B | `mv-b-edge`, `mv-b-core`, `mv-b-data` | E5 → E14, E14 → E12, E12 → E11 |
+| C | `mv-c-edge`, `mv-c-core`, `mv-c-spec` | E3 → E6, E6 → E9, E9 → E13 |
 
-## Inventaire services
+## Inventaire des services
 
-| Ref | Conteneur principal | Zone | Niveau | Scenario |
+| Réf | Conteneur principal | Zone | Niveau | Scénario |
 |---|---|---|---|---|
 | E1 | OPNsense | bordure | sain | configuration manuelle |
 | E2 | `cache-dmz01` | DMZ | N1 | `nginx/insecure-configuration` |
@@ -74,20 +79,18 @@ Micro-segments de chaines :
 | E13 | `wms-shops01` | SHOPS | N3 | `struts2/s2-045` |
 | E14 | `deploy-srv01` | SRV | N2 | `jenkins/CVE-2024-23897` |
 | E15 | `supervision-admin01` | ADMIN | sain | Zabbix appliance |
-| E16 | `crm-srv01` | SRV | sain | CRM leger |
+| E16 | `crm-srv01` | SRV | sain | CRM léger |
 
-Les scenarios Vulhub ci-dessus sont les failles intentionnelles du TP. Les
-autres comportements eventuels des images ne sont pas des objectifs de recette.
+Les scénarios Vulhub ci-dessus sont les failles intentionnelles du TP. Les autres comportements éventuels des images ne sont pas des objectifs de recette.
 
-## Chaines imposees
+## Chaînes imposées
 
-- A : E2 revele la route et le jeton de recherche ; E7 revele E8 ; E8 revele le compte PostgreSQL ; E10 contient le flag final.
-- B : E5 revele le chemin Jenkins ; E14 revele E12 ; E12 revele le compte mongo-express ; E11 contient le flag clients.
-- C : E3 revele E6 ; E6 revele le partage E9 ; E9 contient la procedure WMS ; E13 contient le flag logistique.
+Trois chaînes structurent l'exploitation. Dans la chaîne A, E2 révèle la route et le jeton de recherche, E7 révèle E8, E8 révèle le compte PostgreSQL, et E10 contient le flag final. Dans la chaîne B, E5 révèle le chemin Jenkins, E14 révèle E12, E12 révèle le compte Mongo Express, et E11 contient le flag clients. Dans la chaîne C, E3 révèle E6, E6 révèle le partage E9, E9 contient la procédure WMS, et E13 contient le flag logistique.
 
-## A ajouter apres recette
+## À ajouter après recette
 
-- Export ou capture du schema final `suivi/schema-maisonverte.drawio`.
-- Capture OPNsense : NAT, VLAN, rules actives.
-- `docker network inspect` des zones et micro-segments.
-- `docker ps` prouvant le seul bind public `192.168.10.50:443:443` et Kibana en loopback.
+Restent à ajouter après la recette : l'export ou la capture du schéma final `suivi/schema-maisonverte.drawio`, une capture OPNsense montrant le NAT, les VLAN et les règles actives, la sortie de `docker network inspect` sur les zones et micro-segments, et un `docker ps` prouvant que seul `192.168.10.50:443:443` est publié, Kibana restant en loopback.
+
+---
+
+**Navigation** : ← [`01-cadrage.md`](01-cadrage.md) · Suivant → [`03-deploiement.md`](03-deploiement.md)

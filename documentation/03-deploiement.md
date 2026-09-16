@@ -1,14 +1,14 @@
-# 03 - Deploiement
+# 03 · Déploiement
 
-## Precondition
+*Ce document décrit les préconditions, l'ordre de lancement recommandé et les points de contrôle à effectuer après chaque déploiement.*
 
-- Brancher la recette sur `work/integration-deploy`.
-- Importer les images offline listees dans `deploiement/config/images.lock`.
-- Verifier que les scripts de lab ne telechargent rien.
-- Configurer OPNsense manuellement : WAN/LAN, VLAN, routage, NAT TCP 443 vers `192.168.10.50:443`.
-- Verifier `vulndb` : amd64, RAM, disque, Docker Compose, ports, fichiers de configuration.
+---
 
-Commandes de reference :
+## Préconditions
+
+Avant tout déploiement, se brancher sur `work/integration-deploy`, importer les images hors ligne listées dans `deploiement/config/images.lock`, et vérifier qu'aucun script de lab ne télécharge quoi que ce soit. OPNsense doit être configuré à la main — WAN/LAN, VLAN, routage, NAT TCP 443 vers `192.168.10.50:443` — et `vulndb` vérifié sur son architecture amd64, sa RAM, son disque, Docker Compose, ses ports et ses fichiers de configuration.
+
+Commandes de référence :
 
 ```bash
 git status --branch
@@ -17,7 +17,7 @@ deploiement/00-infra/verify-opnsense.sh
 deploiement/90-orchestration/validate-static.sh
 ```
 
-## Ordre conseille
+## Ordre conseillé
 
 Profil minimal :
 
@@ -25,7 +25,7 @@ Profil minimal :
 deploiement/90-orchestration/deploy-maisonverte.sh poc
 ```
 
-Puis une seule chaine a la fois selon recette :
+Puis une seule chaîne à la fois, selon la recette :
 
 ```bash
 deploiement/90-orchestration/deploy-maisonverte.sh chain-a
@@ -33,29 +33,28 @@ deploiement/90-orchestration/deploy-maisonverte.sh chain-b
 deploiement/90-orchestration/deploy-maisonverte.sh chain-c
 ```
 
-Detection apres import des images ELK :
+Détection, après import des images ELK :
 
 ```bash
 deploiement/90-orchestration/deploy-profile.sh detection
 ```
 
-`full-risky` existe mais ne doit pas etre lance en premier : `vulndb` mesure
-environ 7.95 Gio RAM et les JVM/ELK peuvent saturer le lab.
+> **Attention** — le profil `full-risky` existe mais ne doit pas être lancé en premier : `vulndb` mesure environ 7,95 Gio de RAM et les JVM/ELK peuvent saturer le lab.
 
-## Profils utiles
+## Profils disponibles
 
-| Profil | Role |
+| Profil | Rôle |
 |---|---|
-| `foundation` | socle, reseaux, secrets runtime |
+| `foundation` | socle, réseaux, secrets runtime |
 | `dmz` | E2, E3, E4, E5 |
-| `business` | donnees et workflows metier |
-| `detection` | ELK defensif et notes Suricata |
+| `business` | données et workflows métier |
+| `detection` | ELK défensif et notes Suricata |
 | `chain-a` | E7, E8, E10 |
 | `chain-b` | E14, E12, E11 |
 | `chain-c` | E6, E9, E13 |
-| `stop-heavy` | arret services lourds pour economiser la RAM |
+| `stop-heavy` | arrêt des services lourds pour économiser la RAM |
 
-## Points de controle apres lancement
+## Points de contrôle après lancement
 
 ```bash
 docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'
@@ -63,19 +62,12 @@ docker network ls
 docker compose ls
 ```
 
-A consigner :
+À consigner systématiquement : la date, l'opérateur, la branche et le commit, le profil lancé et sa sortie courte, l'état `healthy` des services ou le délai JVM observé, les ports publiés, ainsi que les erreurs rencontrées et les corrections apportées.
 
-- date, operateur, branche et commit ;
-- profil lance et sortie courte ;
-- services `healthy` ou delai JVM observe ;
-- ports publies ;
-- erreurs et corrections appliquees.
+## Preuves à ajouter
 
-## Preuves a ajouter
+Les preuves à ajouter couvrent la sortie de `preflight.sh`, une capture du NAT et des règles OPNsense, un `docker ps` montrant E2 sur `192.168.10.50:443:443`, une capture des quatre vhosts publics en HTTPS, les healthchecks des profils lancés, et les logs d'import des images hors ligne si l'import est rejoué.
 
-- Sortie `preflight.sh`.
-- Capture NAT/rules OPNsense.
-- Capture `docker ps` montrant E2 en `192.168.10.50:443:443`.
-- Capture des quatre vhosts publics en HTTPS.
-- Healthchecks des profils lances.
-- Logs d'import images offline si l'import est refait.
+---
+
+**Navigation** : ← [`02-architecture.md`](02-architecture.md) · Suivant → [`04-exploitation.md`](04-exploitation.md)
