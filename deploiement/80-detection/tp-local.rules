@@ -80,7 +80,10 @@ alert tls any any -> $HOME_NET 443 (msg:"MV N1 TLS SNI cache.maisonverte.fr (E2,
 alert tls any any -> $HOME_NET 443 (msg:"MV N1 TLS SNI shop.maisonverte.fr (E3, WordPress)"; tls.sni; content:"shop.maisonverte.fr"; sid:9000027; rev:1; classtype:attempted-recon;)
 alert tls any any -> $HOME_NET 443 (msg:"MV N1 TLS SNI vendeurs.maisonverte.fr (E5, Tomcat)"; tls.sni; content:"vendeurs.maisonverte.fr"; sid:9000028; rev:1; classtype:attempted-recon;)
 alert tls any any -> $HOME_NET 443 (msg:"MV TLS SNI api.maisonverte.fr (E4, sain)"; tls.sni; content:"api.maisonverte.fr"; sid:9000029; rev:1; classtype:not-suspicious;)
-# Amelioration possible non implementee : une regle "SNI hors liste connue"
-# (enumeration de vhost) necessiterait un dataset Suricata externe
-# (type string, valeurs encodees base64) - non ajoutee ici pour eviter un
-# risque d'echec de chargement non teste ; a faire en suivi si besoin.
+
+# Signaux globaux, volontairement simples et declenchables. Ils completent les
+# signatures CVE sans pretendre identifier a eux seuls une exploitation reussie.
+alert http any any -> $HOME_NET any (msg:"MV GLOBAL traversal path dans URI HTTP"; flow:established,to_server; http.uri.raw; pcre:"/(?:\.\.\/|%2e%2e(?:%2f|\/))/i"; sid:9000030; rev:1; classtype:web-application-attack;)
+alert http any any -> $HOME_NET any (msg:"MV GLOBAL suspicious HTTP method PUT DELETE PATCH"; flow:established,to_server; http.method; pcre:"/^(?:PUT|DELETE|PATCH)$/"; sid:9000031; rev:1; classtype:web-application-attack;)
+alert http any any -> $HOME_NET any (msg:"MV GLOBAL exploit payload marker dans corps HTTP"; flow:established,to_server; http.request_body; pcre:"/(?:GLUE_SHELL|constructor\.constructor|\"lang\"\s*:\s*\"groovy\"|AI-CANARY-)/i"; sid:9000032; rev:1; classtype:web-application-attack;)
+alert tcp any any -> $HOME_NET [22,445,5432,5636,6379,9200,9999] (msg:"MV GLOBAL sensitive service access"; flow:established,to_server; threshold:type limit,track by_src,count 1,seconds 30; sid:9000033; rev:1; classtype:policy-violation;)

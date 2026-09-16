@@ -46,8 +46,11 @@
 ## Session terrain du 2026-09-16 (post-acces reel)
 
 - Acces reel confirme sur les 4 machines lab (poste, OPNsense, nsm, vulndb) via tunnel SSH fourni.
-- Suricata live sur `nsm` a 29 SID actifs (6 baseline + 19 G04 + **4 nouvelles regles SNI/TLS 9000026-9000029**, ajoutees en direct sur la sonde pour detecter le SNI `E2/E3/E5/E4` faute de contenu HTTP visible en TLS 1.3). **Ces 4 regles ne sont pas encore reportees** dans `deploiement/80-detection/tp-local.rules` ni dans `documentation/08-regles-suricata.md` : a synchroniser avant rendu.
-- `fast.log` confirme : seules les regles de reconnaissance/SNI ont declenche a ce stade, aucune regle d'exploitation/pivot/isolation — les 3 chaines n'ont pas encore ete rejouees pour de vrai.
+- Suricata live sur `nsm` a 29 SID definis (6 baseline + 23 G04, dont SNI/TLS `9000026-9000029`). Git contient aussi 4 regles globales `9000030-9000033`, non encore deployees.
+- Audit EveBox : 7 SID sur 29 ont declenche (`9000001`, `9000002`, `9000006`, `9000026-9000029`). D-06 non conforme tant que 22 regles restent sans preuve. Voir `documentation/08-regles-suricata.md`.
+- Stats live : 52 608 regles chargees, 0 echec, 105 504 paquets, 0 drop. Ecart a clarifier avec les 52 613 consignees initialement.
+- Regles globales ajoutees dans Git : traversal HTTP, methodes `PUT/DELETE/PATCH`, marqueurs de payload, acces aux services sensibles. Script inoffensif de test : `deploiement/80-detection/trigger-suricata-rules.sh`.
+- Tests statiques detection : 0 echec, 33 SID uniques, couverture E2/E3/E5-E14 et familles globales validee.
 - E2 (`cache.maisonverte.fr`) : traversal `/files../` confirme exploitable en conditions WAN reelles (lecture de `runbook.txt` via l'alias `/files -> /home`). Meme requete sur `flag.txt` renvoie 403 (proprietaire du fichier monte != UID nginx, a investiguer si utilise comme preuve de flag).
 - E6 OFBiz (`backoffice-srv01`) : le compte `admin` utilisait encore le mot de passe demo par defaut `ofbiz` (jamais rotate). RCE Groovy confirme via `/webtools/control/ProgramExport` (delegator entity-engine accessible).
   - Cause d'un blocage/hang recurrent identifiee : `HashCrypt.cryptUTF8(...)` declenche `SecureRandom` qui bloque sur l'entropie du conteneur (JVM 8 + `/dev/random`). **Correctif applique** : ajout de `-Djava.security.egd=file:/dev/./urandom` a `JAVA_TOOL_OPTIONS` dans `deploiement/20-srv/services/e6/compose.yaml` (commite ici + applique en direct sur `vulndb`, conteneur recree avec le meme volume `mv-e6_e6-ofbiz-runtime`, healthcheck OK).
@@ -57,7 +60,7 @@
 ## Reste a faire
 
 1. Finaliser OPNsense manuellement : WAN `10.85.4.10`, LAN `192.168.10.1`, VLAN/routage, NAT TCP 443, regles minimales.
-2. Reporter les 4 regles Suricata live (SID 9000026-9000029, SNI TLS) dans `deploiement/80-detection/tp-local.rules` et `documentation/08-regles-suricata.md`.
+2. Copier les SID `9000030-9000033` sur `nsm`, lancer `suricata -T`, redemarrer, executer `trigger-suricata-rules.sh`, puis capturer EveBox. Ensuite poursuivre D-06 par regle.
 3. Confirmer la rotation du mot de passe admin OFBiz (E6) puis creer les 13 comptes OFBiz + 3 comptes WordPress (E3) valides avec l'equipe, idealement via un script rejouable (`install-eX-*.sh`).
 4. Executer chemins d'exploitation (l'equipe rejoue elle-meme les 3 chaines) et confirmer 12 flags sans corriger vulnerabilites intentionnelles.
 5. Completer drafts `documentation/` (04-exploitation, 06-recette, 07-endpoints) avec captures et resultats reels une fois les chaines rejouees.
@@ -77,6 +80,6 @@
 - Interne : `192.168.10.0/24`; firewall LAN `192.168.10.1`; `vulndb` `192.168.10.50`.
 - NSM/EveBox : `192.168.10.30:5636`.
 - Acces local verifie le 2026-09-16 : WireGuard `conf_lab` actif; tunnel SSH actif; EveBox `http://127.0.0.1:5636/`, OPNsense `https://127.0.0.1:8443/` et registre `http://127.0.0.1:5001/` repondent HTTP `200`. Interface EveBox ouverte avec 7 alertes visibles.
-- Blocage acces moteur Suricata : nouveau SSH vers `etudiant@10.85.4.20` refuse le mot de passe historique `Defense2600!`; tunnel EveBox existant reste actif. Confirmer credentials du poste avant `ssh_nsm`.
+- Acces poste retabli avec credential tourne; ne pas versionner le secret. Authentification directe `etudiant` sur `nsm` et `vulndb` reste a confirmer pour audit CLI.
 - Orchestrateur : `deploiement/90-orchestration/deploy-maisonverte.sh`.
 - Verification : `deploiement/90-orchestration/check-all-services.sh` (`--list` pour endpoints seuls).
