@@ -16,7 +16,7 @@ mv_require_file "$SERVICE_DIR/elasticsearch.yml"
 mv_require_file "$SERVICE_DIR/kibana.yml"
 mv_require_file "$SERVICE_DIR/filebeat.yml"
 
-mkdir -p "$SERVICE_STATE/esdata" "$SERVICE_STATE/filebeat-data"
+mkdir -p "$SERVICE_STATE/filebeat-data"
 chmod 700 "$SERVICE_STATE"
 
 mv_log "starting defensive ELK stack with project $ELK_PROJECT"

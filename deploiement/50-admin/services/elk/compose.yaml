@@ -16,7 +16,7 @@ services:
         soft: -1
         hard: -1
     volumes:
-      - ../../../state/services/elk/esdata:/usr/share/elasticsearch/data
+      - elk-esdata:/usr/share/elasticsearch/data
       - ./elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
     networks:
       - net-admin
@@ -95,3 +95,6 @@ networks:
   net-admin:
     external: true
     name: net-admin
+
+volumes:
+  elk-esdata:
