@@ -1,0 +1,137 @@
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+@page { margin: 0; }
+body { font-family: "Liberation Sans", Arial, sans-serif; font-size: 10.5pt; color: #2a2a35; margin: 0; background: #eef0f5; }
+
+.hero { background: #13152c; color: #ffffff; padding: 28pt 34pt 24pt 34pt; }
+.hero-top { width: 100%; background: transparent; }
+.hero-top td { vertical-align: top; background: transparent; border: none; }
+.brand { font-size: 20pt; font-weight: bold; color: #ffffff; }
+.brand-sub { font-size: 8.5pt; color: #b6b8cc; margin-top: 2pt; }
+.badges { text-align: right; }
+.badge { display: inline-block; border: 1px solid #3c3f66; background: #1b1e3d; border-radius: 5pt; padding: 5pt 12pt; margin-left: 6pt; }
+.badge-label { font-size: 6.5pt; letter-spacing: 0.5pt; color: #9a9cc2; text-transform: uppercase; }
+.badge-value { font-size: 9.5pt; font-weight: bold; color: #ffffff; }
+.hero-rule { height: 2pt; margin: 14pt 0 16pt 0; background: #7c6ef0; }
+.hero h1 { font-size: 19pt; margin: 4pt 0 4pt 0; font-weight: bold; color: #ffffff; }
+.hero-desc { font-family: monospace; font-size: 8.5pt; color: #c6c8dd; margin: 0; }
+
+.page { padding: 18pt 34pt 30pt 34pt; }
+
+.callout { background: #fdf3e2; border-left: 3pt solid #dd9a3a; border-radius: 3pt; padding: 9pt 12pt; margin: 14pt 0; font-size: 9pt; }
+.callout b { color: #7a4c12; }
+
+.sec { margin-top: 22pt; }
+.sec-num { display: inline-block; width: 17pt; height: 17pt; line-height: 17pt; text-align: center; background: #5b4bda; color: #fff; font-size: 9pt; font-weight: bold; border-radius: 3pt; margin-right: 7pt; }
+.sec-title { font-size: 13pt; font-weight: bold; color: #1c1e3a; }
+.sec-rule { height: 1.5pt; background: #5b4bda; margin: 5pt 0 10pt 0; }
+
+table { border-collapse: collapse; width: 100%; margin: 6pt 0 12pt 0; background: #ffffff; }
+th { text-align: left; font-size: 7.8pt; text-transform: uppercase; letter-spacing: 0.3pt; color: #6a6c85; border-bottom: 1.5pt solid #d8d9e6; padding: 5pt 6pt; background: #ffffff; }
+td { font-size: 8.6pt; padding: 5pt 6pt; border-bottom: 0.75pt solid #ecedf3; vertical-align: top; color: #2a2a35; }
+
+.small { font-size: 8pt; color: #66687d; }
+code { font-family: monospace; font-size: 8.3pt; background: #f1f1f7; padding: 1pt 3pt; border-radius: 2pt; }
+pre.small { font-size: 7.6pt; background: #fbfbfd; border: 0.75pt solid #e2e3ee; padding: 8pt; color: #3a3d55; }
+.diagram { border: 1.25pt dashed #c7c9dc; border-radius: 4pt; padding: 16pt; text-align: center; background: #ffffff; margin: 8pt 0 14pt 0; }
+.footer { margin-top: 26pt; font-size: 7.8pt; color: #9698ac; border-top: 0.75pt solid #dcddea; padding-top: 6pt; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <table class="hero-top"><tr>
+    <td>
+      <div class="brand">2600</div>
+      <div class="brand-sub">École de cybersécurité</div>
+    </td>
+    <td class="badges">
+      <span class="badge"><div class="badge-label">Document</div><div class="badge-value">Attaquant</div></span>
+      <span class="badge"><div class="badge-label">Profil</div><div class="badge-value">E — MaisonVerte</div></span>
+      <span class="badge"><div class="badge-label">Promotion</div><div class="badge-value">Master 1</div></span>
+    </td>
+  </tr></table>
+  <div class="hero-rule"></div>
+  <h1>Kobayashi Maru —<br>Document Attaquant</h1>
+  <p class="hero-desc">Schéma réseau minimal + accès initiaux — KM-M1-CDC-E · 2026</p>
+</div>
+
+<div class="page">
+
+<div class="callout">
+<b>Rappel — socle technique §9, grille de recette P-07/P-08</b><br>
+Ce document ne contient <b>que</b> le périmètre publié et les accès de test. <b>Ne doit pas</b> y figurer : liste des CVE, plan des réseaux Docker internes, credentials internes, emplacement des flags, schéma des zones internes.
+</div>
+
+<div class="sec">
+<div class="sec-head"><span class="sec-num">1</span><span class="sec-title">Contexte de la mission</span></div>
+<div class="sec-rule"></div>
+
+<table>
+<tr><th>Champ</th><th>Valeur</th></tr>
+<tr><td>Entreprise fictive</td><td>MaisonVerte SAS</td></tr>
+<tr><td>Secteur</td><td>Jardinerie et décoration d'intérieur — retail omnicanal</td></tr>
+<tr><td>Périmètre autorisé</td><td>Uniquement les services publiés du groupe assigné, atteints via <code>10.85.4.10</code> (voir section 3). Aucune exploration hors de ce périmètre.</td></tr>
+<tr><td>Dates / horaires de la mission</td><td>Phase 2 de l'exercice — Jour 3 (13h00-18h00) et Jour 4 (09h30-18h00)</td></tr>
+</table>
+
+<p>MaisonVerte SAS est une enseigne de jardinerie et décoration d'intérieur (540 salariés, 12 points de vente en région, un entrepôt logistique, siège à Nantes). La vente en ligne représente 40 % du chiffre d'affaires. Le système d'information fait l'objet d'un test d'intrusion avant la période commerciale de fin d'année.</p>
+</div>
+
+<div class="sec">
+<div class="sec-head"><span class="sec-num">2</span><span class="sec-title">Schéma réseau partiel</span></div>
+<div class="sec-rule"></div>
+<p class="small">Uniquement le point d'entrée et les services publiés — pas de réseaux internes, pas de zones.</p>
+
+<div class="diagram">
+<pre class="small" style="text-align:left; display:inline-block; border:none; background:transparent; padding:0;">
+      (Internet / VPN d'attaque)
+                 |
+                 v
+       OPNsense  10.85.4.10 : 443   (unique point d'entrée)
+                 |
+                 v
+        reverse proxy public (TLS)
+       /        |        |        \
+ shop.       api.      vendeurs.  cache.
+ maisonverte.fr        maisonverte.fr
+</pre>
+</div>
+</div>
+
+<div class="sec">
+<div class="sec-head"><span class="sec-num">3</span><span class="sec-title">Accès initiaux</span></div>
+<div class="sec-rule"></div>
+
+<table>
+<tr><th>Service publié</th><th>URL / IP</th><th>Port</th><th>Type d'accès</th><th>Compte (bas privilège)</th></tr>
+<tr><td>Boutique en ligne</td><td><code>https://shop.maisonverte.fr/</code> (<code>10.85.4.10</code>)</td><td>443</td><td>HTTPS public</td><td>aucun — accès anonyme</td></tr>
+<tr><td>API mobile</td><td><code>https://api.maisonverte.fr/health</code> (<code>10.85.4.10</code>)</td><td>443</td><td>HTTPS public</td><td>aucun — accès anonyme</td></tr>
+<tr><td>Portail vendeurs</td><td><code>https://vendeurs.maisonverte.fr/</code> (<code>10.85.4.10</code>)</td><td>443</td><td>HTTPS public</td><td>aucun — accès anonyme</td></tr>
+<tr><td>Cache / reverse proxy</td><td><code>https://cache.maisonverte.fr/</code> (<code>10.85.4.10</code>)</td><td>443</td><td>HTTPS public</td><td>aucun — accès anonyme</td></tr>
+</table>
+
+<p class="small">Pas de DNS dans le lab : résolution manuelle nécessaire. Terminal : <code>curl -k --resolve &lt;nom&gt;:443:10.85.4.10 https://&lt;nom&gt;/</code>. Navigateur : ajouter temporairement les 4 noms ci-dessus vers <code>10.85.4.10</code> dans <code>/etc/hosts</code>.</p>
+</div>
+
+<div class="sec">
+<div class="sec-head"><span class="sec-num">4</span><span class="sec-title">Règles d'engagement et contacts</span></div>
+<div class="sec-rule"></div>
+
+<table>
+<tr><th>Élément</th><th>Détail</th></tr>
+<tr><td>Périmètre autorisé</td><td>Uniquement les 4 services listés en section 3, atteints via <code>10.85.4.10</code>. Toute autre adresse ou segment est hors périmètre.</td></tr>
+<tr><td>Interdit</td><td>Attaquer un autre groupe que celui qui vous est assigné, attaquer l'infrastructure de l'école ou LabAuto, les attaques par déni de service, la destruction de données chez le builder.</td></tr>
+<tr><td>Procédure si un service casse</td><td>Prévenir immédiatement le builder et l'équipe pédagogique.</td></tr>
+<tr><td>Contact builder</td><td>Adam Attafi — <code>adam.attafi@ecole2600.com</code></td></tr>
+<tr><td>Contact équipe pédagogique</td><td>assistants@ecole2600.com</td></tr>
+</table>
+</div>
+
+<div class="footer">Modèle généré à partir de document-attaquant-template.md. Document attaquant — usage interne, groupe MaisonVerte.</div>
+
+</div>
+</body>
+</html>

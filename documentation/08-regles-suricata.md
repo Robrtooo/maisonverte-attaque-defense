@@ -1,6 +1,14 @@
 # 08 · Règles Suricata
 
-*Liste des règles locales déployées sur `nsm` (`192.168.10.30`), fichier `/etc/suricata/rules/tp-local.rules`. Déployé et validé le 16/09/2026 (`suricata -T` : 0 erreur ; service redémarré, 52604 règles chargées au total avec les 19 nouvelles, 0 échec).*
+*Liste des règles locales déployées sur `nsm` (`192.168.10.30`), fichier `/etc/suricata/rules/tp-local.rules`. Déployé et validé le 16/09/2026 (`suricata -T` : 0 erreur ; service redémarré, 52613 règles chargées au total avec les 23 nouvelles, 0 échec).*
+
+## Constat important (test réel, 16/09/2026)
+
+E2/E3/E5 sont publiés en TLS (443, nginx par défaut = cipher ECDHE, forward secrecy). Un test réel depuis le VPN a confirmé que :
+
+- Les **signatures de contenu HTTP** (traversal `/files../`, user-agent `sqlmap`, en-tête canary `AI-CANARY-*`, etc.) **ne se déclenchent pas** sur ce trafic : Suricata ne peut pas inspecter un contenu chiffré sans les clés de session, et la capture passive de clé RSA ne fonctionne pas avec ECDHE/TLS 1.3. Ces règles restent dans le fichier (documentent la logique de détection attendue, s'activeraient sur un flux en clair) mais **ne doivent pas être présentées comme preuve réseau** pour les services servis derrière E2.
+- Les **règles SNI TLS** (9000026-9000029, ajoutées suite à ce constat) **se sont bien déclenchées** : test à 10:58:48 le 16/09/2026, alertes `MV N1 TLS SNI shop.maisonverte.fr`, `vendeurs.maisonverte.fr` et `cache.maisonverte.fr` vues dans `fast.log` pour la source `10.200.0.67` (poste VPN) vers `192.168.10.50:443`. C'est la détection réseau fiable pour le trafic N1 réel.
+- **Preuve applicative** (contenu réel de la requête/exploit) : à chercher dans les logs des conteneurs via ELK/Filebeat (ex. access log nginx d'E2), qui voient le trafic en clair après déchiffrement côté conteneur — pas dans Suricata pour ce qui passe par E2.
 
 ---
 
@@ -68,6 +76,15 @@ Ces 6 règles existaient déjà dans le fichier avant notre intervention — fou
 |---|---|---|
 | 9000025 | Accès direct poste → port interne normalement non joignable | source `192.168.10.10` (poste) vers `5432/27017/6379/9200/445/9999/8443` |
 
+### Visibilité N1 fiable — SNI TLS (fonctionne malgré le chiffrement)
+
+| SID | Service | Message | Statut |
+|---|---|---|---|
+| 9000026 | E2 | SNI `cache.maisonverte.fr` | **Déclenchée et vérifiée** 16/09/2026 10:58:48 |
+| 9000027 | E3 | SNI `shop.maisonverte.fr` | **Déclenchée et vérifiée** 16/09/2026 10:58:48 |
+| 9000028 | E5 | SNI `vendeurs.maisonverte.fr` | **Déclenchée et vérifiée** 16/09/2026 10:58:48 |
+| 9000029 | E4 (sain) | SNI `api.maisonverte.fr` | non testée (service sain, pas prioritaire) |
+
 ---
 
 ## Limite connue
@@ -79,7 +96,7 @@ La sonde `nsm` est un pont L2 transparent entre le segment « poste » et `vulnd
 - Fichier : `/etc/suricata/rules/tp-local.rules` sur `nsm` (`192.168.10.30`).
 - Sauvegarde de l'ancien fichier (socle plateforme seul) : `/etc/suricata/rules/tp-local.rules.bak-20260916`.
 - Validation : `sudo suricata -T -c /etc/suricata/suricata.yaml` → 0 erreur.
-- Application : `sudo systemctl restart suricata` → 52604 règles chargées, 0 échec.
+- Application : `sudo systemctl restart suricata` → 52613 règles chargées, 0 échec (dernière itération avec les règles SNI).
 - Copie versionnée du fichier déployé : [`deploiement/80-detection/tp-local.rules`](../deploiement/80-detection/tp-local.rules).
 
 ## Reste à faire
