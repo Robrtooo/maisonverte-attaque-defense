@@ -2,8 +2,9 @@
 
 ## Git
 
-- Branche : `work/integration-deploy`.
-- Remote : `origin/work/integration-deploy`.
+- Branche principale et branche GitHub par defaut : `main`.
+- `main` inclut `feat/deployment-scripts`, `work/current-task5`, `work/current-task6`, `work/current-task7` et `work/integration-deploy`.
+- `main` et `work/integration-deploy` sont synchronisees avant reprise de la chaine A.
 - Toute modification de script doit etre committee et poussee.
 - Documentation de travail : `documentation/` (drafts courts deja pousses).
 - Inventaire endpoints : `documentation/07-endpoints-et-verification.md`.
