@@ -60,5 +60,5 @@ done
 
 mv_log "validating E16 mounted business data"
 docker exec crm-srv01 sh -c \
-  "test -s /usr/share/nginx/html/data/clients.json && test -s /usr/share/nginx/html/data/vendors.json && test -s /usr/share/nginx/html/data/accounts.csv && nginx -t"
+  "test -s /srv/maisonverte-data/clients.json && test -s /srv/maisonverte-data/vendors.json && test -s /srv/maisonverte-data/accounts.csv && nginx -t"
 mv_log "versioned business datasets imported (workflow $WORKFLOW_VERSION)"

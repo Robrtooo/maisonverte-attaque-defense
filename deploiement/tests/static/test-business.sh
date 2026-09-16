@@ -115,6 +115,7 @@ if [[ -f "$E15_COMPOSE" && -f "$E16_COMPOSE" ]]; then
   require_condition "E15 and E16 publish no host ports" "$(! grep -q '^[[:space:]]*ports:' "$E15_COMPOSE" "$E16_COMPOSE"; echo $?)"
   require_condition "E15 and E16 declare healthchecks" "$(grep -q 'healthcheck:' "$E15_COMPOSE" && grep -q 'healthcheck:' "$E16_COMPOSE"; echo $?)"
   require_condition "E16 mounts business data outside its read-only web root" "$(grep -q '../../../data:/srv/maisonverte-data:ro' "$E16_COMPOSE" && ! grep -q '/usr/share/nginx/html/data/.*:ro' "$E16_COMPOSE"; echo $?)"
+  require_condition "business seeding validates the separate E16 data mount" "$(grep -q '/srv/maisonverte-data/clients.json' "$SEED_ALL" && ! grep -q '/usr/share/nginx/html/data/clients.json' "$SEED_ALL"; echo $?)"
   require_condition "E15 persists its MariaDB database" "$(grep -q 'e15-zabbix-mysql:/var/lib/mysql' "$E15_COMPOSE"; echo $?)"
   require_condition "E15 and E16 use restart, pull policy and log rotation" "$(for compose in "$E15_COMPOSE" "$E16_COMPOSE"; do grep -q 'restart: unless-stopped' "$compose" && grep -q 'pull_policy: never' "$compose" && grep -q 'max-size: "10m"' "$compose" && grep -q 'max-file: "3"' "$compose" || exit 1; done; echo $?)"
   memory_total="$(awk '/mem_limit:/ {value=$2; gsub(/[^0-9]/, "", value); total += value} END {print total + 0}' "$E15_COMPOSE" "$E16_COMPOSE")"
