@@ -63,5 +63,6 @@
 - Exposition : `10.85.4.0/24`; firewall WAN `10.85.4.10`; poste `10.85.4.20`.
 - Interne : `192.168.10.0/24`; firewall LAN `192.168.10.1`; `vulndb` `192.168.10.50`.
 - NSM/EveBox : `192.168.10.30:5636`.
+- Acces local verifie le 2026-09-16 : WireGuard `conf_lab` actif; tunnel SSH actif; EveBox `127.0.0.1:5636`, OPNsense `127.0.0.1:8443` et registre `127.0.0.1:5001` repondent HTTP `200`.
 - Orchestrateur : `deploiement/90-orchestration/deploy-maisonverte.sh`.
 - Verification : `deploiement/90-orchestration/check-all-services.sh` (`--list` pour endpoints seuls).
