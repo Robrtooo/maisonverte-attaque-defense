@@ -1,0 +1,57 @@
+# --- Regles locales TP defense/attaque 2600 (sid 9000001+) ---
+# Objectif pedagogique : garantir un premier signal, meme si les regles ET/Open
+# ne matchent pas le trafic fabrique par l'etudiant.
+alert icmp any any -> $HOME_NET any (msg:"TP LOCAL ICMP echo request vers le segment protege"; itype:8; threshold:type limit,track by_src,count 1,seconds 30; classtype:not-suspicious; sid:9000001; rev:1;)
+alert http any any -> $HOME_NET any (msg:"TP LOCAL marqueur de test (URI /tp-suricata-test)"; flow:established,to_server; http.uri; content:"/tp-suricata-test"; nocase; classtype:not-suspicious; sid:9000002; rev:1;)
+alert tcp any any -> $HOME_NET 3306 (msg:"TP LOCAL connexion MySQL/MariaDB vers le segment protege"; flow:to_server,established; threshold:type limit,track by_src,count 1,seconds 60; classtype:attempted-recon; sid:9000003; rev:1;)
+alert tcp any any -> $HOME_NET 6379 (msg:"TP LOCAL connexion Redis (sans authentification) vers le segment protege"; flow:to_server,established; threshold:type limit,track by_src,count 1,seconds 60; classtype:attempted-recon; sid:9000004; rev:1;)
+alert http any any -> $HOME_NET any (msg:"TP LOCAL injection SQL probable (UNION SELECT dans l'URI)"; flow:established,to_server; http.uri; content:"union"; nocase; content:"select"; nocase; distance:0; classtype:web-application-attack; sid:9000005; rev:1;)
+alert tcp any any -> $HOME_NET any (msg:"TP LOCAL balayage de ports probable (SYN vers >15 ports en 10s)"; flags:S,12; threshold:type both,track by_src,count 15,seconds 10; classtype:attempted-recon; sid:9000006; rev:1;)
+
+# --- Regles MaisonVerte (groupe G04) - sid 9000007+ ---
+# Ajoutees le 16/09/2026. Les 6 regles ci-dessus sont le socle fourni par la
+# plateforme (une par groupe) et ne sont pas modifiees ; nos regles reprennent
+# la numerotation a partir de 9000007 pour eviter toute collision de SID.
+#
+# Limite connue (documentation/05-detection.md) : la sonde est un pont L2
+# entre le segment "poste" et vulndb. Elle voit tout le trafic qui atteint
+# vulndb, y compris le trafic externe N1 via le NAT OPNsense, mais PAS le
+# trafic qui reste interne aux reseaux Docker de vulndb (la plupart des
+# pivots N2/N3 apres E2/E3/E5). E2/E3/E5 sont servis en TLS (443) : les
+# signatures de contenu HTTP ci-dessous ne matchent que si l'inspection se
+# fait en clair (tests locaux, ou en cas de decouverte de service annexe en
+# HTTP) ; le SNI TLS reste visible dans tous les cas et permet deja de savoir
+# quel vhost est cible. ELK/Filebeat complete la visibilite manquante.
+
+# Reconnaissance
+alert http any any -> $HOME_NET any (msg:"MV RECON user-agent sqlmap"; flow:to_server,established; http.user_agent; content:"sqlmap"; nocase; sid:9000007; rev:1; classtype:attempted-recon;)
+alert http any any -> $HOME_NET any (msg:"MV RECON user-agent Nikto"; flow:to_server,established; http.user_agent; content:"Nikto"; nocase; sid:9000008; rev:1; classtype:attempted-recon;)
+alert http any any -> $HOME_NET any (msg:"MV RECON outil de brute-force de repertoires (gobuster/dirbuster/ffuf/wfuzz)"; flow:to_server,established; http.user_agent; pcre:"/gobuster|dirbuster|ffuf|wfuzz/i"; sid:9000009; rev:1; classtype:attempted-recon;)
+
+# N1 : E2, E3, E5
+alert http any any -> $HOME_NET any (msg:"MV E2 nginx alias path traversal (/files../)"; flow:to_server,established; http.uri; content:"/files../"; sid:9000010; rev:1; reference:url,github.com/vulhub/vulhub/tree/master/nginx/insecure-configuration; classtype:web-application-attack;)
+alert http any any -> $HOME_NET any (msg:"MV E3 WordPress pwnscriptum Host header command injection"; flow:to_server,established; http.uri; content:"/wp-login.php"; http.header; content:"${run{"; sid:9000011; rev:1; reference:cve,2016-10033; classtype:web-application-attack;)
+alert http any any -> $HOME_NET any (msg:"MV E5 Tomcat PUT JSP write (CVE-2017-12615)"; flow:to_server,established; http.method; content:"PUT"; http.uri; content:".jsp"; endswith; sid:9000012; rev:1; reference:cve,2017-12615; classtype:web-application-attack;)
+
+# Pivots internes : E6, E7, E8, E9, E12, E14
+alert http any any -> $HOME_NET any (msg:"MV E7 Elasticsearch groovy dynamic script RCE (CVE-2015-1427)"; flow:to_server,established; http.uri; content:"_search"; http.request_body; content:"\"lang\":\"groovy\""; sid:9000013; rev:1; reference:cve,2015-1427; classtype:attempted-admin;)
+alert tcp any any -> $HOME_NET 6379 (msg:"MV E8 Redis SLAVEOF/REPLICAOF abuse (rogue master RCE)"; flow:to_server,established; content:"SLAVEOF"; nocase; sid:9000014; rev:1; reference:url,github.com/vulhub/vulhub/tree/master/redis/4-unacc; classtype:attempted-admin;)
+alert tcp any any -> $HOME_NET 6379 (msg:"MV E8 Redis MODULE LOAD abuse"; flow:to_server,established; content:"MODULE"; nocase; content:"LOAD"; nocase; distance:0; sid:9000015; rev:1; classtype:attempted-admin;)
+alert http any any -> $HOME_NET any (msg:"MV E14 Jenkins CLI jar download (reconnaissance CVE-2024-23897)"; flow:to_server,established; http.uri; content:"/jnlpJars/jenkins-cli.jar"; sid:9000016; rev:1; reference:cve,2024-23897; classtype:attempted-recon;)
+alert http any any -> $HOME_NET any (msg:"MV E14 Jenkins CLI lecture fichier arbitraire (@/chemin, CVE-2024-23897)"; flow:to_server,established; http.uri; content:"/cli"; http.request_body; content:"@/"; sid:9000017; rev:1; reference:cve,2024-23897; classtype:attempted-admin;)
+alert http any any -> $HOME_NET 9999 (msg:"MV E12 XXL-JOB executor GLUE_SHELL RCE non authentifie"; flow:to_server,established; http.uri; content:"/run"; http.request_body; content:"GLUE_SHELL"; sid:9000018; rev:1; reference:url,github.com/vulhub/vulhub/tree/master/xxl-job/unacc; classtype:attempted-admin;)
+alert http any any -> $HOME_NET any (msg:"MV E11 mongo-express checkValid RCE (CVE-2019-10758)"; flow:to_server,established; http.uri; content:"/checkValid"; http.request_body; content:"constructor.constructor"; sid:9000019; rev:1; reference:cve,2019-10758; classtype:attempted-admin;)
+alert http any any -> $HOME_NET any (msg:"MV E6 OFBiz ProgramExport auth bypass (CVE-2023-51467)"; flow:to_server,established; http.uri; content:"/webtools/control/ProgramExport"; content:"USERNAME="; distance:0; sid:9000020; rev:1; reference:cve,2023-51467; classtype:web-application-attack;)
+alert tcp any any -> $HOME_NET 445 (msg:"MV E9 Samba ecriture objet .so sur partage (prealable CVE-2017-7494)"; flow:to_server,established; content:".so"; nocase; sid:9000021; rev:1; reference:cve,2017-7494; classtype:attempted-admin;)
+alert http any any -> $HOME_NET any (msg:"MV E13 Struts2 S2-045 OGNL dans Content-Type"; flow:to_server,established; http.header; content:"multipart/form-data"; content:"%{"; distance:0; sid:9000022; rev:1; reference:url,github.com/vulhub/vulhub/tree/master/struts2/s2-045; classtype:web-application-attack;)
+
+# DATA/SHOPS : E10
+alert tcp any any -> $HOME_NET 5432 (msg:"MV E10 PostgreSQL COPY FROM PROGRAM (CVE-2019-9193)"; flow:to_server,established; content:"COPY"; nocase; content:"PROGRAM"; nocase; distance:0; sid:9000023; rev:1; reference:cve,2019-9193; classtype:attempted-admin;)
+
+# Leurres / canary IA
+alert http any any -> $HOME_NET any (msg:"MV CANARY jeton de prompt-injection IA utilise (AI-CANARY-*)"; flow:to_server,established; content:"AI-CANARY-"; nocase; sid:9000024; rev:1; classtype:trojan-activity;)
+
+# Violation d'isolation : ports internes qui ne doivent jamais etre atteints
+# directement depuis le poste d'attaque (uniquement via pivot applicatif
+# intra-Docker). 192.168.10.10 = poste (fixe, voir TOPOLOGIE.txt).
+alert tcp 192.168.10.10 any -> $HOME_NET [5432,27017,6379,9200,445,9999,8443] (msg:"MV ISOLATION acces direct poste vers un port interne normalement non joignable"; flow:to_server; sid:9000025; rev:1; classtype:policy-violation;)
