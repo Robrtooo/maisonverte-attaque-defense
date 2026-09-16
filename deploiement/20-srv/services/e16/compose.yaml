@@ -10,13 +10,11 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - ./html:/usr/share/nginx/html:ro
-      - ../../../data/clients.json:/usr/share/nginx/html/data/clients.json:ro
-      - ../../../data/vendors.json:/usr/share/nginx/html/data/vendors.json:ro
-      - ../../../data/accounts.csv:/usr/share/nginx/html/data/accounts.csv:ro
+      - ../../../data:/srv/maisonverte-data:ro
     networks:
       - net-srv
     healthcheck:
-      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1/health && test -s /usr/share/nginx/html/data/clients.json"]
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1/health && test -s /srv/maisonverte-data/clients.json"]
       interval: 10s
       timeout: 3s
       retries: 6
