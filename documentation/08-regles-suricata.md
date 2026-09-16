@@ -1,6 +1,6 @@
 # 08 · Règles Suricata
 
-*Référence versionnée des règles locales. Le `nsm` possède actuellement les SID `9000001-9000029`; les quatre règles globales `9000030-9000033` sont prêtes dans Git mais restent à copier et valider avec `suricata -T`.*
+*Référence des règles locales versionnées et déployées sur `nsm`. Les 33 SID `9000001-9000033` sont actifs; validation `suricata -T`, redémarrage et tests EveBox effectués le 16/09/2026.*
 
 ## Constat important (test réel, 16/09/2026)
 
@@ -23,7 +23,7 @@ Sources contrôlées : `01-enonce.pdf`, `02-grille-recette.pdf`, `03-socle-techn
 | Paquets capturés | 105 504 |
 | Erreurs / pertes noyau | 0 / 0 |
 | Alertes produites / supprimées par seuil | 241 / 1 898 |
-| Règles locales actives observées | 29 règles, SID `9000001-9000029` |
+| Règles locales actives observées | 33 règles, SID `9000001-9000033` |
 | Règles locales versionnées | 33 règles, 33 SID uniques |
 
 Le moteur et la capture fonctionnent. La valeur live `52 608` ne correspond toutefois pas aux `52 613` consignées lors du redémarrage initial : vérifier directement `suricata.log` et `suricata --dump-config` sur `nsm` avant le rendu.
@@ -34,10 +34,10 @@ Le moteur et la capture fonctionnent. La valeur live `52 608` ne correspond tout
 |---|---|---|---|
 | D-01 | EveBox accessible et alimenté | **OK** | API EveBox active, événements et statistiques présents |
 | D-02 / R-06 | trafic publié visible | **OK** | TLS/SNI E2-E5 observé et horodaté |
-| D-03 | règles dans `tp-local.rules` | **PARTIEL** | 29 actives ; 4 globales prêtes dans Git à déployer |
+| D-03 | règles dans `tp-local.rules` | **OK** | 33 règles actives et versionnées |
 | D-04 | SID locaux à partir de `9000001` | **OK** | version Git : `9000001-9000033`, sans doublon |
-| D-05 | rechargement sans erreur | **OK à recapturer** | stats live : 0 règle en échec ; conserver sortie fraîche de `suricata -T` |
-| D-06 | chaque règle déclenchée au moins une fois | **NON CONFORME** | 7 SID observés sur 29 actives ; 4 globales non encore actives |
+| D-05 | rechargement sans erreur | **OK** | `suricata -T` réussi ; 52 612 règles chargées, 0 échec |
+| D-06 | chaque règle déclenchée au moins une fois | **NON CONFORME** | 11 SID observés sur 33 ; 22 sans preuve réelle |
 | D-07 | journaux applicatifs consultables | **OK** | Filebeat/ELK collecte les logs Docker |
 
 ### SID réellement observés
@@ -157,14 +157,14 @@ Ces 6 règles existaient déjà dans le fichier avant notre intervention — fou
 | 9000028 | E5 | SNI `vendeurs.maisonverte.fr` | **Déclenchée et vérifiée** 16/09/2026 10:58:48 |
 | 9000029 | E4 (sain) | SNI `api.maisonverte.fr` | non testée (service sain, pas prioritaire) |
 
-### Règles globales prêtes à déployer
+### Règles globales déployées et testées
 
 | SID | Signal | Test inoffensif |
 |---|---|---|
-| 9000030 | traversal générique dans URI HTTP | `GET /../../etc/passwd` |
-| 9000031 | méthode HTTP `PUT`, `DELETE` ou `PATCH` | `PUT /tp-suricata-method-test` |
-| 9000032 | marqueur d'exploit dans corps HTTP | corps contenant `GLUE_SHELL` |
-| 9000033 | connexion vers service sensible | TCP vers `22/445/5432/5636/6379/9200/9999` |
+| 9000030 | traversal générique dans URI HTTP | `GET /../../etc/passwd` ; EveBox : 2 alertes |
+| 9000031 | méthode HTTP `PUT`, `DELETE` ou `PATCH` | `PUT /tp-suricata-method-test` ; EveBox : 2 alertes |
+| 9000032 | marqueur d'exploit dans corps HTTP | corps contenant `GLUE_SHELL` ; EveBox : 2 alertes |
+| 9000033 | connexion vers service sensible | TCP vers `22/445/5432/5636/6379/9200/9999` ; EveBox : 3 alertes |
 
 Générateur : `deploiement/80-detection/trigger-suricata-rules.sh`. Il envoie seulement des marqueurs IDS vers EveBox et n'exécute aucun exploit.
 
@@ -179,9 +179,9 @@ La sonde `nsm` est un pont L2 transparent entre le segment « poste » et `vulnd
 - Fichier : `/etc/suricata/rules/tp-local.rules` sur `nsm` (`192.168.10.30`).
 - Sauvegarde de l'ancien fichier (socle plateforme seul) : `/etc/suricata/rules/tp-local.rules.bak-20260916`.
 - Validation : `sudo suricata -T -c /etc/suricata/suricata.yaml` → 0 erreur.
-- Application : `sudo systemctl restart suricata` → 52613 règles chargées, 0 échec (dernière itération avec les règles SNI).
+- Application : `systemctl restart suricata` → 52 612 règles chargées, 0 échec.
 - Copie versionnée du fichier déployé : [`deploiement/80-detection/tp-local.rules`](../deploiement/80-detection/tp-local.rules).
-- État actuel : SID `9000030-9000033` non encore copiés sur `nsm`, faute d'authentification SSH directe valide.
+- Sauvegarde avant mise à jour : `/etc/suricata/rules/tp-local.rules.bak-20260916-121837`.
 
 ## Reste à faire
 

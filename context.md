@@ -46,10 +46,10 @@
 ## Session terrain du 2026-09-16 (post-acces reel)
 
 - Acces reel confirme sur les 4 machines lab (poste, OPNsense, nsm, vulndb) via tunnel SSH fourni.
-- Suricata live sur `nsm` a 29 SID definis (6 baseline + 23 G04, dont SNI/TLS `9000026-9000029`). Git contient aussi 4 regles globales `9000030-9000033`, non encore deployees.
-- Audit EveBox : 7 SID sur 29 ont declenche (`9000001`, `9000002`, `9000006`, `9000026-9000029`). D-06 non conforme tant que 22 regles restent sans preuve. Voir `documentation/08-regles-suricata.md`.
-- Stats live : 52 608 regles chargees, 0 echec, 105 504 paquets, 0 drop. Ecart a clarifier avec les 52 613 consignees initialement.
-- Regles globales ajoutees dans Git : traversal HTTP, methodes `PUT/DELETE/PATCH`, marqueurs de payload, acces aux services sensibles. Script inoffensif de test : `deploiement/80-detection/trigger-suricata-rules.sh`.
+- Suricata live sur `nsm` a 33 SID definis (`9000001-9000033`) et synchronises avec Git.
+- Audit EveBox : 11 SID sur 33 ont declenche. Les SID globaux `9000030-9000033` ont respectivement 2, 2, 2 et 3 alertes. D-06 reste non conforme pour 22 regles sans preuve.
+- Dernier redemarrage : 52 612 regles chargees, 0 echec. `suricata -T` reussi; services Suricata et EveBox actifs.
+- Regles globales deployees : traversal HTTP, methodes `PUT/DELETE/PATCH`, marqueurs de payload, acces aux services sensibles. Script inoffensif de test : `deploiement/80-detection/trigger-suricata-rules.sh`.
 - Tests statiques detection : 0 echec, 33 SID uniques, couverture E2/E3/E5-E14 et familles globales validee.
 - E2 (`cache.maisonverte.fr`) : traversal `/files../` confirme exploitable en conditions WAN reelles (lecture de `runbook.txt` via l'alias `/files -> /home`). Meme requete sur `flag.txt` renvoie 403 (proprietaire du fichier monte != UID nginx, a investiguer si utilise comme preuve de flag).
 - E6 OFBiz (`backoffice-srv01`) : le compte `admin` utilisait encore le mot de passe demo par defaut `ofbiz` (jamais rotate). RCE Groovy confirme via `/webtools/control/ProgramExport` (delegator entity-engine accessible).
@@ -60,7 +60,7 @@
 ## Reste a faire
 
 1. Finaliser OPNsense manuellement : WAN `10.85.4.10`, LAN `192.168.10.1`, VLAN/routage, NAT TCP 443, regles minimales.
-2. Copier les SID `9000030-9000033` sur `nsm`, lancer `suricata -T`, redemarrer, executer `trigger-suricata-rules.sh`, puis capturer EveBox. Ensuite poursuivre D-06 par regle.
+2. Poursuivre D-06 pour les 22 SID non prouves : replay, capture EveBox, auteur/prompt et preuve ELK lorsque trafic chiffre ou intra-Docker.
 3. Confirmer la rotation du mot de passe admin OFBiz (E6) puis creer les 13 comptes OFBiz + 3 comptes WordPress (E3) valides avec l'equipe, idealement via un script rejouable (`install-eX-*.sh`).
 4. Executer chemins d'exploitation (l'equipe rejoue elle-meme les 3 chaines) et confirmer 12 flags sans corriger vulnerabilites intentionnelles.
 5. Completer drafts `documentation/` (04-exploitation, 06-recette, 07-endpoints) avec captures et resultats reels une fois les chaines rejouees.
