@@ -1,0 +1,41 @@
+services:
+  ofbiz:
+    image: vulhub/ofbiz:18.12.10
+    pull_policy: never
+    container_name: backoffice-srv01
+    restart: unless-stopped
+    mem_limit: 1024m
+    environment:
+      JAVA_TOOL_OPTIONS: "-Xms256m -Xmx768m"
+    command: ["java", "-jar", "./build/libs/ofbiz.jar"]
+    expose:
+      - "8443"
+    volumes:
+      - e6-ofbiz-runtime:/usr/src/apache-ofbiz/runtime
+      - ./content:/opt/maisonverte/content:ro
+      - ../../../state/services/e6/flag.txt:/opt/maisonverte/flag.txt:ro
+    networks:
+      - mv-c-edge
+      - mv-c-core
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c '</dev/tcp/127.0.0.1/8443'"]
+      interval: 15s
+      timeout: 5s
+      retries: 16
+      start_period: 60s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  e6-ofbiz-runtime:
+
+networks:
+  mv-c-edge:
+    external: true
+    name: mv-c-edge
+  mv-c-core:
+    external: true
+    name: mv-c-core

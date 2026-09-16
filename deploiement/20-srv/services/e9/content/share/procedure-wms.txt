@@ -1,0 +1,8 @@
+Procedure de transfert WMS - revision 2026-09-15
+
+1. Ouvrir l'interface interne http://wms-shops01:8080/.
+2. Deposer le bordereau de preparation avec le formulaire d'import.
+3. Conserver le type de formulaire multipart/form-data.
+4. Verifier le numero de lot affiche avant validation logistique.
+
+Cette procedure concerne uniquement le service WMS.

@@ -1,0 +1,6 @@
+MaisonVerte back-office integration note
+
+Marketing file exchanges use the guest SMB share named myshare on
+files-srv01. Its server-side path is /home/share.
+
+No other internal service is required for this integration.
