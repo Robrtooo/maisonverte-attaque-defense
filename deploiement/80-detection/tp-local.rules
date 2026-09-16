@@ -13,15 +13,33 @@ alert tcp any any -> $HOME_NET any (msg:"TP LOCAL balayage de ports probable (SY
 # plateforme (une par groupe) et ne sont pas modifiees ; nos regles reprennent
 # la numerotation a partir de 9000007 pour eviter toute collision de SID.
 #
-# Limite connue (documentation/05-detection.md) : la sonde est un pont L2
-# entre le segment "poste" et vulndb. Elle voit tout le trafic qui atteint
-# vulndb, y compris le trafic externe N1 via le NAT OPNsense, mais PAS le
-# trafic qui reste interne aux reseaux Docker de vulndb (la plupart des
-# pivots N2/N3 apres E2/E3/E5). E2/E3/E5 sont servis en TLS (443) : les
-# signatures de contenu HTTP ci-dessous ne matchent que si l'inspection se
-# fait en clair (tests locaux, ou en cas de decouverte de service annexe en
-# HTTP) ; le SNI TLS reste visible dans tous les cas et permet deja de savoir
-# quel vhost est cible. ELK/Filebeat complete la visibilite manquante.
+# Limite connue et VERIFIEE en test reel le 16/09/2026 (documentation/05-detection.md) :
+# la sonde est un pont L2 entre le segment "poste" et vulndb. Elle voit tout
+# le trafic qui atteint vulndb, y compris le trafic externe N1 via le NAT
+# OPNsense (confirme : nos requetes de test via le VPN apparaissent bien dans
+# fast.log/eve.json), mais PAS le trafic qui reste interne aux reseaux Docker
+# de vulndb (la quasi-totalite des pivots N2/N3 apres E2/E3/E5, qui restent
+# intra-hote). E2/E3/E5 sont en outre serVIS EN TLS (443, TLSv1.2/1.3 avec
+# cipher ECDHE par defaut nginx) : nos tests reels (traversal /files../,
+# user-agent sqlmap, en-tete canary) N'ONT PAS declenche les signatures de
+# contenu HTTP ci-dessous, car Suricata ne peut pas voir le contenu chiffre
+# sans cle de session (TLS 1.3 = forward secrecy, decryption passive
+# impossible meme avec la cle privee du certificat). Ces signatures de
+# contenu restent donc principalement utiles pour un trafic en clair
+# (tests locaux hors TLS, service annexe HTTP) : elles sont conservees car
+# elles documentent la logique de detection attendue et pourraient s'activer
+# si un flux en clair existe un jour, mais NE PAS s'appuyer dessus comme
+# preuve reseau pour E2/E3/E5/E7/E14/E12/E11/E6/E13 en conditions reelles.
+#
+# Detection reseau fiable pour le trafic N1 reel (TLS) : les regles SNI
+# ci-dessous (9000026+), qui lisent le ClientHello TLS en clair (le SNI
+# n'est jamais chiffre) et indiquent de maniere fiable quel vhost est vise,
+# meme sans dechiffrement. Testees et CONFIRMEES declenchees le 16/09/2026.
+#
+# Preuve applicative (contenu de la requete/exploit) : a chercher dans les
+# LOGS APPLICATIFS via ELK/Filebeat (acces nginx d'E2, logs d'application
+# des conteneurs pivots), qui montrent le trafic en clair APRES
+# dechiffrement TLS par le conteneur lui-meme, et non dans Suricata.
 
 # Reconnaissance
 alert http any any -> $HOME_NET any (msg:"MV RECON user-agent sqlmap"; flow:to_server,established; http.user_agent; content:"sqlmap"; nocase; sid:9000007; rev:1; classtype:attempted-recon;)
@@ -55,3 +73,14 @@ alert http any any -> $HOME_NET any (msg:"MV CANARY jeton de prompt-injection IA
 # directement depuis le poste d'attaque (uniquement via pivot applicatif
 # intra-Docker). 192.168.10.10 = poste (fixe, voir TOPOLOGIE.txt).
 alert tcp 192.168.10.10 any -> $HOME_NET [5432,27017,6379,9200,445,9999,8443] (msg:"MV ISOLATION acces direct poste vers un port interne normalement non joignable"; flow:to_server; sid:9000025; rev:1; classtype:policy-violation;)
+
+# Visibilite N1 fiable via SNI TLS (fonctionne meme si le corps HTTP est
+# chiffre ; confirme en test reel le 16/09/2026).
+alert tls any any -> $HOME_NET 443 (msg:"MV N1 TLS SNI cache.maisonverte.fr (E2, reverse proxy)"; tls.sni; content:"cache.maisonverte.fr"; sid:9000026; rev:1; classtype:attempted-recon;)
+alert tls any any -> $HOME_NET 443 (msg:"MV N1 TLS SNI shop.maisonverte.fr (E3, WordPress)"; tls.sni; content:"shop.maisonverte.fr"; sid:9000027; rev:1; classtype:attempted-recon;)
+alert tls any any -> $HOME_NET 443 (msg:"MV N1 TLS SNI vendeurs.maisonverte.fr (E5, Tomcat)"; tls.sni; content:"vendeurs.maisonverte.fr"; sid:9000028; rev:1; classtype:attempted-recon;)
+alert tls any any -> $HOME_NET 443 (msg:"MV TLS SNI api.maisonverte.fr (E4, sain)"; tls.sni; content:"api.maisonverte.fr"; sid:9000029; rev:1; classtype:not-suspicious;)
+# Amelioration possible non implementee : une regle "SNI hors liste connue"
+# (enumeration de vhost) necessiterait un dataset Suricata externe
+# (type string, valeurs encodees base64) - non ajoutee ici pour eviter un
+# risque d'echec de chargement non teste ; a faire en suivi si besoin.
