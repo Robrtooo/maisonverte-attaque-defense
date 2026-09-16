@@ -1,0 +1,2366 @@
+{
+  "schema_version": "1.0.0",
+  "generated_on": "2026-09-15",
+  "products": [
+    {
+      "product_id": "MV-P001",
+      "sku": "MV-P001",
+      "name": "Terreau universel 40 L",
+      "category": "terreaux",
+      "description": "Terreau universel 40 L, selection MaisonVerte pour un jardin durable et facile a entretenir.",
+      "visual": "/images/products/mv-p001.svg",
+      "price_eur": 7.87,
+      "stocks_by_store": [
+        {
+          "store_id": "MAG001",
+          "quantity": 15
+        },
+        {
+          "store_id": "MAG002",
+          "quantity": 18
+        },
+        {
+          "store_id": "MAG003",
+          "quantity": 21
+        },
+        {
+          "store_id": "MAG004",
+          "quantity": 24
+        },
+        {
+          "store_id": "MAG005",
+          "quantity": 27
+        },
+        {
+          "store_id": "MAG006",
+          "quantity": 30
+        },
+        {
+          "store_id": "MAG007",
+          "quantity": 33
+        },
+        {
+          "store_id": "MAG008",
+          "quantity": 36
+        },
+        {
+          "store_id": "MAG009",
+          "quantity": 39
+        },
+        {
+          "store_id": "MAG010",
+          "quantity": 42
+        },
+        {
+          "store_id": "MAG011",
+          "quantity": 45
+        },
+        {
+          "store_id": "MAG012",
+          "quantity": 48
+        }
+      ]
+    },
+    {
+      "product_id": "MV-P002",
+      "sku": "MV-P002",
+      "name": "Basilic bio en pot",
+      "category": "plantes",
+      "description": "Basilic bio en pot, selection MaisonVerte pour un jardin durable et facile a entretenir.",
+      "visual": "/images/products/mv-p002.svg",
+      "price_eur": 9.24,
+      "stocks_by_store": [
+        {
+          "store_id": "MAG001",
+          "quantity": 22
+        },
+        {
+          "store_id": "MAG002",
+          "quantity": 25
+        },
+        {
+          "store_id": "MAG003",
+          "quantity": 28
+        },
+        {
+          "store_id": "MAG004",
+          "quantity": 31
+        },
+        {
+          "store_id": "MAG005",
+          "quantity": 34
+        },
+        {
+          "store_id": "MAG006",
+          "quantity": 37
+        },
+        {
+          "store_id": "MAG007",
+          "quantity": 40
+        },
+        {
+          "store_id": "MAG008",
+          "quantity": 43
+        },
+        {
+          "store_id": "MAG009",
+          "quantity": 46
+        },
+        {
+          "store_id": "MAG010",
+          "quantity": 49
+        },
+        {
+          "store_id": "MAG011",
+          "quantity": 6
+        },
+        {
+          "store_id": "MAG012",
+          "quantity": 9
+        }
+      ]
+    },
+    {
+      "product_id": "MV-P003",
+      "sku": "MV-P003",
+      "name": "Rosier buisson rouge",
+      "category": "outillage",
+      "description": "Rosier buisson rouge, selection MaisonVerte pour un jardin durable et facile a entretenir.",
+      "visual": "/images/products/mv-p003.svg",
+      "price_eur": 10.61,
+      "stocks_by_store": [
+        {
+          "store_id": "MAG001",
+          "quantity": 29
+        },
+        {
+          "store_id": "MAG002",
+          "quantity": 32
+        },
+        {
+          "store_id": "MAG003",
+          "quantity": 35
+        },
+        {
+          "store_id": "MAG004",
+          "quantity": 38
+        },
+        {
+          "store_id": "MAG005",
+          "quantity": 41
+        },
+        {
+          "store_id": "MAG006",
+          "quantity": 44
+        },
+        {
+          "store_id": "MAG007",
+          "quantity": 47
+        },
+        {
+          "store_id": "MAG008",
+          "quantity": 50
+        },
+        {
+          "store_id": "MAG009",
+          "quantity": 7
+        },
+        {
+          "store_id": "MAG010",
+          "quantity": 10
+        },
+        {
+          "store_id": "MAG011",
+          "quantity": 13
+        },
+        {
+          "store_id": "MAG012",
+          "quantity": 16
+        }
+      ]
+    },
+    {
+      "product_id": "MV-P004",
+      "sku": "MV-P004",
+      "name": "Arrosoir recycle 10 L",
+      "category": "arrosage",
+      "description": "Arrosoir recycle 10 L, selection MaisonVerte pour un jardin durable et facile a entretenir.",
+      "visual": "/images/products/mv-p004.svg",
+      "price_eur": 11.98,
+      "stocks_by_store": [
+        {
+          "store_id": "MAG001",
+          "quantity": 36
+        },
+        {
+          "store_id": "MAG002",
+          "quantity": 39
+        },
+        {
+          "store_id": "MAG003",
+          "quantity": 42
+        },
+        {
+          "store_id": "MAG004",
+          "quantity": 45
+        },
+        {
+          "store_id": "MAG005",
+          "quantity": 48
+        },
+        {
+          "store_id": "MAG006",
+          "quantity": 5
+        },
+        {
+          "store_id": "MAG007",
+          "quantity": 8
+        },
+        {
+          "store_id": "MAG008",
+          "quantity": 11
+        },
+        {
+          "store_id": "MAG009",
+          "quantity": 14
+        },
+        {
+          "store_id": "MAG010",
+          "quantity": 17
+        },
+        {
+          "store_id": "MAG011",
+          "quantity": 20
+        },
+        {
+          "store_id": "MAG012",
+          "quantity": 23
+        }
+      ]
+    },
+    {
+      "product_id": "MV-P005",
+      "sku": "MV-P005",
+      "name": "Gants de jardinage",
+      "category": "semences",
+      "description": "Gants de jardinage, selection MaisonVerte pour un jardin durable et facile a entretenir.",
+      "visual": "/images/products/mv-p005.svg",
+      "price_eur": 13.35,
+      "stocks_by_store": [
+        {
+          "store_id": "MAG001",
+          "quantity": 43
+        },
+        {
+          "store_id": "MAG002",
+          "quantity": 46
+        },
+        {
+          "store_id": "MAG003",
+          "quantity": 49
+        },
+        {
+          "store_id": "MAG004",
+          "quantity": 6
+        },
+        {
+          "store_id": "MAG005",
+          "quantity": 9
+        },
+        {
+          "store_id": "MAG006",
+          "quantity": 12
+        },
+        {
+          "store_id": "MAG007",
+          "quantity": 15
+        },
+        {
+          "store_id": "MAG008",
+          "quantity": 18
+        },
+        {
+          "store_id": "MAG009",
+          "quantity": 21
+        },
+        {
+          "store_id": "MAG010",
+          "quantity": 24
+        },
+        {
+          "store_id": "MAG011",
+          "quantity": 27
+        },
+        {
+          "store_id": "MAG012",
+          "quantity": 30
+        }
+      ]
+    },
+    {
+      "product_id": "MV-P006",
+      "sku": "MV-P006",
+      "name": "Secateur a lame franche",
+      "category": "amenagement",
+      "description": "Secateur a lame franche, selection MaisonVerte pour un jardin durable et facile a entretenir.",
+      "visual": "/images/products/mv-p006.svg",
+      "price_eur": 14.72,
+      "stocks_by_store": [
+        {
+          "store_id": "MAG001",
+          "quantity": 50
+        },
+        {
+          "store_id": "MAG002",
+          "quantity": 7
+        },
+        {
+          "store_id": "MAG003",
+          "quantity": 10
+        },
+        {
+          "store_id": "MAG004",
+          "quantity": 13
+        },
+        {
+          "store_id": "MAG005",
+          "quantity": 16
+        },
+        {
+          "store_id": "MAG006",
+          "quantity": 19
+        },
+        {
+          "store_id": "MAG007",
+          "quantity": 22
+        },
+        {
+          "store_id": "MAG008",
+          "quantity": 25
+        },
+        {
+          "store_id": "MAG009",
+          "quantity": 28
+        },
+        {
+          "store_id": "MAG010",
+          "quantity": 31
+        },
+        {
+          "store_id": "MAG011",
+          "quantity": 34
+        },
+        {
+          "store_id": "MAG012",
+          "quantity": 37
+        }
+      ]
+    },
+    {
+      "product_id": "MV-P007",
+      "sku": "MV-P007",
+      "name": "Paillage de chanvre",
+      "category": "biodiversite",
+      "description": "Paillage de chanvre, selection MaisonVerte pour un jardin durable et facile a entretenir.",
+      "visual": "/images/products/mv-p007.svg",
+      "price_eur": 16.09,
+      "stocks_by_store": [
+        {
+          "store_id": "MAG001",
+          "quantity": 11
+        },
+        {
+          "store_id": "MAG002",
+          "quantity": 14
+        },
+        {
+          "store_id": "MAG003",
+          "quantity": 17
+        },
+        {
+          "store_id": "MAG004",
+          "quantity": 20
+        },
+        {
+          "store_id": "MAG005",
+          "quantity": 23
+        },
+        {
+          "store_id": "MAG006",
+          "quantity": 26
+        },
+        {
+          "store_id": "MAG007",
+          "quantity": 29
+        },
+        {
+          "store_id": "MAG008",
+          "quantity": 32
+        },
+        {
+          "store_id": "MAG009",
+          "quantity": 35
+        },
+        {
+          "store_id": "MAG010",
+          "quantity": 38
+        },
+        {
+          "store_id": "MAG011",
+          "quantity": 41
+        },
+        {
+          "store_id": "MAG012",
+          "quantity": 44
+        }
+      ]
+    },
+    {
+      "product_id": "MV-P008",
+      "sku": "MV-P008",
+      "name": "Engrais potager bio",
+      "category": "mobilier",
+      "description": "Engrais potager bio, selection MaisonVerte pour un jardin durable et facile a entretenir.",
+      "visual": "/images/products/mv-p008.svg",
+      "price_eur": 17.46,
+      "stocks_by_store": [
+        {
+          "store_id": "MAG001",
+          "quantity": 18
+        },
+        {
+          "store_id": "MAG002",
+          "quantity": 21
+        },
+        {
+          "store_id": "MAG003",
+          "quantity": 24
+        },
+        {
+          "store_id": "MAG004",
+          "quantity": 27
+        },
+        {
+          "store_id": "MAG005",
+          "quantity": 30
+        },
+        {
+          "store_id": "MAG006",
+          "quantity": 33
+        },
+        {
+          "store_id": "MAG007",
+          "quantity": 36
+        },
+        {
+          "store_id": "MAG008",
+          "quantity": 39
+        },
+        {
+          "store_id": "MAG009",
+          "quantity": 42
+        },
+        {
+          "store_id": "MAG010",
+          "quantity": 45
+        },
+        {
+          "store_id": "MAG011",
+          "quantity": 48
+        },
+        {
+          "store_id": "MAG012",
+          "quantity": 5
+        }
+      ]
+    },
+    {
+      "product_id": "MV-P009",
+      "sku": "MV-P009",
+      "name": "Jardiniere balcon",
+      "category": "terreaux",
+      "description": "Jardiniere balcon, selection MaisonVerte pour un jardin durable et facile a entretenir.",
+      "visual": "/images/products/mv-p009.svg",
+      "price_eur": 18.83,
+      "stocks_by_store": [
+        {
+          "store_id": "MAG001",
+          "quantity": 25
+        },
+        {
+          "store_id": "MAG002",
+          "quantity": 28
+        },
+        {
+          "store_id": "MAG003",
+          "quantity": 31
+        },
+        {
+          "store_id": "MAG004",
+          "quantity": 34
+        },
+        {
+          "store_id": "MAG005",
+          "quantity": 37
+        },
+        {
+          "store_id": "MAG006",
+          "quantity": 40
+        },
+        {
+          "store_id": "MAG007",
+          "quantity": 43
+        },
+        {
+          "store_id": "MAG008",
+          "quantity": 46
+        },
+        {
+          "store_id": "MAG009",
+          "quantity": 49
+        },
+        {
+          "store_id": "MAG010",
+          "quantity": 6
+        },
+        {
+          "store_id": "MAG011",
+          "quantity": 9
+        },
+        {
+          "store_id": "MAG012",
+          "quantity": 12
+        }
+      ]
+    },
+    {
+      "product_id": "MV-P010",
+      "sku": "MV-P010",
+      "name": "Tuteur bambou 120 cm",
+      "category": "plantes",
+      "description": "Tuteur bambou 120 cm, selection MaisonVerte pour un jardin durable et facile a entretenir.",
+      "visual": "/images/products/mv-p010.svg",
+      "price_eur": 20.2,
+      "stocks_by_store": [
+        {
+          "store_id": "MAG001",
+          "quantity": 32
+        },
+        {
+          "store_id": "MAG002",
+          "quantity": 35
+        },
+        {
+          "store_id": "MAG003",
+          "quantity": 38
+        },
+        {
+          "store_id": "MAG004",
+          "quantity": 41
+        },
+        {
+          "store_id": "MAG005",
+          "quantity": 44
+        },
+        {
+          "store_id": "MAG006",
+          "quantity": 47
+        },
+        {
+          "store_id": "MAG007",
+          "quantity": 50
+        },
+        {
+          "store_id": "MAG008",
+          "quantity": 7
+        },
+        {
+          "store_id": "MAG009",
+          "quantity": 10
+        },
+        {
+          "store_id": "MAG010",
+          "quantity": 13
+        },
+        {
+          "store_id": "MAG011",
+          "quantity": 16
+        },
+        {
+          "store_id": "MAG012",
+          "quantity": 19
+        }
+      ]
+    },
+    {
+      "product_id": "MV-P011",
+      "sku": "MV-P011",
+      "name": "Graines de tomates",
+      "category": "outillage",
+      "description": "Graines de tomates, selection MaisonVerte pour un jardin durable et facile a entretenir.",
+      "visual": "/images/products/mv-p011.svg",
+      "price_eur": 21.57,
+      "stocks_by_store": [
+        {
+          "store_id": "MAG001",
+          "quantity": 39
+        },
+        {
+          "store_id": "MAG002",
+          "quantity": 42
+        },
+        {
+          "store_id": "MAG003",
+          "quantity": 45
+        },
+        {
+          "store_id": "MAG004",
+          "quantity": 48
+        },
+        {
+          "store_id": "MAG005",
+          "quantity": 5
+        },
+        {
+          "store_id": "MAG006",
+          "quantity": 8
+        },
+        {
+          "store_id": "MAG007",
+          "quantity": 11
+        },
+        {
+          "store_id": "MAG008",
+          "quantity": 14
+        },
+        {
+          "store_id": "MAG009",
+          "quantity": 17
+        },
+        {
+          "store_id": "MAG010",
+          "quantity": 20
+        },
+        {
+          "store_id": "MAG011",
+          "quantity": 23
+        },
+        {
+          "store_id": "MAG012",
+          "quantity": 26
+        }
+      ]
+    },
+    {
+      "product_id": "MV-P012",
+      "sku": "MV-P012",
+      "name": "Graines de courgettes",
+      "category": "arrosage",
+      "description": "Graines de courgettes, selection MaisonVerte pour un jardin durable et facile a entretenir.",
+      "visual": "/images/products/mv-p012.svg",
+      "price_eur": 22.94,
+      "stocks_by_store": [
+        {
+          "store_id": "MAG001",
+          "quantity": 46
+        },
+        {
+          "store_id": "MAG002",
+          "quantity": 49
+        },
+        {
+          "store_id": "MAG003",
+          "quantity": 6
+        },
+        {
+          "store_id": "MAG004",
+          "quantity": 9
+        },
+        {
+          "store_id": "MAG005",
+          "quantity": 12
+        },
+        {
+          "store_id": "MAG006",
+          "quantity": 15
+        },
+        {
+          "store_id": "MAG007",
+          "quantity": 18
+        },
+        {
+          "store_id": "MAG008",
+          "quantity": 21
+        },
+        {
+          "store_id": "MAG009",
+          "quantity": 24
+        },
+        {
+          "store_id": "MAG010",
+          "quantity": 27
+        },
+        {
+          "store_id": "MAG011",
+          "quantity": 30
+        },
+        {
+          "store_id": "MAG012",
+          "quantity": 33
+        }
+      ]
+    },
+    {
+      "product_id": "MV-P013",
+      "sku": "MV-P013",
+      "name": "Composteur 300 L",
+      "category": "semences",
+      "description": "Composteur 300 L, selection MaisonVerte pour un jardin durable et facile a entretenir.",
+      "visual": "/images/products/mv-p013.svg",
+      "price_eur": 24.31,
+      "stocks_by_store": [
+        {
+          "store_id": "MAG001",
+          "quantity": 7
+        },
+        {
+          "store_id": "MAG002",
+          "quantity": 10
+        },
+        {
+          "store_id": "MAG003",
+          "quantity": 13
+        },
+        {
+          "store_id": "MAG004",
+          "quantity": 16
+        },
+        {
+          "store_id": "MAG005",
+          "quantity": 19
+        },
+        {
+          "store_id": "MAG006",
+          "quantity": 22
+        },
+        {
+          "store_id": "MAG007",
+          "quantity": 25
+        },
+        {
+          "store_id": "MAG008",
+          "quantity": 28
+        },
+        {
+          "store_id": "MAG009",
+          "quantity": 31
+        },
+        {
+          "store_id": "MAG010",
+          "quantity": 34
+        },
+        {
+          "store_id": "MAG011",
+          "quantity": 37
+        },
+        {
+          "store_id": "MAG012",
+          "quantity": 40
+        }
+      ]
+    },
+    {
+      "product_id": "MV-P014",
+      "sku": "MV-P014",
+      "name": "Recuperateur eau 200 L",
+      "category": "amenagement",
+      "description": "Recuperateur eau 200 L, selection MaisonVerte pour un jardin durable et facile a entretenir.",
+      "visual": "/images/products/mv-p014.svg",
+      "price_eur": 25.68,
+      "stocks_by_store": [
+        {
+          "store_id": "MAG001",
+          "quantity": 14
+        },
+        {
+          "store_id": "MAG002",
+          "quantity": 17
+        },
+        {
+          "store_id": "MAG003",
+          "quantity": 20
+        },
+        {
+          "store_id": "MAG004",
+          "quantity": 23
+        },
+        {
+          "store_id": "MAG005",
+          "quantity": 26
+        },
+        {
+          "store_id": "MAG006",
+          "quantity": 29
+        },
+        {
+          "store_id": "MAG007",
+          "quantity": 32
+        },
+        {
+          "store_id": "MAG008",
+          "quantity": 35
+        },
+        {
+          "store_id": "MAG009",
+          "quantity": 38
+        },
+        {
+          "store_id": "MAG010",
+          "quantity": 41
+        },
+        {
+          "store_id": "MAG011",
+          "quantity": 44
+        },
+        {
+          "store_id": "MAG012",
+          "quantity": 47
+        }
+      ]
+    },
+    {
+      "product_id": "MV-P015",
+      "sku": "MV-P015",
+      "name": "Tuyau arrosage 20 m",
+      "category": "biodiversite",
+      "description": "Tuyau arrosage 20 m, selection MaisonVerte pour un jardin durable et facile a entretenir.",
+      "visual": "/images/products/mv-p015.svg",
+      "price_eur": 27.05,
+      "stocks_by_store": [
+        {
+          "store_id": "MAG001",
+          "quantity": 21
+        },
+        {
+          "store_id": "MAG002",
+          "quantity": 24
+        },
+        {
+          "store_id": "MAG003",
+          "quantity": 27
+        },
+        {
+          "store_id": "MAG004",
+          "quantity": 30
+        },
+        {
+          "store_id": "MAG005",
+          "quantity": 33
+        },
+        {
+          "store_id": "MAG006",
+          "quantity": 36
+        },
+        {
+          "store_id": "MAG007",
+          "quantity": 39
+        },
+        {
+          "store_id": "MAG008",
+          "quantity": 42
+        },
+        {
+          "store_id": "MAG009",
+          "quantity": 45
+        },
+        {
+          "store_id": "MAG010",
+          "quantity": 48
+        },
+        {
+          "store_id": "MAG011",
+          "quantity": 5
+        },
+        {
+          "store_id": "MAG012",
+          "quantity": 8
+        }
+      ]
+    },
+    {
+      "product_id": "MV-P016",
+      "sku": "MV-P016",
+      "name": "Raccord rapide laiton",
+      "category": "mobilier",
+      "description": "Raccord rapide laiton, selection MaisonVerte pour un jardin durable et facile a entretenir.",
+      "visual": "/images/products/mv-p016.svg",
+      "price_eur": 28.42,
+      "stocks_by_store": [
+        {
+          "store_id": "MAG001",
+          "quantity": 28
+        },
+        {
+          "store_id": "MAG002",
+          "quantity": 31
+        },
+        {
+          "store_id": "MAG003",
+          "quantity": 34
+        },
+        {
+          "store_id": "MAG004",
+          "quantity": 37
+        },
+        {
+          "store_id": "MAG005",
+          "quantity": 40
+        },
+        {
+          "store_id": "MAG006",
+          "quantity": 43
+        },
+        {
+          "store_id": "MAG007",
+          "quantity": 46
+        },
+        {
+          "store_id": "MAG008",
+          "quantity": 49
+        },
+        {
+          "store_id": "MAG009",
+          "quantity": 6
+        },
+        {
+          "store_id": "MAG010",
+          "quantity": 9
+        },
+        {
+          "store_id": "MAG011",
+          "quantity": 12
+        },
+        {
+          "store_id": "MAG012",
+          "quantity": 15
+        }
+      ]
+    },
+    {
+      "product_id": "MV-P017",
+      "sku": "MV-P017",
+      "name": "Pelle transplantoir",
+      "category": "terreaux",
+      "description": "Pelle transplantoir, selection MaisonVerte pour un jardin durable et facile a entretenir.",
+      "visual": "/images/products/mv-p017.svg",
+      "price_eur": 29.79,
+      "stocks_by_store": [
+        {
+          "store_id": "MAG001",
+          "quantity": 35
+        },
+        {
+          "store_id": "MAG002",
+          "quantity": 38
+        },
+        {
+          "store_id": "MAG003",
+          "quantity": 41
+        },
+        {
+          "store_id": "MAG004",
+          "quantity": 44
+        },
+        {
+          "store_id": "MAG005",
+          "quantity": 47
+        },
+        {
+          "store_id": "MAG006",
+          "quantity": 50
+        },
+        {
+          "store_id": "MAG007",
+          "quantity": 7
+        },
+        {
+          "store_id": "MAG008",
+          "quantity": 10
+        },
+        {
+          "store_id": "MAG009",
+          "quantity": 13
+        },
+        {
+          "store_id": "MAG010",
+          "quantity": 16
+        },
+        {
+          "store_id": "MAG011",
+          "quantity": 19
+        },
+        {
+          "store_id": "MAG012",
+          "quantity": 22
+        }
+      ]
+    },
+    {
+      "product_id": "MV-P018",
+      "sku": "MV-P018",
+      "name": "Rateau a fleurs",
+      "category": "plantes",
+      "description": "Rateau a fleurs, selection MaisonVerte pour un jardin durable et facile a entretenir.",
+      "visual": "/images/products/mv-p018.svg",
+      "price_eur": 31.16,
+      "stocks_by_store": [
+        {
+          "store_id": "MAG001",
+          "quantity": 42
+        },
+        {
+          "store_id": "MAG002",
+          "quantity": 45
+        },
+        {
+          "store_id": "MAG003",
+          "quantity": 48
+        },
+        {
+          "store_id": "MAG004",
+          "quantity": 5
+        },
+        {
+          "store_id": "MAG005",
+          "quantity": 8
+        },
+        {
+          "store_id": "MAG006",
+          "quantity": 11
+        },
+        {
+          "store_id": "MAG007",
+          "quantity": 14
+        },
+        {
+          "store_id": "MAG008",
+          "quantity": 17
+        },
+        {
+          "store_id": "MAG009",
+          "quantity": 20
+        },
+        {
+          "store_id": "MAG010",
+          "quantity": 23
+        },
+        {
+          "store_id": "MAG011",
+          "quantity": 26
+        },
+        {
+          "store_id": "MAG012",
+          "quantity": 29
+        }
+      ]
+    },
+    {
+      "product_id": "MV-P019",
+      "sku": "MV-P019",
+      "name": "Binette de jardin",
+      "category": "outillage",
+      "description": "Binette de jardin, selection MaisonVerte pour un jardin durable et facile a entretenir.",
+      "visual": "/images/products/mv-p019.svg",
+      "price_eur": 32.53,
+      "stocks_by_store": [
+        {
+          "store_id": "MAG001",
+          "quantity": 49
+        },
+        {
+          "store_id": "MAG002",
+          "quantity": 6
+        },
+        {
+          "store_id": "MAG003",
+          "quantity": 9
+        },
+        {
+          "store_id": "MAG004",
+          "quantity": 12
+        },
+        {
+          "store_id": "MAG005",
+          "quantity": 15
+        },
+        {
+          "store_id": "MAG006",
+          "quantity": 18
+        },
+        {
+          "store_id": "MAG007",
+          "quantity": 21
+        },
+        {
+          "store_id": "MAG008",
+          "quantity": 24
+        },
+        {
+          "store_id": "MAG009",
+          "quantity": 27
+        },
+        {
+          "store_id": "MAG010",
+          "quantity": 30
+        },
+        {
+          "store_id": "MAG011",
+          "quantity": 33
+        },
+        {
+          "store_id": "MAG012",
+          "quantity": 36
+        }
+      ]
+    },
+    {
+      "product_id": "MV-P020",
+      "sku": "MV-P020",
+      "name": "Brouette acier 90 L",
+      "category": "arrosage",
+      "description": "Brouette acier 90 L, selection MaisonVerte pour un jardin durable et facile a entretenir.",
+      "visual": "/images/products/mv-p020.svg",
+      "price_eur": 33.9,
+      "stocks_by_store": [
+        {
+          "store_id": "MAG001",
+          "quantity": 10
+        },
+        {
+          "store_id": "MAG002",
+          "quantity": 13
+        },
+        {
+          "store_id": "MAG003",
+          "quantity": 16
+        },
+        {
+          "store_id": "MAG004",
+          "quantity": 19
+        },
+        {
+          "store_id": "MAG005",
+          "quantity": 22
+        },
+        {
+          "store_id": "MAG006",
+          "quantity": 25
+        },
+        {
+          "store_id": "MAG007",
+          "quantity": 28
+        },
+        {
+          "store_id": "MAG008",
+          "quantity": 31
+        },
+        {
+          "store_id": "MAG009",
+          "quantity": 34
+        },
+        {
+          "store_id": "MAG010",
+          "quantity": 37
+        },
+        {
+          "store_id": "MAG011",
+          "quantity": 40
+        },
+        {
+          "store_id": "MAG012",
+          "quantity": 43
+        }
+      ]
+    },
+    {
+      "product_id": "MV-P021",
+      "sku": "MV-P021",
+      "name": "Pot terre cuite 25 cm",
+      "category": "semences",
+      "description": "Pot terre cuite 25 cm, selection MaisonVerte pour un jardin durable et facile a entretenir.",
+      "visual": "/images/products/mv-p021.svg",
+      "price_eur": 35.27,
+      "stocks_by_store": [
+        {
+          "store_id": "MAG001",
+          "quantity": 17
+        },
+        {
+          "store_id": "MAG002",
+          "quantity": 20
+        },
+        {
+          "store_id": "MAG003",
+          "quantity": 23
+        },
+        {
+          "store_id": "MAG004",
+          "quantity": 26
+        },
+        {
+          "store_id": "MAG005",
+          "quantity": 29
+        },
+        {
+          "store_id": "MAG006",
+          "quantity": 32
+        },
+        {
+          "store_id": "MAG007",
+          "quantity": 35
+        },
+        {
+          "store_id": "MAG008",
+          "quantity": 38
+        },
+        {
+          "store_id": "MAG009",
+          "quantity": 41
+        },
+        {
+          "store_id": "MAG010",
+          "quantity": 44
+        },
+        {
+          "store_id": "MAG011",
+          "quantity": 47
+        },
+        {
+          "store_id": "MAG012",
+          "quantity": 50
+        }
+      ]
+    },
+    {
+      "product_id": "MV-P022",
+      "sku": "MV-P022",
+      "name": "Soucoupe terre cuite",
+      "category": "amenagement",
+      "description": "Soucoupe terre cuite, selection MaisonVerte pour un jardin durable et facile a entretenir.",
+      "visual": "/images/products/mv-p022.svg",
+      "price_eur": 36.64,
+      "stocks_by_store": [
+        {
+          "store_id": "MAG001",
+          "quantity": 24
+        },
+        {
+          "store_id": "MAG002",
+          "quantity": 27
+        },
+        {
+          "store_id": "MAG003",
+          "quantity": 30
+        },
+        {
+          "store_id": "MAG004",
+          "quantity": 33
+        },
+        {
+          "store_id": "MAG005",
+          "quantity": 36
+        },
+        {
+          "store_id": "MAG006",
+          "quantity": 39
+        },
+        {
+          "store_id": "MAG007",
+          "quantity": 42
+        },
+        {
+          "store_id": "MAG008",
+          "quantity": 45
+        },
+        {
+          "store_id": "MAG009",
+          "quantity": 48
+        },
+        {
+          "store_id": "MAG010",
+          "quantity": 5
+        },
+        {
+          "store_id": "MAG011",
+          "quantity": 8
+        },
+        {
+          "store_id": "MAG012",
+          "quantity": 11
+        }
+      ]
+    },
+    {
+      "product_id": "MV-P023",
+      "sku": "MV-P023",
+      "name": "Lavande vraie",
+      "category": "biodiversite",
+      "description": "Lavande vraie, selection MaisonVerte pour un jardin durable et facile a entretenir.",
+      "visual": "/images/products/mv-p023.svg",
+      "price_eur": 38.01,
+      "stocks_by_store": [
+        {
+          "store_id": "MAG001",
+          "quantity": 31
+        },
+        {
+          "store_id": "MAG002",
+          "quantity": 34
+        },
+        {
+          "store_id": "MAG003",
+          "quantity": 37
+        },
+        {
+          "store_id": "MAG004",
+          "quantity": 40
+        },
+        {
+          "store_id": "MAG005",
+          "quantity": 43
+        },
+        {
+          "store_id": "MAG006",
+          "quantity": 46
+        },
+        {
+          "store_id": "MAG007",
+          "quantity": 49
+        },
+        {
+          "store_id": "MAG008",
+          "quantity": 6
+        },
+        {
+          "store_id": "MAG009",
+          "quantity": 9
+        },
+        {
+          "store_id": "MAG010",
+          "quantity": 12
+        },
+        {
+          "store_id": "MAG011",
+          "quantity": 15
+        },
+        {
+          "store_id": "MAG012",
+          "quantity": 18
+        }
+      ]
+    },
+    {
+      "product_id": "MV-P024",
+      "sku": "MV-P024",
+      "name": "Romarin officinal",
+      "category": "mobilier",
+      "description": "Romarin officinal, selection MaisonVerte pour un jardin durable et facile a entretenir.",
+      "visual": "/images/products/mv-p024.svg",
+      "price_eur": 39.38,
+      "stocks_by_store": [
+        {
+          "store_id": "MAG001",
+          "quantity": 38
+        },
+        {
+          "store_id": "MAG002",
+          "quantity": 41
+        },
+        {
+          "store_id": "MAG003",
+          "quantity": 44
+        },
+        {
+          "store_id": "MAG004",
+          "quantity": 47
+        },
+        {
+          "store_id": "MAG005",
+          "quantity": 50
+        },
+        {
+          "store_id": "MAG006",
+          "quantity": 7
+        },
+        {
+          "store_id": "MAG007",
+          "quantity": 10
+        },
+        {
+          "store_id": "MAG008",
+          "quantity": 13
+        },
+        {
+          "store_id": "MAG009",
+          "quantity": 16
+        },
+        {
+          "store_id": "MAG010",
+          "quantity": 19
+        },
+        {
+          "store_id": "MAG011",
+          "quantity": 22
+        },
+        {
+          "store_id": "MAG012",
+          "quantity": 25
+        }
+      ]
+    },
+    {
+      "product_id": "MV-P025",
+      "sku": "MV-P025",
+      "name": "Menthe verte",
+      "category": "terreaux",
+      "description": "Menthe verte, selection MaisonVerte pour un jardin durable et facile a entretenir.",
+      "visual": "/images/products/mv-p025.svg",
+      "price_eur": 40.75,
+      "stocks_by_store": [
+        {
+          "store_id": "MAG001",
+          "quantity": 45
+        },
+        {
+          "store_id": "MAG002",
+          "quantity": 48
+        },
+        {
+          "store_id": "MAG003",
+          "quantity": 5
+        },
+        {
+          "store_id": "MAG004",
+          "quantity": 8
+        },
+        {
+          "store_id": "MAG005",
+          "quantity": 11
+        },
+        {
+          "store_id": "MAG006",
+          "quantity": 14
+        },
+        {
+          "store_id": "MAG007",
+          "quantity": 17
+        },
+        {
+          "store_id": "MAG008",
+          "quantity": 20
+        },
+        {
+          "store_id": "MAG009",
+          "quantity": 23
+        },
+        {
+          "store_id": "MAG010",
+          "quantity": 26
+        },
+        {
+          "store_id": "MAG011",
+          "quantity": 29
+        },
+        {
+          "store_id": "MAG012",
+          "quantity": 32
+        }
+      ]
+    },
+    {
+      "product_id": "MV-P026",
+      "sku": "MV-P026",
+      "name": "Olivier jeune plant",
+      "category": "plantes",
+      "description": "Olivier jeune plant, selection MaisonVerte pour un jardin durable et facile a entretenir.",
+      "visual": "/images/products/mv-p026.svg",
+      "price_eur": 42.12,
+      "stocks_by_store": [
+        {
+          "store_id": "MAG001",
+          "quantity": 6
+        },
+        {
+          "store_id": "MAG002",
+          "quantity": 9
+        },
+        {
+          "store_id": "MAG003",
+          "quantity": 12
+        },
+        {
+          "store_id": "MAG004",
+          "quantity": 15
+        },
+        {
+          "store_id": "MAG005",
+          "quantity": 18
+        },
+        {
+          "store_id": "MAG006",
+          "quantity": 21
+        },
+        {
+          "store_id": "MAG007",
+          "quantity": 24
+        },
+        {
+          "store_id": "MAG008",
+          "quantity": 27
+        },
+        {
+          "store_id": "MAG009",
+          "quantity": 30
+        },
+        {
+          "store_id": "MAG010",
+          "quantity": 33
+        },
+        {
+          "store_id": "MAG011",
+          "quantity": 36
+        },
+        {
+          "store_id": "MAG012",
+          "quantity": 39
+        }
+      ]
+    },
+    {
+      "product_id": "MV-P027",
+      "sku": "MV-P027",
+      "name": "Hortensia bleu",
+      "category": "outillage",
+      "description": "Hortensia bleu, selection MaisonVerte pour un jardin durable et facile a entretenir.",
+      "visual": "/images/products/mv-p027.svg",
+      "price_eur": 43.49,
+      "stocks_by_store": [
+        {
+          "store_id": "MAG001",
+          "quantity": 13
+        },
+        {
+          "store_id": "MAG002",
+          "quantity": 16
+        },
+        {
+          "store_id": "MAG003",
+          "quantity": 19
+        },
+        {
+          "store_id": "MAG004",
+          "quantity": 22
+        },
+        {
+          "store_id": "MAG005",
+          "quantity": 25
+        },
+        {
+          "store_id": "MAG006",
+          "quantity": 28
+        },
+        {
+          "store_id": "MAG007",
+          "quantity": 31
+        },
+        {
+          "store_id": "MAG008",
+          "quantity": 34
+        },
+        {
+          "store_id": "MAG009",
+          "quantity": 37
+        },
+        {
+          "store_id": "MAG010",
+          "quantity": 40
+        },
+        {
+          "store_id": "MAG011",
+          "quantity": 43
+        },
+        {
+          "store_id": "MAG012",
+          "quantity": 46
+        }
+      ]
+    },
+    {
+      "product_id": "MV-P028",
+      "sku": "MV-P028",
+      "name": "Camelia japonica",
+      "category": "arrosage",
+      "description": "Camelia japonica, selection MaisonVerte pour un jardin durable et facile a entretenir.",
+      "visual": "/images/products/mv-p028.svg",
+      "price_eur": 44.86,
+      "stocks_by_store": [
+        {
+          "store_id": "MAG001",
+          "quantity": 20
+        },
+        {
+          "store_id": "MAG002",
+          "quantity": 23
+        },
+        {
+          "store_id": "MAG003",
+          "quantity": 26
+        },
+        {
+          "store_id": "MAG004",
+          "quantity": 29
+        },
+        {
+          "store_id": "MAG005",
+          "quantity": 32
+        },
+        {
+          "store_id": "MAG006",
+          "quantity": 35
+        },
+        {
+          "store_id": "MAG007",
+          "quantity": 38
+        },
+        {
+          "store_id": "MAG008",
+          "quantity": 41
+        },
+        {
+          "store_id": "MAG009",
+          "quantity": 44
+        },
+        {
+          "store_id": "MAG010",
+          "quantity": 47
+        },
+        {
+          "store_id": "MAG011",
+          "quantity": 50
+        },
+        {
+          "store_id": "MAG012",
+          "quantity": 7
+        }
+      ]
+    },
+    {
+      "product_id": "MV-P029",
+      "sku": "MV-P029",
+      "name": "Fraisier remontant",
+      "category": "semences",
+      "description": "Fraisier remontant, selection MaisonVerte pour un jardin durable et facile a entretenir.",
+      "visual": "/images/products/mv-p029.svg",
+      "price_eur": 46.23,
+      "stocks_by_store": [
+        {
+          "store_id": "MAG001",
+          "quantity": 27
+        },
+        {
+          "store_id": "MAG002",
+          "quantity": 30
+        },
+        {
+          "store_id": "MAG003",
+          "quantity": 33
+        },
+        {
+          "store_id": "MAG004",
+          "quantity": 36
+        },
+        {
+          "store_id": "MAG005",
+          "quantity": 39
+        },
+        {
+          "store_id": "MAG006",
+          "quantity": 42
+        },
+        {
+          "store_id": "MAG007",
+          "quantity": 45
+        },
+        {
+          "store_id": "MAG008",
+          "quantity": 48
+        },
+        {
+          "store_id": "MAG009",
+          "quantity": 5
+        },
+        {
+          "store_id": "MAG010",
+          "quantity": 8
+        },
+        {
+          "store_id": "MAG011",
+          "quantity": 11
+        },
+        {
+          "store_id": "MAG012",
+          "quantity": 14
+        }
+      ]
+    },
+    {
+      "product_id": "MV-P030",
+      "sku": "MV-P030",
+      "name": "Framboisier heritage",
+      "category": "amenagement",
+      "description": "Framboisier heritage, selection MaisonVerte pour un jardin durable et facile a entretenir.",
+      "visual": "/images/products/mv-p030.svg",
+      "price_eur": 47.6,
+      "stocks_by_store": [
+        {
+          "store_id": "MAG001",
+          "quantity": 34
+        },
+        {
+          "store_id": "MAG002",
+          "quantity": 37
+        },
+        {
+          "store_id": "MAG003",
+          "quantity": 40
+        },
+        {
+          "store_id": "MAG004",
+          "quantity": 43
+        },
+        {
+          "store_id": "MAG005",
+          "quantity": 46
+        },
+        {
+          "store_id": "MAG006",
+          "quantity": 49
+        },
+        {
+          "store_id": "MAG007",
+          "quantity": 6
+        },
+        {
+          "store_id": "MAG008",
+          "quantity": 9
+        },
+        {
+          "store_id": "MAG009",
+          "quantity": 12
+        },
+        {
+          "store_id": "MAG010",
+          "quantity": 15
+        },
+        {
+          "store_id": "MAG011",
+          "quantity": 18
+        },
+        {
+          "store_id": "MAG012",
+          "quantity": 21
+        }
+      ]
+    },
+    {
+      "product_id": "MV-P031",
+      "sku": "MV-P031",
+      "name": "Nichoir mesange",
+      "category": "biodiversite",
+      "description": "Nichoir mesange, selection MaisonVerte pour un jardin durable et facile a entretenir.",
+      "visual": "/images/products/mv-p031.svg",
+      "price_eur": 48.97,
+      "stocks_by_store": [
+        {
+          "store_id": "MAG001",
+          "quantity": 41
+        },
+        {
+          "store_id": "MAG002",
+          "quantity": 44
+        },
+        {
+          "store_id": "MAG003",
+          "quantity": 47
+        },
+        {
+          "store_id": "MAG004",
+          "quantity": 50
+        },
+        {
+          "store_id": "MAG005",
+          "quantity": 7
+        },
+        {
+          "store_id": "MAG006",
+          "quantity": 10
+        },
+        {
+          "store_id": "MAG007",
+          "quantity": 13
+        },
+        {
+          "store_id": "MAG008",
+          "quantity": 16
+        },
+        {
+          "store_id": "MAG009",
+          "quantity": 19
+        },
+        {
+          "store_id": "MAG010",
+          "quantity": 22
+        },
+        {
+          "store_id": "MAG011",
+          "quantity": 25
+        },
+        {
+          "store_id": "MAG012",
+          "quantity": 28
+        }
+      ]
+    },
+    {
+      "product_id": "MV-P032",
+      "sku": "MV-P032",
+      "name": "Hotel a insectes",
+      "category": "mobilier",
+      "description": "Hotel a insectes, selection MaisonVerte pour un jardin durable et facile a entretenir.",
+      "visual": "/images/products/mv-p032.svg",
+      "price_eur": 50.34,
+      "stocks_by_store": [
+        {
+          "store_id": "MAG001",
+          "quantity": 48
+        },
+        {
+          "store_id": "MAG002",
+          "quantity": 5
+        },
+        {
+          "store_id": "MAG003",
+          "quantity": 8
+        },
+        {
+          "store_id": "MAG004",
+          "quantity": 11
+        },
+        {
+          "store_id": "MAG005",
+          "quantity": 14
+        },
+        {
+          "store_id": "MAG006",
+          "quantity": 17
+        },
+        {
+          "store_id": "MAG007",
+          "quantity": 20
+        },
+        {
+          "store_id": "MAG008",
+          "quantity": 23
+        },
+        {
+          "store_id": "MAG009",
+          "quantity": 26
+        },
+        {
+          "store_id": "MAG010",
+          "quantity": 29
+        },
+        {
+          "store_id": "MAG011",
+          "quantity": 32
+        },
+        {
+          "store_id": "MAG012",
+          "quantity": 35
+        }
+      ]
+    },
+    {
+      "product_id": "MV-P033",
+      "sku": "MV-P033",
+      "name": "Lanterne solaire",
+      "category": "terreaux",
+      "description": "Lanterne solaire, selection MaisonVerte pour un jardin durable et facile a entretenir.",
+      "visual": "/images/products/mv-p033.svg",
+      "price_eur": 51.71,
+      "stocks_by_store": [
+        {
+          "store_id": "MAG001",
+          "quantity": 9
+        },
+        {
+          "store_id": "MAG002",
+          "quantity": 12
+        },
+        {
+          "store_id": "MAG003",
+          "quantity": 15
+        },
+        {
+          "store_id": "MAG004",
+          "quantity": 18
+        },
+        {
+          "store_id": "MAG005",
+          "quantity": 21
+        },
+        {
+          "store_id": "MAG006",
+          "quantity": 24
+        },
+        {
+          "store_id": "MAG007",
+          "quantity": 27
+        },
+        {
+          "store_id": "MAG008",
+          "quantity": 30
+        },
+        {
+          "store_id": "MAG009",
+          "quantity": 33
+        },
+        {
+          "store_id": "MAG010",
+          "quantity": 36
+        },
+        {
+          "store_id": "MAG011",
+          "quantity": 39
+        },
+        {
+          "store_id": "MAG012",
+          "quantity": 42
+        }
+      ]
+    },
+    {
+      "product_id": "MV-P034",
+      "sku": "MV-P034",
+      "name": "Voile hivernage",
+      "category": "plantes",
+      "description": "Voile hivernage, selection MaisonVerte pour un jardin durable et facile a entretenir.",
+      "visual": "/images/products/mv-p034.svg",
+      "price_eur": 53.08,
+      "stocks_by_store": [
+        {
+          "store_id": "MAG001",
+          "quantity": 16
+        },
+        {
+          "store_id": "MAG002",
+          "quantity": 19
+        },
+        {
+          "store_id": "MAG003",
+          "quantity": 22
+        },
+        {
+          "store_id": "MAG004",
+          "quantity": 25
+        },
+        {
+          "store_id": "MAG005",
+          "quantity": 28
+        },
+        {
+          "store_id": "MAG006",
+          "quantity": 31
+        },
+        {
+          "store_id": "MAG007",
+          "quantity": 34
+        },
+        {
+          "store_id": "MAG008",
+          "quantity": 37
+        },
+        {
+          "store_id": "MAG009",
+          "quantity": 40
+        },
+        {
+          "store_id": "MAG010",
+          "quantity": 43
+        },
+        {
+          "store_id": "MAG011",
+          "quantity": 46
+        },
+        {
+          "store_id": "MAG012",
+          "quantity": 49
+        }
+      ]
+    },
+    {
+      "product_id": "MV-P035",
+      "sku": "MV-P035",
+      "name": "Cloche de culture",
+      "category": "outillage",
+      "description": "Cloche de culture, selection MaisonVerte pour un jardin durable et facile a entretenir.",
+      "visual": "/images/products/mv-p035.svg",
+      "price_eur": 54.45,
+      "stocks_by_store": [
+        {
+          "store_id": "MAG001",
+          "quantity": 23
+        },
+        {
+          "store_id": "MAG002",
+          "quantity": 26
+        },
+        {
+          "store_id": "MAG003",
+          "quantity": 29
+        },
+        {
+          "store_id": "MAG004",
+          "quantity": 32
+        },
+        {
+          "store_id": "MAG005",
+          "quantity": 35
+        },
+        {
+          "store_id": "MAG006",
+          "quantity": 38
+        },
+        {
+          "store_id": "MAG007",
+          "quantity": 41
+        },
+        {
+          "store_id": "MAG008",
+          "quantity": 44
+        },
+        {
+          "store_id": "MAG009",
+          "quantity": 47
+        },
+        {
+          "store_id": "MAG010",
+          "quantity": 50
+        },
+        {
+          "store_id": "MAG011",
+          "quantity": 7
+        },
+        {
+          "store_id": "MAG012",
+          "quantity": 10
+        }
+      ]
+    },
+    {
+      "product_id": "MV-P036",
+      "sku": "MV-P036",
+      "name": "Bordure bois 1 m",
+      "category": "arrosage",
+      "description": "Bordure bois 1 m, selection MaisonVerte pour un jardin durable et facile a entretenir.",
+      "visual": "/images/products/mv-p036.svg",
+      "price_eur": 55.82,
+      "stocks_by_store": [
+        {
+          "store_id": "MAG001",
+          "quantity": 30
+        },
+        {
+          "store_id": "MAG002",
+          "quantity": 33
+        },
+        {
+          "store_id": "MAG003",
+          "quantity": 36
+        },
+        {
+          "store_id": "MAG004",
+          "quantity": 39
+        },
+        {
+          "store_id": "MAG005",
+          "quantity": 42
+        },
+        {
+          "store_id": "MAG006",
+          "quantity": 45
+        },
+        {
+          "store_id": "MAG007",
+          "quantity": 48
+        },
+        {
+          "store_id": "MAG008",
+          "quantity": 5
+        },
+        {
+          "store_id": "MAG009",
+          "quantity": 8
+        },
+        {
+          "store_id": "MAG010",
+          "quantity": 11
+        },
+        {
+          "store_id": "MAG011",
+          "quantity": 14
+        },
+        {
+          "store_id": "MAG012",
+          "quantity": 17
+        }
+      ]
+    },
+    {
+      "product_id": "MV-P037",
+      "sku": "MV-P037",
+      "name": "Dalle ardoise",
+      "category": "semences",
+      "description": "Dalle ardoise, selection MaisonVerte pour un jardin durable et facile a entretenir.",
+      "visual": "/images/products/mv-p037.svg",
+      "price_eur": 57.19,
+      "stocks_by_store": [
+        {
+          "store_id": "MAG001",
+          "quantity": 37
+        },
+        {
+          "store_id": "MAG002",
+          "quantity": 40
+        },
+        {
+          "store_id": "MAG003",
+          "quantity": 43
+        },
+        {
+          "store_id": "MAG004",
+          "quantity": 46
+        },
+        {
+          "store_id": "MAG005",
+          "quantity": 49
+        },
+        {
+          "store_id": "MAG006",
+          "quantity": 6
+        },
+        {
+          "store_id": "MAG007",
+          "quantity": 9
+        },
+        {
+          "store_id": "MAG008",
+          "quantity": 12
+        },
+        {
+          "store_id": "MAG009",
+          "quantity": 15
+        },
+        {
+          "store_id": "MAG010",
+          "quantity": 18
+        },
+        {
+          "store_id": "MAG011",
+          "quantity": 21
+        },
+        {
+          "store_id": "MAG012",
+          "quantity": 24
+        }
+      ]
+    },
+    {
+      "product_id": "MV-P038",
+      "sku": "MV-P038",
+      "name": "Salon balcon acier",
+      "category": "amenagement",
+      "description": "Salon balcon acier, selection MaisonVerte pour un jardin durable et facile a entretenir.",
+      "visual": "/images/products/mv-p038.svg",
+      "price_eur": 58.56,
+      "stocks_by_store": [
+        {
+          "store_id": "MAG001",
+          "quantity": 44
+        },
+        {
+          "store_id": "MAG002",
+          "quantity": 47
+        },
+        {
+          "store_id": "MAG003",
+          "quantity": 50
+        },
+        {
+          "store_id": "MAG004",
+          "quantity": 7
+        },
+        {
+          "store_id": "MAG005",
+          "quantity": 10
+        },
+        {
+          "store_id": "MAG006",
+          "quantity": 13
+        },
+        {
+          "store_id": "MAG007",
+          "quantity": 16
+        },
+        {
+          "store_id": "MAG008",
+          "quantity": 19
+        },
+        {
+          "store_id": "MAG009",
+          "quantity": 22
+        },
+        {
+          "store_id": "MAG010",
+          "quantity": 25
+        },
+        {
+          "store_id": "MAG011",
+          "quantity": 28
+        },
+        {
+          "store_id": "MAG012",
+          "quantity": 31
+        }
+      ]
+    },
+    {
+      "product_id": "MV-P039",
+      "sku": "MV-P039",
+      "name": "Coussin exterieur vert",
+      "category": "biodiversite",
+      "description": "Coussin exterieur vert, selection MaisonVerte pour un jardin durable et facile a entretenir.",
+      "visual": "/images/products/mv-p039.svg",
+      "price_eur": 59.93,
+      "stocks_by_store": [
+        {
+          "store_id": "MAG001",
+          "quantity": 5
+        },
+        {
+          "store_id": "MAG002",
+          "quantity": 8
+        },
+        {
+          "store_id": "MAG003",
+          "quantity": 11
+        },
+        {
+          "store_id": "MAG004",
+          "quantity": 14
+        },
+        {
+          "store_id": "MAG005",
+          "quantity": 17
+        },
+        {
+          "store_id": "MAG006",
+          "quantity": 20
+        },
+        {
+          "store_id": "MAG007",
+          "quantity": 23
+        },
+        {
+          "store_id": "MAG008",
+          "quantity": 26
+        },
+        {
+          "store_id": "MAG009",
+          "quantity": 29
+        },
+        {
+          "store_id": "MAG010",
+          "quantity": 32
+        },
+        {
+          "store_id": "MAG011",
+          "quantity": 35
+        },
+        {
+          "store_id": "MAG012",
+          "quantity": 38
+        }
+      ]
+    },
+    {
+      "product_id": "MV-P040",
+      "sku": "MV-P040",
+      "name": "Livre potager naturel",
+      "category": "mobilier",
+      "description": "Livre potager naturel, selection MaisonVerte pour un jardin durable et facile a entretenir.",
+      "visual": "/images/products/mv-p040.svg",
+      "price_eur": 61.3,
+      "stocks_by_store": [
+        {
+          "store_id": "MAG001",
+          "quantity": 12
+        },
+        {
+          "store_id": "MAG002",
+          "quantity": 15
+        },
+        {
+          "store_id": "MAG003",
+          "quantity": 18
+        },
+        {
+          "store_id": "MAG004",
+          "quantity": 21
+        },
+        {
+          "store_id": "MAG005",
+          "quantity": 24
+        },
+        {
+          "store_id": "MAG006",
+          "quantity": 27
+        },
+        {
+          "store_id": "MAG007",
+          "quantity": 30
+        },
+        {
+          "store_id": "MAG008",
+          "quantity": 33
+        },
+        {
+          "store_id": "MAG009",
+          "quantity": 36
+        },
+        {
+          "store_id": "MAG010",
+          "quantity": 39
+        },
+        {
+          "store_id": "MAG011",
+          "quantity": 42
+        },
+        {
+          "store_id": "MAG012",
+          "quantity": 45
+        }
+      ]
+    }
+  ]
+}

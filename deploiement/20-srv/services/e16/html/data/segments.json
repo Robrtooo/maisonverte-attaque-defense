@@ -1,0 +1,8 @@
+{
+  "schema_version": "1.0.0",
+  "segments": [
+    {"segment_id":"SEG-OR","label":"Fidelite Or","members":10,"campaign":"Jardin d'automne"},
+    {"segment_id":"SEG-ARGENT","label":"Fidelite Argent","members":10,"campaign":"Entretien de saison"},
+    {"segment_id":"SEG-BRONZE","label":"Fidelite Bronze","members":10,"campaign":"Bienvenue MaisonVerte"}
+  ]
+}

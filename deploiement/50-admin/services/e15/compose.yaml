@@ -1,0 +1,36 @@
+services:
+  zabbix:
+    image: zabbix/zabbix-appliance:alpine-7.0.27
+    pull_policy: never
+    container_name: supervision-admin01
+    restart: unless-stopped
+    mem_limit: 1024m
+    expose:
+      - "80"
+      - "10051"
+    volumes:
+      - e15-zabbix-data:/var/lib/zabbix
+      - e15-zabbix-mysql:/var/lib/mysql
+      - ./config/zabbix_server.conf:/etc/zabbix/zabbix_server.conf.d/maisonverte.conf:ro
+    networks:
+      - net-admin
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1/ && test -r /etc/zabbix/zabbix_server.conf.d/maisonverte.conf"]
+      interval: 20s
+      timeout: 5s
+      retries: 15
+      start_period: 90s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  e15-zabbix-data:
+  e15-zabbix-mysql:
+
+networks:
+  net-admin:
+    external: true
+    name: net-admin

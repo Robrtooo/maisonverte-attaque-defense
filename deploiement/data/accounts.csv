@@ -1,0 +1,22 @@
+username,role,entity,scopes,status
+f.leclerc,DSI,Informatique,administration supervision,active
+n.roussel,responsable e-commerce,Marketing,boutique campagnes CRM,active
+a.perrot,acheteur gestion du catalogue,Achats,catalogue fournisseurs stocks,active
+resp.mag001,responsable de magasin,Magasins,back-office MAG001,active
+resp.mag002,responsable de magasin,Magasins,back-office MAG002,active
+resp.mag003,responsable de magasin,Magasins,back-office MAG003,active
+resp.mag004,responsable de magasin,Magasins,back-office MAG004,active
+resp.mag005,responsable de magasin,Magasins,back-office MAG005,active
+resp.mag006,responsable de magasin,Magasins,back-office MAG006,active
+resp.mag007,responsable de magasin,Magasins,back-office MAG007,active
+resp.mag008,responsable de magasin,Magasins,back-office MAG008,active
+resp.mag009,responsable de magasin,Magasins,back-office MAG009,active
+resp.mag010,responsable de magasin,Magasins,back-office MAG010,active
+resp.mag011,responsable de magasin,Magasins,back-office MAG011,active
+resp.mag012,responsable de magasin,Magasins,back-office MAG012,active
+logistique.entrepot,gestionnaire entrepot,Logistique,preparations expeditions stocks,active
+svc_deploy,service deploiement,Service,deploiement automatise,active
+svc_caisse,service remontee ventes,Service,consolidation ventes,active
+agence.web,agence boutique externe,Externe,boutique maintenance,active
+client_test,client demonstration,Externe,boutique fidelite,active
+vendeur_test,vendeur demonstration,Externe,place de marche,active
