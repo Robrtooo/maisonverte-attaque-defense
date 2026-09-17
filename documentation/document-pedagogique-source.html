@@ -64,7 +64,7 @@ pre.small { font-size: 7.6pt; background: #fbfbfd; border: 0.75pt solid #e2e3ee;
 <div class="page">
 
 <div class="callout">
-<b>État du document (16/09/2026).</b> Sections 1, 2, 3, 6 et 7 renseignées à partir de l'infrastructure réellement déployée et vérifiée (branche <code>work/integration-deploy</code>, 26 conteneurs sains sur <code>vulndb</code>, NAT OPNsense posé et testé depuis l'extérieur, 23 règles Suricata écrites et déployées sur <code>nsm</code>). Section 4/5 : chaîne A rejouée à 3/4 (preuve réelle) le 16/09/2026, chaîne B amorcée (E5), chaîne C arrêtée à E3 (indice E6 connu, exploitation pwnscriptum non aboutie). Section 8 (répartition nominative) renseignée.
+<b>État du document (17/09/2026).</b> Sections 1, 2, 3, 6 et 7 renseignées à partir de l'infrastructure réellement déployée et vérifiée (branche <code>work/integration-deploy</code>, 26 conteneurs sains sur <code>vulndb</code>, NAT OPNsense posé et testé depuis l'extérieur, 23 règles Suricata écrites et déployées sur <code>nsm</code>). Section 4/5 : chaîne A rejouée à 3/4 (preuve réelle) le 16/09/2026, chaîne B amorcée (E5), chaîne C arrêtée à E3 (indice E6 connu, exploitation pwnscriptum non aboutie). Section 8 (répartition nominative) renseignée. <b>Mise à jour du 17/09 :</b> le rapport d'attaque du groupe attaquant assigné (G10, 16/09/2026) corrobore E2/E5/E7/E8/E11 comme compromis, confirme les blocages déjà identifiés sur E3/E14 et en révèle un supplémentaire (permissions des flags) — voir section 9.
 </div>
 
 <div class="sec">
@@ -181,14 +181,14 @@ pre.small { font-size: 7.6pt; background: #fbfbfd; border: 0.75pt solid #e2e3ee;
 <tr><td>E3</td><td>Boutique WordPress</td><td>wordpress/pwnscriptum</td><td>RCE non authentifiée</td><td>N1</td><td>Exploit pwnscriptum, indice vers back-office E6</td><td class="pending">Tenté, non abouti — voir §5</td><td>flag_id=2, conteneur <code>shop-dmz01</code></td></tr>
 <tr><td>E5</td><td>Portail vendeurs Tomcat</td><td>tomcat/CVE-2017-12615</td><td>CVE-2017-12615</td><td>N1</td><td>PUT JSP non authentifié → webshell, indice Jenkins</td><td>Oui — voir §5 chaîne B</td><td>flag_id=3, conteneur <code>market-dmz01</code></td></tr>
 <tr><td>E7</td><td>Recherche produits</td><td>elasticsearch/CVE-2015-1427</td><td>CVE-2015-1427</td><td>N2</td><td>RCE Groovy non authentifiée, indice vers Redis</td><td>Oui — voir §5 chaîne A</td><td>flag_id=4, conteneur <code>search-srv01</code></td></tr>
-<tr><td>E8</td><td>Cache sessions</td><td>redis/4-unacc</td><td>accès non authentifié</td><td>N2</td><td>Redis sans mot de passe, lecture d'un secret PostgreSQL</td><td>Lecture confirmée — RCE en cours (équipe attaque)</td><td>flag_id=5, conteneur <code>cache-srv01</code></td></tr>
-<tr><td>E10</td><td>Base catalogue / commandes</td><td>postgres/CVE-2019-9193</td><td>CVE-2019-9193 (COPY FROM PROGRAM)</td><td>N3</td><td>Exécution de commande via COPY FROM PROGRAM avec le compte de service</td><td class="pending">à renseigner</td><td>flag_id=6, conteneur <code>catalog-data01</code></td></tr>
-<tr><td>E14</td><td>Déploiement Jenkins</td><td>jenkins/CVE-2024-23897</td><td>CVE-2024-23897</td><td>N2</td><td>Lecture de fichier arbitraire via CLI non authentifiée, secret de job</td><td class="pending">à renseigner</td><td>flag_id=7, conteneur <code>deploy-srv01</code></td></tr>
-<tr><td>E12</td><td>Consolidation ventes</td><td>xxl-job/unacc</td><td>executor sans authentification</td><td>N3</td><td>RPC executor 9999 non authentifié, exécution de commande</td><td class="pending">à renseigner</td><td>flag_id=8, conteneur <code>pos-consol-shops01</code></td></tr>
-<tr><td>E11</td><td>Base clients</td><td>mongo-express/CVE-2019-10758</td><td>CVE-2019-10758</td><td>N3</td><td>Injection NoSQL → RCE via <code>$where</code>, ou creds par défaut <code>admin/pass</code></td><td class="pending">à renseigner</td><td>flag_id=9, conteneur <code>clients-data01</code></td></tr>
-<tr><td>E6</td><td>Back-office commerçant</td><td>ofbiz/CVE-2023-51467</td><td>CVE-2023-51467</td><td>N2</td><td>Contournement d'authentification via <code>ProgramExport</code>, indice partage E9</td><td class="pending">à renseigner</td><td>flag_id=10, conteneur <code>backoffice-srv01</code></td></tr>
-<tr><td>E9</td><td>Fichiers marketing</td><td>samba/CVE-2017-7494</td><td>CVE-2017-7494 (is_known_pipename)</td><td>N2</td><td>RCE via partage accessible en écriture, procédure WMS trouvée</td><td class="pending">à renseigner</td><td>flag_id=11, conteneur <code>files-srv01</code></td></tr>
-<tr><td>E13</td><td>WMS entrepôt</td><td>struts2/s2-045</td><td>S2-045</td><td>N3</td><td>RCE via en-tête <code>Content-Type</code> (OGNL)</td><td class="pending">à renseigner</td><td>flag_id=12, conteneur <code>wms-shops01</code></td></tr>
+<tr><td>E8</td><td>Cache sessions</td><td>redis/4-unacc</td><td>accès non authentifié</td><td>N2</td><td>Redis sans mot de passe, lecture d'un secret PostgreSQL</td><td>Oui — RCE (commande <code>MODULE</code>) confirmée par le rapport d'attaque G10, débloquée par la correction de permission du flag — voir §9</td><td>flag_id=5, conteneur <code>cache-srv01</code></td></tr>
+<tr><td>E10</td><td>Base catalogue / commandes</td><td>postgres/CVE-2019-9193</td><td>CVE-2019-9193 (COPY FROM PROGRAM)</td><td>N3</td><td>Exécution de commande via COPY FROM PROGRAM avec le compte de service</td><td class="pending">Non abouti — chaîne A bloquée après E8 : le rapport d'attaque G10 signale l'absence de client PostgreSQL exploitable depuis E8 — voir §5/§9</td><td>flag_id=6, conteneur <code>catalog-data01</code></td></tr>
+<tr><td>E14</td><td>Déploiement Jenkins</td><td>jenkins/CVE-2024-23897</td><td>CVE-2024-23897</td><td>N2</td><td>Lecture de fichier arbitraire via CLI non authentifiée, secret de job</td><td class="pending">Non abouti — incompatibilité Java confirmée par nos tests et par G10 (<code>jenkins-cli.jar</code> nécessite Java 11+, E5 n'a que Java 8) — voir §5/§9</td><td>flag_id=7, conteneur <code>deploy-srv01</code></td></tr>
+<tr><td>E12</td><td>Consolidation ventes</td><td>xxl-job/unacc</td><td>executor sans authentification</td><td>N3</td><td>RPC executor 9999 non authentifié, exécution de commande</td><td class="pending">Non atteint — chaîne B bloquée en amont à E14</td><td>flag_id=8, conteneur <code>pos-consol-shops01</code></td></tr>
+<tr><td>E11</td><td>Base clients</td><td>mongo-express/CVE-2019-10758</td><td>CVE-2019-10758</td><td>N3</td><td>Injection NoSQL → RCE via <code>$where</code>, ou creds par défaut <code>admin/pass</code></td><td>Oui — RCE via <code>/checkValid</code> confirmée par le rapport d'attaque G10</td><td>flag_id=9, conteneur <code>clients-data01</code></td></tr>
+<tr><td>E6</td><td>Back-office commerçant</td><td>ofbiz/CVE-2023-51467</td><td>CVE-2023-51467</td><td>N2</td><td>Contournement d'authentification via <code>ProgramExport</code>, indice partage E9</td><td class="pending">Non atteint — chaîne C arrêtée à E3 (voir §5)</td><td>flag_id=10, conteneur <code>backoffice-srv01</code></td></tr>
+<tr><td>E9</td><td>Fichiers marketing</td><td>samba/CVE-2017-7494</td><td>CVE-2017-7494 (is_known_pipename)</td><td>N2</td><td>RCE via partage accessible en écriture, procédure WMS trouvée</td><td class="pending">Non atteint — chaîne C arrêtée à E3 (voir §5)</td><td>flag_id=11, conteneur <code>files-srv01</code></td></tr>
+<tr><td>E13</td><td>WMS entrepôt</td><td>struts2/s2-045</td><td>S2-045</td><td>N3</td><td>RCE via en-tête <code>Content-Type</code> (OGNL)</td><td class="pending">Non atteint — chaîne C arrêtée à E3 (voir §5)</td><td>flag_id=12, conteneur <code>wms-shops01</code></td></tr>
 </table>
 </div>
 
@@ -203,7 +203,7 @@ pre.small { font-size: 7.6pt; background: #fbfbfd; border: 0.75pt solid #e2e3ee;
 <tr><td>E2</td><td><code>cache.maisonverte.fr</code> publié via NAT E2</td><td>Traversal <code>/files../</code> → lecture du runbook, révèle route + jeton de recherche</td><td>E7</td></tr>
 <tr><td>E7</td><td>Route + jeton lus sur E2</td><td>RCE Groovy confirmée (<code>id</code> → <code>uid=0(root)</code>), indice Redis lu</td><td>E8</td></tr>
 <tr><td>E8</td><td>Indice E7 validé</td><td>Pivot réseau via <code>/dev/tcp</code>, lecture Redis → credential PostgreSQL de service</td><td>E10</td></tr>
-<tr><td>E10</td><td>Credential E8 obtenu</td><td class="pending">En cours (équipe attaque) — accès réseau E8→E10 confirmé disponible</td><td>fin de chaîne</td></tr>
+<tr><td>E10</td><td>Credential E8 obtenu</td><td class="pending">Bloqué côté attaquant — accès réseau E8→E10 confirmé disponible, mais le rapport d'attaque G10 signale l'absence de client PostgreSQL exploitable sur E8 (seuls bash/curl/md5sum disponibles) ; à retester avec un outillage adapté</td><td>fin de chaîne</td></tr>
 </table>
 
 <p class="small"><b>Preuve 1 — E2, traversal :</b></p>
@@ -241,8 +241,8 @@ host=catalog-data01 port=5432 dbname=maisonverte user=mv_catalog_admin password=
 <tr><th>Étape</th><th>Précondition</th><th>Résultat obtenu</th><th>Mène à</th></tr>
 <tr><td>E5</td><td><code>vendeurs.maisonverte.fr</code> publié via E2</td><td>PUT JSP (CVE-2017-12615) confirmé → webshell, RCE <code>id</code> → <code>uid=0(root)</code></td><td>E14</td></tr>
 <tr><td>E14</td><td>Indice « deploy-srv01 » sur la page E5</td><td class="pending">Bloqué : E5 n'a que Java 8 (Tomcat 8.5.19/Debian 9), le CLI Jenkins 2.441 exige Java 11+</td><td>E12</td></tr>
-<tr><td>E12</td><td>Secret E14</td><td class="pending">à renseigner</td><td>E11</td></tr>
-<tr><td>E11</td><td>Credential E12</td><td class="pending">à renseigner</td><td>fin de chaîne</td></tr>
+<tr><td>E12</td><td>Secret E14</td><td class="pending">Non atteint — chaîne bloquée en amont à E14 (incompatibilité Java, confirmée par G10)</td><td>E11</td></tr>
+<tr><td>E11</td><td>Credential E12</td><td class="pending">Non atteint par cette chaîne — mais E11 a été compromis directement (RCE <code>/checkValid</code>, sans passer par E12), confirmé par le rapport d'attaque G10 (voir §4)</td><td>fin de chaîne</td></tr>
 </table>
 
 <p class="small"><b>Preuve 1 — E5, PUT JSP (CVE-2017-12615), écriture d'un webshell :</b></p>
@@ -264,7 +264,7 @@ of the Java Runtime only recognizes class file versions up to 52.0</pre>
 <p class="small">E5 n'a que Java 8 (<code>1.8.0_141</code>) ; le CLI Jenkins 2.441 exige Java 11+. Contournement testé (conteneur jetable basé sur l'image <code>vulhub/jenkins:2.441</code>, qui embarque Java 17, sur le réseau <code>mv-b-edge</code>) : la commande CLI utilisée (<code>connect-node</code>) échoue avec <code>No such agent ... exists</code> — la syntaxe exacte pour déclencher la lecture de fichier CVE-2024-23897 reste à ajuster.</p>
 
 <h3>Chaîne C — boutique → back-office → fichiers → entrepôt</h3>
-<p><code>E3 → E6 → E9 → E13</code> — <b>arrêtée à l'étape E3</b> le 16/09/2026.</p>
+<p><code>E3 → E6 → E9 → E13</code> — <b>arrêtée à l'étape E3</b> le 16/09/2026, cause racine confirmée indépendamment par le rapport d'attaque G10 (16/09/2026) : PHPMailer patché dans l'image WordPress déployée.</p>
 <table>
 <tr><th>Étape</th><th>Précondition</th><th>Résultat obtenu</th><th>Mène à</th></tr>
 <tr><td>E3</td><td><code>shop.maisonverte.fr</code> publié via E2</td><td>Indice back-office trouvé par simple lecture du site (article public, sans exploit). Exploitation pwnscriptum tentée (injection Host/PHPMailer-Exim) mais non concluante après plusieurs essais.</td><td>E6</td></tr>
@@ -292,7 +292,7 @@ Stack trace: PHPMailer->setFrom(...) -&gt; wp_mail(...) -&gt; retrieve_password(
 <div class="sec-rule"></div>
 
 <h3>6a. Accès d'administration du lab (infrastructure)</h3>
-<p class="small">Mots de passe volontairement omis de ce document versionné (rotés régulièrement par l'équipe) — voir le gestionnaire de secrets / canal privé de l'équipe pour les valeurs courantes.</p>
+<p class="small">Mots de passe volontairement omis de ce document versionné (rotés régulièrement par l'équipe) — voir le gestionnaire de secrets / canal privé de l'équipe pour les valeurs courantes. <span class="pending">Constat du 17/09 (rapport d'attaque G10) : le mot de passe par défaut <code>Defense2600!</code> était encore actif sur le poste (<code>10.85.4.20</code>) et sur <code>vulndb</code> (<code>192.168.10.50</code>) au moment de l'attaque — la rotation annoncée ici n'avait pas été faite avant la Phase 2. Voir §9.</span></p>
 <table>
 <tr><th>Service</th><th>Compte</th><th>Mot de passe</th><th>Rôle / droits</th><th>Zone</th><th>Commentaire</th></tr>
 <tr><td>OPNsense (webConfigurator)</td><td>root</td><td>— (canal privé équipe)</td><td>Administration complète du pare-feu du groupe</td><td>bordure (E1)</td><td><code>https://192.168.10.1/</code></td></tr>
@@ -355,7 +355,7 @@ Stack trace: PHPMailer->setFrom(...) -&gt; wp_mail(...) -&gt; retrieve_password(
 <h3>7b. Règles Suricata</h3>
 <p>Écrites et déployées le 16/09/2026 sur <code>/etc/suricata/rules/tp-local.rules</code> (sonde <code>nsm</code>, <code>192.168.10.30</code>) : 23 règles ajoutées (SID 9000007 à 9000029) au-dessus des 6 règles socle fournies par la plateforme (SID 9000001-9000006, non modifiées). Validation <code>suricata -T</code> : 0 erreur. Rechargement : 52613 règles chargées au total, 0 échec.</p>
 <p><b>Constat de test réel important.</b> E2/E3/E5 sont publiés en TLS. Un test en direct a confirmé que les signatures de <i>contenu</i> HTTP (traversal, user-agent, canary…) ne se déclenchent pas sur ce trafic chiffré (limite technique, pas un bug — Suricata ne peut pas inspecter un corps TLS sans les clés de session). Pour compenser, 4 règles supplémentaires basées sur le <b>SNI TLS</b> (visible en clair dans le ClientHello) ont été ajoutées et <b>vérifiées déclenchées en conditions réelles</b> le 16/09/2026 à 10:58:48 (alertes <code>fast.log</code> pour <code>shop</code>/<code>vendeurs</code>/<code>cache.maisonverte.fr</code>, source <code>10.200.0.67</code> → <code>192.168.10.50:443</code>). C'est la détection réseau fiable pour le trafic N1 réel ; la preuve applicative détaillée (contenu de l'exploit) reste à chercher côté ELK/logs applicatifs, pas côté réseau, pour tout ce qui passe derrière E2. Détail complet par SID : <code>documentation/08-regles-suricata.md</code>.</p>
-<p class="pending">Reste à faire : déclencher les règles restantes (pivots internes, DATA, canary) en conditions réelles lors du rejeu des chaînes A/B/C (section 4/5) et vérifier dans EveBox (<code>http://192.168.10.30:5636/</code>) avant la recette finale.</p>
+<p class="pending">Mise à jour du 17/09 : le rapport d'attaque G10 confirme le déclenchement réel (voir <code>documentation/rapport-detection-source.html</code> §6/§6a) sur E2, E5, E7, E8 et E11. Les chaînes B (E14/E12) et C (E6/E9/E13) restent sans preuve de déclenchement — non pas faute de règle, mais parce que G10 ne les a pas atteintes (voir §5/§9). Reste à faire : rejouer ces deux chaînes après correctif pour vérifier que les règles associées se déclenchent bien, et récupérer la preuve applicative (ELK) pour E7/E8/E11, invisibles pour Suricata (trafic intra-Docker).</p>
 </div>
 
 <div class="sec">
@@ -370,6 +370,21 @@ Stack trace: PHPMailer->setFrom(...) -&gt; wp_mail(...) -&gt; retrieve_password(
 <tr><td>Adam Attafi</td><td>Validation des 3 chaînes d'exploitation (A/B/C) côté red team avant livraison ; préparation de l'attaque Phase 2 contre le groupe adverse ; chef de groupe / contact builder</td><td>Tests de rejeu sur l'ensemble des 12 vulnérabilités</td><td><code>06-recette.md</code></td><td>—</td></tr>
 <tr><td>Seymen Isikli</td><td>Validation des 3 chaînes d'exploitation (A/B/C) côté red team avant livraison ; préparation de l'attaque Phase 2 contre le groupe adverse</td><td>Tests de rejeu sur l'ensemble des 12 vulnérabilités</td><td><code>06-recette.md</code></td><td>—</td></tr>
 </table>
+</div>
+
+<div class="sec">
+<div class="sec-head"><span class="sec-num">9</span><span class="sec-title">Correctifs identifiés (rapport d'attaque G10, 16/09/2026)</span></div>
+<div class="sec-rule"></div>
+<p>Le groupe attaquant assigné (G10) a communiqué son rapport d'attaque le 16/09/2026, avec 4 points bloquants et 1 majeur. Documentés ici pour traçabilité ; correctifs <span class="pending">non encore appliqués</span> à la date de ce document.</p>
+<table>
+<tr><th>#</th><th>Constat</th><th>Impact</th><th>Correctif proposé</th><th>Statut</th></tr>
+<tr><td>1 — Bloquant</td><td>Flags montés <code>-rw------- 1001:1001</code> : illisibles par les services qui ne tournent pas en root (E8 uid 999, E10 uid 999, E2 www-data)</td><td>Flag incapturable même après compromission complète du service</td><td><code>chmod 644 state/services/*/flag.txt</code> dans chaque <code>install-eX-*.sh</code>, avant le <code>docker cp</code>/montage</td><td class="pending">Non appliqué</td></tr>
+<tr><td>2 — Bloquant</td><td>Chaîne B : <code>/tmp/jenkins-cli.jar</code> posé sur E5 compilé pour Java 11+, alors qu'E5 (Tomcat) n'embarque que Java 8 (<code>1.8.0_141</code>)</td><td>Chaîne B morte au maillon E5→E14 ; E14 et E12 incapturables par ce chemin</td><td>Déposer un JRE 11+ sur E5, ou remplacer le pivot par un client compatible Java 8</td><td class="pending">Non appliqué</td></tr>
+<tr><td>3 — Bloquant</td><td>Chaîne C : PHPMailer embarqué dans l'image WordPress d'E3 est en version patchée (<code>escapeshellarg</code> sur <code>Sender</code>, ≥ 5.2.21) — confirmé indépendamment par nos propres tests (§5, preuve 2)</td><td>Chaîne C entière inaccessible (E6, E9, E13)</td><td>Injecter une version vulnérable de PHPMailer (≤ 5.2.20) dans <code>shop-dmz01</code>, ou adapter le scénario E3</td><td class="pending">Non appliqué</td></tr>
+<tr><td>4 — Bloquant</td><td>Chaîne A : aucun client PostgreSQL sur E8 (uniquement bash/curl/md5sum) pour exploiter le credential révélé vers E10</td><td>Chaîne A bloquée au dernier maillon E8→E10</td><td>Fournir un client (psql statique, script python/perl) sur <code>cache-srv01</code>, ou faire porter la connexion par un maillon disposant d'un client</td><td class="pending">Non appliqué</td></tr>
+<tr><td>5 — Majeur</td><td>Mots de passe par défaut <code>root/Defense2600!</code> actifs sur le poste et <code>vulndb</code> ; <code>admin/password</code> et <code>webadmin/letmein</code> du bundle également inchangés</td><td>Zone lab accessible aux autres groupes avec les identifiants école, y compris <code>state/secrets/</code> et les flags côté builder</td><td>Changer les mots de passe comme prévu par le bundle, retirer les secrets du dépôt</td><td class="pending">Non appliqué</td></tr>
+</table>
+<p class="small">Le même rapport signale positivement : architecture documentée à jour (ce document, utilisé tel quel par G10), déploiement offline rejouable, images épinglées, pivots matériels bien pensés, défense ELK cloisonnée, services sains réellement sains (E4, E15, E16). Aucune donnée détruite côté attaquant ; traces limitées à <code>/tmp</code> sur <code>search-srv01</code> et <code>clients-data01</code>.</p>
 </div>
 
 <div class="footer">Modèle généré à partir de document-pedagogique-template.md. Document pédagogique — usage interne, groupe MaisonVerte.</div>
