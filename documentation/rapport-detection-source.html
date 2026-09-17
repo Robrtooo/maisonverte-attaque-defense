@@ -1,0 +1,309 @@
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+@page { margin: 0; }
+body { font-family: "Liberation Sans", Arial, sans-serif; font-size: 10.5pt; color: #2a2a35; margin: 0; background: #eef0f5; }
+
+.hero { background: #13152c; color: #ffffff; padding: 28pt 34pt 24pt 34pt; }
+.hero-top { width: 100%; background: transparent; }
+.hero-top td { vertical-align: top; background: transparent; border: none; }
+.brand { font-size: 20pt; font-weight: bold; color: #ffffff; }
+.brand-sub { font-size: 8.5pt; color: #b6b8cc; margin-top: 2pt; }
+.badges { text-align: right; }
+.badge { display: inline-block; border: 1px solid #3c3f66; background: #1b1e3d; border-radius: 5pt; padding: 5pt 12pt; margin-left: 6pt; }
+.badge-label { font-size: 6.5pt; letter-spacing: 0.5pt; color: #9a9cc2; text-transform: uppercase; }
+.badge-value { font-size: 9.5pt; font-weight: bold; color: #ffffff; }
+.hero-rule { height: 2pt; margin: 14pt 0 16pt 0; background: #7c6ef0; }
+.hero h1 { font-size: 19pt; margin: 4pt 0 4pt 0; font-weight: bold; color: #ffffff; }
+.hero-desc { font-family: monospace; font-size: 8.5pt; color: #c6c8dd; margin: 0; }
+
+.page { padding: 18pt 34pt 30pt 34pt; }
+
+.callout { background: #fdf3e2; border-left: 3pt solid #dd9a3a; border-radius: 3pt; padding: 9pt 12pt; margin: 14pt 0; font-size: 9pt; }
+.callout b { color: #7a4c12; }
+
+.sec { margin-top: 22pt; }
+.sec-head { }
+.sec-num { display: inline-block; width: 17pt; height: 17pt; line-height: 17pt; text-align: center; background: #5b4bda; color: #fff; font-size: 9pt; font-weight: bold; border-radius: 3pt; margin-right: 7pt; }
+.sec-title { font-size: 13pt; font-weight: bold; color: #1c1e3a; }
+.sec-rule { height: 1.5pt; background: #5b4bda; margin: 5pt 0 10pt 0; }
+
+h3 { font-size: 10.5pt; margin: 12pt 0 4pt 0; color: #3a3d68; border-left: 2.5pt solid #a99bf5; padding-left: 6pt; }
+
+table { border-collapse: collapse; width: 100%; margin: 6pt 0 12pt 0; background: #ffffff; }
+th { text-align: left; font-size: 7.8pt; text-transform: uppercase; letter-spacing: 0.3pt; color: #6a6c85; border-bottom: 1.5pt solid #d8d9e6; padding: 5pt 6pt; background: #ffffff; }
+td { font-size: 8.6pt; padding: 5pt 6pt; border-bottom: 0.75pt solid #ecedf3; vertical-align: top; color: #2a2a35; }
+
+.pending { background: #fdf3e2; font-style: italic; color: #8a6a2f; }
+.done { background: #e9f7ec; color: #1e6b39; font-weight: bold; }
+.small { font-size: 8pt; color: #66687d; }
+code { font-family: monospace; font-size: 8.3pt; background: #f1f1f7; padding: 1pt 3pt; border-radius: 2pt; }
+pre.small { font-size: 7.6pt; background: #fbfbfd; border: 0.75pt solid #e2e3ee; padding: 8pt; color: #3a3d55; }
+.footer { margin-top: 26pt; font-size: 7.8pt; color: #9698ac; border-top: 0.75pt solid #dcddea; padding-top: 6pt; }
+.shot { margin: 8pt 0 12pt 0; }
+.shot img { width: 100%; border: 0.75pt solid #d8d9e6; border-radius: 3pt; }
+.shot-cap { font-size: 7.6pt; color: #66687d; margin: 2pt 0 0 0; font-family: monospace; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <table class="hero-top"><tr>
+    <td>
+      <div class="brand">2600</div>
+      <div class="brand-sub">École de cybersécurité</div>
+    </td>
+    <td class="badges">
+      <span class="badge"><div class="badge-label">Document</div><div class="badge-value">Rapport de détection</div></span>
+      <span class="badge"><div class="badge-label">Profil</div><div class="badge-value">E — MaisonVerte</div></span>
+      <span class="badge"><div class="badge-label">Promotion</div><div class="badge-value">Master 1</div></span>
+    </td>
+  </tr></table>
+  <div class="hero-rule"></div>
+  <h1>Kobayashi Maru —<br>Rapport de détection</h1>
+  <p class="hero-desc">Phase 2 — Observateur / défenseur — KM-M1-CDC-E · 2026</p>
+</div>
+
+<div class="page">
+
+<div class="callout">
+<b>État du document (17/09/2026).</b> Les 23 règles locales (§4) sont écrites, déployées et chargées sans erreur sur la sonde <code>nsm</code> depuis le matin du 16/09/2026. Avant le début de la Phase 2 (16/09/2026, 13h00), elles ont été <b>auto-testées</b> volontairement depuis nos propres adresses pour vérifier qu'elles se déclenchent — voir §5. À partir de 13h00-14h00 le 16/09/2026, le volume et la nature du trafic changent nettement (pic à ~4 500 alertes/20 min, balayage massif multi-CVE, tentatives d'exploitation génériques) : c'est la fenêtre où démarre le trafic du <b>groupe attaquant réel</b>, détaillée en §6.
+</div>
+
+<div class="sec">
+<div class="sec-head"><span class="sec-num">1</span><span class="sec-title">Contexte et rôle</span></div>
+<div class="sec-rule"></div>
+
+<table>
+<tr><th>Champ</th><th>Valeur</th></tr>
+<tr><td>Rôle</td><td>Observateur / défenseur — détection et documentation des attaques menées contre le SI MaisonVerte du groupe G04</td></tr>
+<tr><td>Sonde</td><td>Suricata + EveBox sur <code>nsm</code> (<code>192.168.10.30</code>), pont L2 transparent entre le segment poste et <code>vulndb</code></td></tr>
+<tr><td>Complément</td><td>Stack ELK défensive (Elasticsearch/Kibana/Filebeat, zone <code>net-admin</code>), distincte du service vulnérable E7, lit les logs Docker JSON en lecture seule</td></tr>
+<tr><td>Fenêtre d'observation</td><td>Phase 2 — Jour 3 (13h00-18h00) et Jour 4 (09h30-18h00)</td></tr>
+</table>
+</div>
+
+<div class="sec">
+<div class="sec-head"><span class="sec-num">2</span><span class="sec-title">Sources de détection</span></div>
+<div class="sec-rule"></div>
+
+<table>
+<tr><th>Source</th><th>Rôle</th><th>Limite</th></tr>
+<tr><td>Suricata</td><td>Preuve réseau officielle</td><td>Voit le trafic qui traverse le pont L2 (dont le trafic N1 externe via NAT OPNsense), pas nécessairement les flux intra-hôte Docker (la plupart des pivots N2/N3)</td></tr>
+<tr><td>EveBox</td><td>Consultation des alertes Suricata</td><td>Accessible depuis le pivot interne, <code>http://192.168.10.30:5636/</code></td></tr>
+<tr><td>ELK défensif</td><td>Logs Docker au format JSON, par conteneur</td><td>Distinct de E7 (vulnérable) ; Kibana publié en loopback uniquement (<code>127.0.0.1:5601</code> sur <code>vulndb</code>), tunnel SSH requis</td></tr>
+<tr><td>Logs Docker</td><td>Traces applicatives par conteneur</td><td>Dépendent des images et des healthchecks fournis par Vulhub</td></tr>
+</table>
+
+<p class="small">Principe retenu : ELK ne remplace jamais Suricata, il en complète les angles morts Docker. Le fichier de règles locales est <code>/etc/suricata/rules/tp-local.rules</code> sur <code>nsm</code>, avec des SID locaux à partir de <code>9000001</code> ; une correspondance SID → étape → alerte → preuve est tenue à jour dans <code>documentation/05-detection.md</code>.</p>
+</div>
+
+<div class="sec">
+<div class="sec-head"><span class="sec-num">3</span><span class="sec-title">Couverture attendue par famille</span></div>
+<div class="sec-rule"></div>
+
+<table>
+<tr><th>Famille</th><th>Exemples à couvrir</th><th>Preuve à ajouter</th></tr>
+<tr><td>Reconnaissance</td><td>scans, vhosts, chemins sensibles</td><td>alerte EveBox + paquet/log</td></tr>
+<tr><td>N1 (points d'entrée)</td><td>E2 nginx, E3 WordPress, E5 Tomcat</td><td>alerte par point d'entrée</td></tr>
+<tr><td>Pivots internes</td><td>E7, E8, E14, E12, E6, E9</td><td>alerte ou log corrélé</td></tr>
+<tr><td>DATA / SHOPS</td><td>E10, E11, E13</td><td>flux final + accès flag masqué</td></tr>
+<tr><td>Canaries IA</td><td><code>AI-CANARY-*</code> si déclenchés</td><td>alerte sans effet fonctionnel</td></tr>
+<tr><td>Services sains</td><td>E4, E15, E16</td><td>logs montrant un accès normal, sans flag volontaire</td></tr>
+</table>
+</div>
+
+<div class="sec">
+<div class="sec-head"><span class="sec-num">4</span><span class="sec-title">Règles de détection produites</span></div>
+<div class="sec-rule"></div>
+
+<p>Déployées le 16/09/2026 sur <code>/etc/suricata/rules/tp-local.rules</code> (sonde <code>nsm</code>) : 23 règles locales ajoutées (SID 9000007 à 9000029) au-dessus des 6 règles socle fournies par la plateforme (SID 9000001-9000006, non modifiées, listées §4a). Validation <code>suricata -T -c /etc/suricata/suricata.yaml</code> : 0 erreur. Rechargement (<code>systemctl restart suricata</code>) : 52613 règles chargées au total, 0 échec. Sauvegarde de l'ancien fichier : <code>/etc/suricata/rules/tp-local.rules.bak-20260916</code>. Copie versionnée : <code>deploiement/80-detection/tp-local.rules</code>.</p>
+
+<h3>4a. Socle plateforme (non modifié)</h3>
+<table>
+<tr><th>SID</th><th>Message</th><th>Déclencheur</th></tr>
+<tr><td>9000001</td><td>ICMP echo request vers le segment protégé</td><td>ping vers <code>vulndb</code>/segment protégé</td></tr>
+<tr><td>9000002</td><td>Marqueur de test (URI <code>/tp-suricata-test</code>)</td><td>requête HTTP de test</td></tr>
+<tr><td>9000003</td><td>Connexion MySQL/MariaDB vers le segment protégé</td><td>connexion TCP/3306</td></tr>
+<tr><td>9000004</td><td>Connexion Redis (sans authentification) vers le segment protégé</td><td>connexion TCP/6379</td></tr>
+<tr><td>9000005</td><td>Injection SQL probable (UNION SELECT dans l'URI)</td><td>motif générique dans l'URI</td></tr>
+<tr><td>9000006</td><td>Balayage de ports probable (SYN vers &gt;15 ports en 10s)</td><td>scan TCP</td></tr>
+</table>
+
+<h3>4b. Reconnaissance</h3>
+<table>
+<tr><th>SID</th><th>Message</th><th>Déclencheur</th></tr>
+<tr><td>9000007</td><td>User-agent <code>sqlmap</code></td><td>en-tête <code>User-Agent</code> HTTP</td></tr>
+<tr><td>9000008</td><td>User-agent <code>Nikto</code></td><td>en-tête <code>User-Agent</code> HTTP</td></tr>
+<tr><td>9000009</td><td>Outil de brute-force de répertoires (gobuster/dirbuster/ffuf/wfuzz)</td><td>en-tête <code>User-Agent</code> HTTP</td></tr>
+</table>
+
+<h3>4c. N1 — points d'entrée (E2, E3, E5)</h3>
+<table>
+<tr><th>SID</th><th>Service</th><th>Message</th><th>Déclencheur</th></tr>
+<tr><td>9000010</td><td>E2</td><td>nginx alias path traversal (<code>/files../</code>)</td><td>URI HTTP</td></tr>
+<tr><td>9000011</td><td>E3</td><td>WordPress pwnscriptum, injection de commande via en-tête Host (<code>${run{</code>)</td><td>URI <code>/wp-login.php</code> + en-tête Host</td></tr>
+<tr><td>9000012</td><td>E5</td><td>Tomcat PUT JSP (CVE-2017-12615)</td><td>méthode PUT + URI se terminant par <code>.jsp</code></td></tr>
+</table>
+
+<h3>4d. Pivots internes (E6, E7, E8, E9, E12, E14)</h3>
+<table>
+<tr><th>SID</th><th>Service</th><th>Message</th><th>Déclencheur</th></tr>
+<tr><td>9000013</td><td>E7</td><td>Elasticsearch RCE via script groovy (CVE-2015-1427)</td><td>URI <code>_search</code> + corps <code>"lang":"groovy"</code></td></tr>
+<tr><td>9000014</td><td>E8</td><td>Redis SLAVEOF/REPLICAOF (prise de contrôle rogue master)</td><td>commande Redis <code>SLAVEOF</code></td></tr>
+<tr><td>9000015</td><td>E8</td><td>Redis MODULE LOAD</td><td>commandes Redis <code>MODULE</code> + <code>LOAD</code></td></tr>
+<tr><td>9000016</td><td>E14</td><td>Jenkins — téléchargement <code>jenkins-cli.jar</code> (reconnaissance CVE-2024-23897)</td><td>URI <code>/jnlpJars/jenkins-cli.jar</code></td></tr>
+<tr><td>9000017</td><td>E14</td><td>Jenkins CLI — lecture de fichier arbitraire (<code>@/chemin</code>)</td><td>URI <code>/cli</code> + corps contenant <code>@/</code></td></tr>
+<tr><td>9000018</td><td>E12</td><td>XXL-JOB executor — RCE <code>GLUE_SHELL</code> non authentifiée</td><td>URI <code>/run</code> (port 9999) + corps <code>GLUE_SHELL</code></td></tr>
+<tr><td>9000019</td><td>E11</td><td>mongo-express <code>/checkValid</code> RCE (CVE-2019-10758)</td><td>URI <code>/checkValid</code> + corps <code>constructor.constructor</code></td></tr>
+<tr><td>9000020</td><td>E6</td><td>OFBiz <code>ProgramExport</code> — contournement d'authentification (CVE-2023-51467)</td><td>URI <code>/webtools/control/ProgramExport</code> + <code>USERNAME=</code></td></tr>
+<tr><td>9000021</td><td>E9</td><td>Samba — écriture d'un objet <code>.so</code> sur le partage (préalable CVE-2017-7494)</td><td>contenu TCP/445</td></tr>
+<tr><td>9000022</td><td>E13</td><td>Struts2 S2-045 — OGNL dans l'en-tête Content-Type</td><td>en-têtes HTTP : <code>multipart/form-data</code> + <code>%{</code></td></tr>
+</table>
+
+<h3>4e. DATA / SHOPS — objectifs finaux</h3>
+<table>
+<tr><th>SID</th><th>Service</th><th>Message</th><th>Déclencheur</th></tr>
+<tr><td>9000023</td><td>E10</td><td>PostgreSQL <code>COPY FROM PROGRAM</code> (CVE-2019-9193)</td><td>contenu TCP/5432 : <code>COPY</code> + <code>PROGRAM</code></td></tr>
+</table>
+
+<h3>4f. Leurres / canary IA</h3>
+<table>
+<tr><th>SID</th><th>Message</th><th>Déclencheur</th></tr>
+<tr><td>9000024</td><td>Jeton de prompt-injection IA utilisé (<code>AI-CANARY-*</code>)</td><td>contenu HTTP <code>AI-CANARY-</code></td></tr>
+</table>
+
+<h3>4g. Violation d'isolation</h3>
+<table>
+<tr><th>SID</th><th>Message</th><th>Déclencheur</th></tr>
+<tr><td>9000025</td><td>Accès direct poste → port interne normalement non joignable</td><td>source <code>192.168.10.10</code> (poste) vers <code>5432/27017/6379/9200/445/9999/8443</code></td></tr>
+</table>
+
+<h3>4h. Visibilité N1 fiable — SNI TLS (fonctionne malgré le chiffrement)</h3>
+<table>
+<tr><th>SID</th><th>Service</th><th>Message</th><th>Statut</th></tr>
+<tr><td>9000026</td><td>E2</td><td>SNI <code>cache.maisonverte.fr</code></td><td class="done">Auto-test OK 16/09 10:58:48 ; ré-observée en Phase 2 (§6)</td></tr>
+<tr><td>9000027</td><td>E3</td><td>SNI <code>shop.maisonverte.fr</code></td><td class="done">Auto-test OK 16/09 10:58:48 ; ré-observée en Phase 2 (§6), signature la plus fréquente (3 562 hits)</td></tr>
+<tr><td>9000028</td><td>E5</td><td>SNI <code>vendeurs.maisonverte.fr</code></td><td class="done">Auto-test OK 16/09 10:58:48 ; ré-observée en Phase 2 (§6)</td></tr>
+<tr><td>9000029</td><td>E4 (sain)</td><td>SNI <code>api.maisonverte.fr</code></td><td class="done">Non prioritaire en auto-test, mais également déclenchée en Phase 2 (service sain scanné par l'attaquant comme les autres)</td></tr>
+</table>
+</div>
+
+<div class="sec">
+<div class="sec-head"><span class="sec-num">5</span><span class="sec-title">Validation des règles pendant le build (auto-test, avant 13h00 le 16/09)</span></div>
+<div class="sec-rule"></div>
+
+<p class="callout"><b>Portée de cette section.</b> Ce qui suit décrit des tests menés par nous-mêmes contre notre propre infrastructure, <b>avant le début de la Phase 2</b> (16/09/2026, avant 13h00), pour vérifier que les règles se déclenchent. Les attaques réellement détectées ensuite, une fois la Phase 2 lancée, sont documentées en §6.</p>
+
+<p>E2/E3/E5 sont publiés en TLS (443, nginx par défaut = cipher ECDHE, forward secrecy). Le test réalisé le 16/09/2026 au matin a montré que :</p>
+<ul>
+<li>Les <b>signatures de contenu HTTP</b> (traversal <code>/files../</code>, user-agent <code>sqlmap</code>, en-tête canary <code>AI-CANARY-*</code>, etc.) <b>ne se déclenchent pas</b> sur ce trafic : Suricata ne peut pas inspecter un contenu chiffré sans les clés de session, et la capture passive de clé RSA ne fonctionne pas avec ECDHE/TLS 1.3. Ces règles restent dans le fichier (elles documentent la logique de détection attendue et s'activeraient sur un flux en clair) mais <b>ne doivent pas être présentées comme preuve réseau</b> pour les services servis derrière E2.</li>
+<li>Les <b>règles SNI TLS</b> (9000026-9000029) <b>se sont bien déclenchées</b> : test à 10:58:48 le 16/09/2026, alertes <code>MV N1 TLS SNI shop.maisonverte.fr</code>, <code>vendeurs.maisonverte.fr</code> et <code>cache.maisonverte.fr</code> vues dans <code>fast.log</code> vers <code>192.168.10.50:443</code>. Ça a validé que la détection réseau fonctionnerait aussi pour le trafic N1 du groupe attaquant réel — confirmé en §6.</li>
+<li><b>Preuve applicative</b> (contenu réel de la requête/exploit) : à chercher dans les logs des conteneurs via ELK/Filebeat (ex. access log nginx d'E2), qui voient le trafic en clair après déchiffrement côté conteneur — pas dans Suricata pour ce qui passe par E2.</li>
+</ul>
+
+<p>La sonde <code>nsm</code> est un pont L2 transparent entre le segment « poste » et <code>vulndb</code> : elle voit tout le trafic qui atteint <code>vulndb</code> (y compris le trafic externe N1 via le NAT OPNsense), mais <b>pas</b> le trafic qui reste interne aux réseaux Docker de <code>vulndb</code> (la plupart des pivots N2/N3 après E2/E3/E5). ELK/Filebeat complète la visibilité que Suricata n'a pas sur ces flux.</p>
+
+<div class="shot"><img src="../Rendu/Rendu défense/image.png" alt="EveBox auto-test 16/09 avant 13h00"><p class="shot-cap">image.png — 16/09/2026 11:59:55-12:18:37 (avant Phase 2) — SSH scan + ICMP + balayage de ports, trafic d'auto-test. Capturé par : Thibault Foulon.</p></div>
+<div class="shot"><img src="../Rendu/Rendu défense/1.png" alt="EveBox auto-test 16/09 fin de matinée"><p class="shot-cap">1.png — 16/09/2026 12:20:01-13:15:33 — fin de l'auto-test des règles N1/reconnaissance juste avant l'ouverture de la Phase 2 (13h00). Capturé par : Thibault Foulon.</p></div>
+</div>
+
+<div class="sec">
+<div class="sec-head"><span class="sec-num">6</span><span class="sec-title">Attaques détectées en Phase 2 (groupe attaquant réel)</span></div>
+<div class="sec-rule"></div>
+
+<p>À partir de 13h00 le 16/09/2026 (ouverture de la Phase 2), le trafic reçu sur <code>nsm</code> change de nature par rapport aux auto-tests du §5 : montée en volume, diversité des sources, et signatures typiques d'un scan de vulnérabilités puis d'essais d'exploitation générique — cohérent avec un groupe de 6 attaquants connectés chacun depuis sa propre adresse VPN (<code>10.200.0.2</code>, <code>.4</code>, <code>.5</code>, <code>.6</code>, <code>.7</code>…). Repères EveBox agrégés (§ vue d'ensemble ci-dessous) : 10 095 alertes / 58 signatures sur la fenêtre observée, pic à ~2 100 puis ~4 500 alertes entre 14h30 et 14h49.</p>
+
+<table>
+<tr><th>Horodatage (16/09/2026, sauf mention)</th><th>SID / règle</th><th>Nature</th><th>Source</th></tr>
+<tr><td>13:15 – 13:41</td><td>MV ISOLATION (9000025) ; ET SCAN inbound MySQL/PostgreSQL ; TP LOCAL balayage de ports (9000006) ; ET INFO GIOP/RMI Outbound ; premiers SNI E2/E5 (9000026/28)</td><td class="done">Ouverture immédiate de l'attaque : violation d'isolement (accès direct poste → 3306/5432), balayage de ports, reconnaissance de services Java (RMI/GIOP — probablement en quête d'E7/E12/E14), premiers hits N1</td><td><code>192.168.10.10</code>, <code>10.200.0.66/67</code></td></tr>
+<tr><td>13:42 – 14:47</td><td>ET SCAN Nmap Scripting Engine ; ET/GPL EXPLOIT et WEB_SERVER (Cisco IOS exec, ZyXEL config, OrangeHRM LFI, DD-WRT disclosure, .htpasswd/.htaccess, <code>/etc/passwd</code> in URI)</td><td class="done">Montée en charge : scanner multi-CVE générique (type Nmap <code>--script vuln</code>) contre la façade N1</td><td><code>10.200.0.6</code></td></tr>
+<tr><td>14:47 – 14:54</td><td>ET SCAN Nmap Scripting Engine (4 422 hits — signature la plus fréquente de toute la fenêtre)</td><td class="done">Pic de reconnaissance automatisée</td><td><code>10.200.0.6</code></td></tr>
+<tr><td>14:56 – 17:36</td><td>ET WEB_SERVER PHP tags/System Command in HTTP POST ; CVE-2016-10033 PHPMailer RCE Attempt ; puis SNI répétés 9000026/27/28/29 (E2/E3/E5/E4)</td><td class="done">Tentatives d'exploitation applicative (injection PHP) puis ciblage répété des 3 N1 + E4 ; pic à 2 006 hits sur le SNI <code>shop.maisonverte.fr</code> à 16:40</td><td><code>10.200.0.2</code>, <code>.4</code>, <code>.5</code>, <code>.6</code>, <code>.7</code></td></tr>
+<tr><td>17:36 – 18:19</td><td>ET SCAN Potential SSH Scan / SSH Scan OUTBOUND ; MV GLOBAL sensitive service access</td><td class="done">Probable pivot après accès initial : sondage de services internes normalement non joignables depuis la position « poste »</td><td><code>192.168.10.10</code></td></tr>
+<tr><td>17/09/2026 09:39</td><td>MV GLOBAL sensitive service access</td><td class="pending">Activité en cours ce matin (Jour 4) — à requalifier/compléter au fil de la journée jusqu'à 18h00</td><td><code>192.168.10.10</code></td></tr>
+</table>
+
+<div class="shot"><img src="../Rendu/Rendu défense/2.png" alt="EveBox 13h15-13h41"><p class="shot-cap">2.png — 16/09/2026 13:15:42-13:41:26 — ouverture de l'attaque : isolation, scan, reconnaissance Java, premiers SNI. Capturé par : Thibault Foulon.</p></div>
+<div class="shot"><img src="../Rendu/Rendu défense/3.png" alt="EveBox 13h42-14h47"><p class="shot-cap">3.png — 16/09/2026 13:42:30-14:47:37 — montée en charge, scan multi-CVE générique. Capturé par : Thibault Foulon.</p></div>
+<div class="shot"><img src="../Rendu/Rendu défense/4.png" alt="EveBox 14h47-14h54"><p class="shot-cap">4.png — 16/09/2026 14:47:37-14:54:11 — pic de reconnaissance (4 422 hits Nmap Scripting Engine). Capturé par : Thibault Foulon.</p></div>
+<div class="shot"><img src="../Rendu/Rendu défense/5.png" alt="EveBox 14h56-17h36"><p class="shot-cap">5.png — 16/09/2026 14:56:47-17:36:37 — tentatives PHP puis ciblage répété des N1 (SNI). Capturé par : Thibault Foulon.</p></div>
+<div class="shot"><img src="../Rendu/Rendu défense/6.png" alt="EveBox 17h36-18h19 + 17/09 09h39"><p class="shot-cap">6.png — 16/09/2026 17:36:52-18:19:42, et 17/09/2026 09:39:22 — scan SSH, accès à un service sensible, reprise le matin du Jour 4. Capturé par : Thibault Foulon.</p></div>
+<div class="shot"><img src="../Rendu/Rendu défense/7.png" alt="EveBox vue d'ensemble - compteurs et histogramme"><p class="shot-cap">7.png — vue d'ensemble EveBox : 10 095 alertes, 58 signatures, histogramme horaire (pic 14h30-14h49). Capturé par : Thibault Foulon.</p></div>
+<div class="shot"><img src="../Rendu/Rendu défense/8.png" alt="EveBox vue d'ensemble - adresses les plus alertantes"><p class="shot-cap">8.png — vue d'ensemble EveBox : adresses de destination les plus alertantes (<code>192.168.10.50</code> : 9 368 hits ; <code>192.168.10.30</code> : 635 ; <code>10.85.4.10</code> : 56 ; <code>192.168.10.10</code> : 36). Capturé par : Thibault Foulon.</p></div>
+
+<p class="small">Lien précis SID → capture pour les pivots N2/N3 (E6-E14, E10) encore marqués <span class="pending">à ajouter</span> en §7 : aucune des captures ci-dessus ne montre une signature spécifique à ces services (Elasticsearch, Redis, Jenkins, XXL-JOB, Mongo Express, OFBiz, Samba, Struts2, PostgreSQL) — seulement de la reconnaissance générique et les 3 N1. À vérifier dans EveBox/ELK si l'attaquant a effectivement pivoté avant la fin de la Phase 2.</p>
+</div>
+
+<div class="sec">
+<div class="sec-head"><span class="sec-num">7</span><span class="sec-title">Corrélation réseau / logs — référentiel établi pendant le build</span></div>
+<div class="sec-rule"></div>
+
+<p class="small">Ce tableau documente, pour chaque étape, où chercher la preuve réseau (Suricata/EveBox) et la preuve applicative (ELK). Les lignes E2/E3/E5 sont désormais couvertes des deux côtés : SID validé en auto-test (§5) puis ré-observé sur trafic attaquant réel en Phase 2 (§6).</p>
+
+<table>
+<tr><th>Étape</th><th>Source réseau</th><th>Source log</th><th>Statut</th></tr>
+<tr><td>E2 fuite nginx (traversal)</td><td>Suricata/EveBox (SNI 9000026)</td><td><code>cache-dmz01</code></td><td class="done">Auto-test 16/09 10:58:48 + ré-observée en Phase 2 (§6, 15h19-17h59) ; preuve applicative (<code>/files../</code>) à corréler côté ELK</td></tr>
+<tr><td>E3 WordPress</td><td>Suricata/EveBox (SNI 9000027)</td><td><code>shop-dmz01</code></td><td class="done">Auto-test 16/09 10:58:48 + ré-observée en Phase 2 (§6), signature la plus fréquente (3 562 hits) ; exploitation applicative à confirmer côté ELK</td></tr>
+<tr><td>E5 Tomcat PUT JSP</td><td>Suricata/EveBox (SNI 9000028)</td><td><code>market-dmz01</code></td><td class="done">Auto-test 16/09 10:58:48 + ré-observée en Phase 2 (§6, 15h19-17h49) ; PUT JSP à confirmer côté ELK sur cette fenêtre</td></tr>
+<tr><td>E7 Elasticsearch</td><td>Suricata si le flux traverse le pont, sinon ELK</td><td><code>search-srv01</code></td><td class="pending">à ajouter</td></tr>
+<tr><td>E8 Redis</td><td>Suricata si visible, sinon ELK</td><td><code>cache-srv01</code></td><td class="pending">à ajouter</td></tr>
+<tr><td>E10 PostgreSQL</td><td>Suricata si visible, sinon ELK</td><td><code>catalog-data01</code></td><td class="pending">à ajouter</td></tr>
+<tr><td>E14 Jenkins</td><td>Suricata si visible, sinon ELK</td><td><code>deploy-srv01</code></td><td class="pending">à ajouter</td></tr>
+<tr><td>E12 XXL-JOB</td><td>Suricata si visible, sinon ELK</td><td><code>pos-consol-shops01</code></td><td class="pending">à ajouter</td></tr>
+<tr><td>E11 Mongo Express</td><td>Suricata si visible, sinon ELK</td><td><code>clients-data01</code></td><td class="pending">à ajouter</td></tr>
+<tr><td>E6 OFBiz</td><td>Suricata si visible, sinon ELK</td><td><code>backoffice-srv01</code></td><td class="pending">à ajouter</td></tr>
+<tr><td>E9 Samba</td><td>Suricata si visible, sinon ELK</td><td><code>files-srv01</code></td><td class="pending">à ajouter</td></tr>
+<tr><td>E13 Struts2</td><td>Suricata si visible, sinon ELK</td><td><code>wms-shops01</code></td><td class="pending">à ajouter</td></tr>
+</table>
+
+<p class="small">Requêtes Kibana identifiées pour documenter la corrélation applicative (à exécuter et capturer une fois une attaque réelle observée) :</p>
+<pre class="small">container.name:"cache-dmz01"
+container.name:"market-dmz01" AND message:"PUT"
+message:"AI-CANARY"
+container.name:"deploy-srv01"
+container.name:"pos-consol-shops01"</pre>
+</div>
+
+<div class="sec">
+<div class="sec-head"><span class="sec-num">8</span><span class="sec-title">Prompts utilisés pour la génération des règles</span></div>
+<div class="sec-rule"></div>
+<p>Les 23 règles du groupe (SID 9000007-9000029) ont été produites avec l'assistance de <b>Claude Code</b> (Claude Sonnet 5, Anthropic), sur le poste de Yanis Hortholary, en deux sessions le 16/09/2026. Preuve vérifiable : les deux commits qui introduisent ces règles portent la co-signature <code>Co-Authored-By: Claude Sonnet 5 &lt;noreply@anthropic.com&gt;</code>.</p>
+<table>
+<tr><th>Commit</th><th>SID couverts</th><th>Tâche demandée à l'assistant (résumé du message de commit)</th></tr>
+<tr><td><code>8d5f426</code></td><td>9000007-9000025</td><td>Écrire et déployer 19 règles Suricata spécifiques au groupe (reconnaissance, N1 E2/E3/E5, pivots E6-E14, DATA E10, canary IA, isolation), au-dessus des 6 règles socle de la plateforme ; valider avec <code>suricata -T</code> et recharger.</td></tr>
+<tr><td><code>a796476</code></td><td>9000026-9000029</td><td>Ajouter 4 règles SNI TLS après avoir constaté en test réel que les règles de contenu HTTP précédentes ne se déclenchaient jamais sur le trafic TLS d'E2/E3/E5 ; confirmer leur déclenchement réel dans <code>fast.log</code> et synchroniser <code>tp-local.rules</code> dans le dépôt.</td></tr>
+</table>
+<p class="small">Le texte exact des échanges (prompts mot pour mot) de ces deux sessions n'a pas été conservé séparément du dépôt — seul l'historique git fait foi. Les demandes ci-dessus sont un résumé fidèle de ce que documentent les messages de commit, pas une reconstruction inventée. Aucun autre SID (socle 9000001-9000006, écrits par la plateforme, ni les règles du 17/09 s'il y en a) n'est concerné par une assistance IA à ce jour.</p>
+</div>
+
+<div class="sec">
+<div class="sec-head"><span class="sec-num">9</span><span class="sec-title">Répartition nominative — qui a rédigé quelle règle / quelle capture</span></div>
+<div class="sec-rule"></div>
+
+<table>
+<tr><th>Membre</th><th>Contribution détection</th><th>Règle(s) / chapitre / capture</th></tr>
+<tr><td>Yanis Hortholary</td><td>Écriture et déploiement des 23 règles locales (avec assistance Claude Code, voir §8), diagnostic et correction de la règle NAT WAN→E2 sur OPNsense (condition nécessaire pour observer du trafic N1 réel), rédaction de l'ensemble de la documentation de détection</td><td>SID 9000007-9000029, <code>05-detection.md</code>, <code>08-regles-suricata.md</code>, présent rapport</td></tr>
+<tr><td>Nathan Palvadeau</td><td>Surveillance EveBox le 16/09 (Jour 3) et activation/rechargement des règles sur la sonde <code>nsm</code></td><td><code>configure-suricata-notes.sh</code>, règles socle</td></tr>
+<tr><td>Thibault Foulon</td><td>Réalisation des 9 captures EveBox du rapport (§5 : <code>image.png</code>, <code>1.png</code> ; §6 : <code>2.png</code> à <code>8.png</code>), surveillance en cours le 17/09 (Jour 4), vérification de la configuration OPNsense sous-jacente</td><td><code>06-recette.md</code>, §5-6 du présent rapport</td></tr>
+<tr><td>Damien Aouaj, Adam Attafi, Seymen Isikli</td><td>Non affectés à la détection sur cette phase — rôle attaquant Phase 2 / autre chapitre</td><td>—</td></tr>
+</table>
+<p class="small">Attribution des captures confirmée par le groupe. Reste à confirmer, pour la ligne 17/09 09:39 du §6 (encore <span class="pending">en cours</span>), qui complètera la capture finale une fois la fenêtre Phase 2 close.</p>
+</div>
+
+<div class="sec">
+<div class="sec-head"><span class="sec-num">10</span><span class="sec-title">Reste à faire avant la remise</span></div>
+<div class="sec-rule"></div>
+<ul>
+<li>Nommer, pour chaque capture EveBox du §5/§6 (<code>image.png</code>, <code>1.png</code> à <code>8.png</code>), le membre du groupe qui l'a réalisée — actuellement <span class="pending">à renseigner</span> sous chaque capture.</li>
+<li>Corréler les alertes réseau du §6 avec les logs applicatifs (ELK/Filebeat) pour obtenir la preuve applicative en plus de la preuve réseau, et compléter le tableau du §7 pour les pivots N2/N3 (E6 à E14, E10) encore marqués <span class="pending">à ajouter</span> — aucune capture actuelle ne montre de signature spécifique à ces services ; à vérifier si l'attaquant a pivoté au-delà de la reconnaissance et des 3 N1.</li>
+<li>Continuer à surveiller EveBox jusqu'à la fin de la fenêtre Phase 2 (Jour 4, 18h00) et compléter la dernière ligne du §6 (17/09 09:39, encore <span class="pending">en cours</span>).</li>
+</ul>
+</div>
+
+<div class="footer">Rapport de détection — Phase 2, rôle défenseur — usage interne, groupe MaisonVerte (G04). Sources : <code>documentation/05-detection.md</code>, <code>documentation/08-regles-suricata.md</code>.</div>
+
+</div>
+</body>
+</html>
