@@ -68,7 +68,7 @@ pre.small { font-size: 7.6pt; background: #fbfbfd; border: 0.75pt solid #e2e3ee;
 <div class="page">
 
 <div class="callout">
-<b>État du document (17/09/2026).</b> Les 23 règles locales (§4) sont écrites, déployées et chargées sans erreur sur la sonde <code>nsm</code> depuis le matin du 16/09/2026. Avant le début de la Phase 2 (16/09/2026, 13h00), elles ont été <b>auto-testées</b> volontairement depuis nos propres adresses pour vérifier qu'elles se déclenchent — voir §5. À partir de 13h00-14h00 le 16/09/2026, le volume et la nature du trafic changent nettement (pic à ~4 500 alertes/20 min, balayage massif multi-CVE, tentatives d'exploitation génériques) : c'est la fenêtre où démarre le trafic du <b>groupe attaquant réel</b>, détaillée en §6.
+<b>État du document (17/09/2026).</b> Les 23 règles locales (§4) sont écrites, déployées et chargées sans erreur sur la sonde <code>nsm</code> depuis le matin du 16/09/2026. Avant le début de la Phase 2 (16/09/2026, 13h00), elles ont été <b>auto-testées</b> volontairement depuis nos propres adresses pour vérifier qu'elles se déclenchent — voir §5. À partir de 13h00-14h00 le 16/09/2026, le volume et la nature du trafic changent nettement (pic à ~4 500 alertes/20 min, balayage massif multi-CVE, tentatives d'exploitation génériques) : c'est la fenêtre où démarre le trafic du <b>groupe attaquant réel</b>, détaillée en §6. Le rapport d'attaque communiqué par le groupe attaquant (G10, 16/09/2026) corrobore, de façon indépendante, la compromission réelle d'E2, E5, E7, E8 et E11 — voir §6a.
 </div>
 
 <div class="sec">
@@ -233,7 +233,20 @@ pre.small { font-size: 7.6pt; background: #fbfbfd; border: 0.75pt solid #e2e3ee;
 <div class="shot"><img src="../Rendu/Rendu défense/7.png" alt="EveBox vue d'ensemble - compteurs et histogramme"><p class="shot-cap">7.png — vue d'ensemble EveBox : 10 095 alertes, 58 signatures, histogramme horaire (pic 14h30-14h49). Capturé par : Thibault Foulon.</p></div>
 <div class="shot"><img src="../Rendu/Rendu défense/8.png" alt="EveBox vue d'ensemble - adresses les plus alertantes"><p class="shot-cap">8.png — vue d'ensemble EveBox : adresses de destination les plus alertantes (<code>192.168.10.50</code> : 9 368 hits ; <code>192.168.10.30</code> : 635 ; <code>10.85.4.10</code> : 56 ; <code>192.168.10.10</code> : 36). Capturé par : Thibault Foulon.</p></div>
 
-<p class="small">Lien précis SID → capture pour les pivots N2/N3 (E6-E14, E10) encore marqués <span class="pending">à ajouter</span> en §7 : aucune des captures ci-dessus ne montre une signature spécifique à ces services (Elasticsearch, Redis, Jenkins, XXL-JOB, Mongo Express, OFBiz, Samba, Struts2, PostgreSQL) — seulement de la reconnaissance générique et les 3 N1. À vérifier dans EveBox/ELK si l'attaquant a effectivement pivoté avant la fin de la Phase 2.</p>
+<p class="small">Aucune des 9 captures EveBox ci-dessus ne montre de signature spécifique aux pivots N2/N3 — seulement de la reconnaissance générique et les 3 N1. La sous-section suivante explique pourquoi, avec une source externe indépendante.</p>
+
+<h3>6a. Confirmation externe — Rapport d'attaque G10 → G04 (16/09/2026)</h3>
+<p>Le groupe attaquant assigné (G10) a communiqué son propre rapport d'attaque, daté du 16/09/2026. Il confirme, de son côté, la compromission réelle de 5 services — une source indépendante des captures EveBox du §6, à recouper avec elles :</p>
+<table>
+<tr><th>Service</th><th>Exploit confirmé côté attaquant</th><th>SID applicable</th><th>Visible par Suricata ?</th></tr>
+<tr><td>E2 (nginx, N1)</td><td>Traversal <code>/files../</code>, flag lu</td><td>9000010 (contenu, TLS) / 9000026 (SNI)</td><td class="done">Oui, via SNI (9000026, confirmé §5/§6) ; le contenu ne se voit pas (TLS, cf. §5)</td></tr>
+<tr><td>E5 (Tomcat, N1)</td><td>PUT JSP root (CVE-2017-12615), exploit rejoué</td><td>9000012 (contenu, TLS) / 9000028 (SNI)</td><td class="done">Oui, via SNI (9000028, confirmé §5/§6) ; le contenu ne se voit pas (TLS, cf. §5)</td></tr>
+<tr><td>E7 (Elasticsearch, pivot)</td><td>RCE groovy root (CVE-2015-1427), exploit rejoué</td><td>9000013</td><td class="pending">Angle mort documenté §5 : trafic intra-Docker, hors du pont L2 <code>nsm</code> — seule une preuve ELK/log applicatif est possible, pas de preuve réseau attendue</td></tr>
+<tr><td>E8 (Redis, pivot)</td><td>Débloqué par notre correctif de permission sur le flag ; commande <code>MODULE</code></td><td>9000015</td><td class="pending">Même angle mort — preuve ELK/log applicatif uniquement</td></tr>
+<tr><td>E11 (mongo-express, pivot)</td><td>RCE <code>/checkValid</code> (CVE-2019-10758), exploit rejoué</td><td>9000019</td><td class="pending">Même angle mort — preuve ELK/log applicatif uniquement</td></tr>
+</table>
+<p>Le même rapport explique aussi, à l'inverse, pourquoi les autres pivots restent muets dans nos captures — pas une lacune de détection, mais des chaînes que l'attaquant n'a pas pu terminer avec son propre outillage : chaîne A bloquée après E8 (aucun client PostgreSQL disponible pour atteindre E10) ; chaîne B bloquée après E5 (le <code>jenkins-cli.jar</code> posé exige Java 11+, le Tomcat d'E5 n'a que Java 8 — E14 et E12 jamais atteints) ; chaîne C entièrement bloquée dès E3 (PHPMailer patché dans l'image WordPress déployée — E6, E9, E13 jamais atteints). C'est cohérent avec l'absence totale de signature E3/E6/E9/E12/E13/E14 dans nos 9 captures.</p>
+<p class="small">Le rapport G10 signale aussi 2 points hors périmètre détection (permissions des flags, mots de passe par défaut non changés) — à traiter côté build/exploitation, pas dans ce rapport.</p>
 </div>
 
 <div class="sec">
@@ -245,17 +258,17 @@ pre.small { font-size: 7.6pt; background: #fbfbfd; border: 0.75pt solid #e2e3ee;
 <table>
 <tr><th>Étape</th><th>Source réseau</th><th>Source log</th><th>Statut</th></tr>
 <tr><td>E2 fuite nginx (traversal)</td><td>Suricata/EveBox (SNI 9000026)</td><td><code>cache-dmz01</code></td><td class="done">Auto-test 16/09 10:58:48 + ré-observée en Phase 2 (§6, 15h19-17h59) ; preuve applicative (<code>/files../</code>) à corréler côté ELK</td></tr>
-<tr><td>E3 WordPress</td><td>Suricata/EveBox (SNI 9000027)</td><td><code>shop-dmz01</code></td><td class="done">Auto-test 16/09 10:58:48 + ré-observée en Phase 2 (§6), signature la plus fréquente (3 562 hits) ; exploitation applicative à confirmer côté ELK</td></tr>
+<tr><td>E3 WordPress</td><td>Suricata/EveBox (SNI 9000027)</td><td><code>shop-dmz01</code></td><td class="done">Auto-test 16/09 10:58:48 + ré-observée en Phase 2 (§6), signature la plus fréquente (3 562 hits) — service le plus scanné, mais exploitation confirmée <b>non aboutie</b> par le rapport d'attaque G10 (§6a) : PHPMailer patché dans l'image déployée, chaîne C bloquée dès ce maillon</td></tr>
 <tr><td>E5 Tomcat PUT JSP</td><td>Suricata/EveBox (SNI 9000028)</td><td><code>market-dmz01</code></td><td class="done">Auto-test 16/09 10:58:48 + ré-observée en Phase 2 (§6, 15h19-17h49) ; PUT JSP à confirmer côté ELK sur cette fenêtre</td></tr>
-<tr><td>E7 Elasticsearch</td><td>Suricata si le flux traverse le pont, sinon ELK</td><td><code>search-srv01</code></td><td class="pending">à ajouter</td></tr>
-<tr><td>E8 Redis</td><td>Suricata si visible, sinon ELK</td><td><code>cache-srv01</code></td><td class="pending">à ajouter</td></tr>
-<tr><td>E10 PostgreSQL</td><td>Suricata si visible, sinon ELK</td><td><code>catalog-data01</code></td><td class="pending">à ajouter</td></tr>
-<tr><td>E14 Jenkins</td><td>Suricata si visible, sinon ELK</td><td><code>deploy-srv01</code></td><td class="pending">à ajouter</td></tr>
-<tr><td>E12 XXL-JOB</td><td>Suricata si visible, sinon ELK</td><td><code>pos-consol-shops01</code></td><td class="pending">à ajouter</td></tr>
-<tr><td>E11 Mongo Express</td><td>Suricata si visible, sinon ELK</td><td><code>clients-data01</code></td><td class="pending">à ajouter</td></tr>
-<tr><td>E6 OFBiz</td><td>Suricata si visible, sinon ELK</td><td><code>backoffice-srv01</code></td><td class="pending">à ajouter</td></tr>
-<tr><td>E9 Samba</td><td>Suricata si visible, sinon ELK</td><td><code>files-srv01</code></td><td class="pending">à ajouter</td></tr>
-<tr><td>E13 Struts2</td><td>Suricata si visible, sinon ELK</td><td><code>wms-shops01</code></td><td class="pending">à ajouter</td></tr>
+<tr><td>E7 Elasticsearch</td><td>Hors de portée du pont L2 <code>nsm</code> (angle mort documenté §5) — aucune alerte réseau attendue</td><td><code>search-srv01</code></td><td class="done">Compromission confirmée par le rapport d'attaque G10 (§6a, RCE groovy root) ; preuve à obtenir côté ELK/log applicatif uniquement</td></tr>
+<tr><td>E8 Redis</td><td>Hors de portée du pont L2 <code>nsm</code> (angle mort documenté §5) — aucune alerte réseau attendue</td><td><code>cache-srv01</code></td><td class="done">Compromission confirmée par le rapport d'attaque G10 (§6a, commande MODULE, débloquée par le correctif de permission du flag) ; preuve à obtenir côté ELK/log applicatif uniquement</td></tr>
+<tr><td>E10 PostgreSQL</td><td>Suricata si visible, sinon ELK</td><td><code>catalog-data01</code></td><td class="pending">Non atteint par G10 à ce jour (chaîne A bloquée après E8, faute de client PostgreSQL côté attaquant) — pas une lacune de détection</td></tr>
+<tr><td>E14 Jenkins</td><td>Suricata si visible, sinon ELK</td><td><code>deploy-srv01</code></td><td class="pending">Non atteint par G10 (chaîne B bloquée après E5, <code>jenkins-cli.jar</code> incompatible Java 8) — pas une lacune de détection</td></tr>
+<tr><td>E12 XXL-JOB</td><td>Suricata si visible, sinon ELK</td><td><code>pos-consol-shops01</code></td><td class="pending">Non atteint par G10 (même blocage chaîne B) — pas une lacune de détection</td></tr>
+<tr><td>E11 Mongo Express</td><td>Hors de portée du pont L2 <code>nsm</code> (angle mort documenté §5) — aucune alerte réseau attendue</td><td><code>clients-data01</code></td><td class="done">Compromission confirmée par le rapport d'attaque G10 (§6a, RCE <code>/checkValid</code>) ; preuve à obtenir côté ELK/log applicatif uniquement</td></tr>
+<tr><td>E6 OFBiz</td><td>Suricata si visible, sinon ELK</td><td><code>backoffice-srv01</code></td><td class="pending">Non atteint par G10 (chaîne C entièrement bloquée dès E3) — pas une lacune de détection</td></tr>
+<tr><td>E9 Samba</td><td>Suricata si visible, sinon ELK</td><td><code>files-srv01</code></td><td class="pending">Non atteint par G10 (même blocage chaîne C) — pas une lacune de détection</td></tr>
+<tr><td>E13 Struts2</td><td>Suricata si visible, sinon ELK</td><td><code>wms-shops01</code></td><td class="pending">Non atteint par G10 (même blocage chaîne C) — pas une lacune de détection</td></tr>
 </table>
 
 <p class="small">Requêtes Kibana identifiées pour documenter la corrélation applicative (à exécuter et capturer une fois une attaque réelle observée) :</p>
@@ -296,9 +309,9 @@ container.name:"pos-consol-shops01"</pre>
 <div class="sec-head"><span class="sec-num">10</span><span class="sec-title">Reste à faire avant la remise</span></div>
 <div class="sec-rule"></div>
 <ul>
-<li>Nommer, pour chaque capture EveBox du §5/§6 (<code>image.png</code>, <code>1.png</code> à <code>8.png</code>), le membre du groupe qui l'a réalisée — actuellement <span class="pending">à renseigner</span> sous chaque capture.</li>
-<li>Corréler les alertes réseau du §6 avec les logs applicatifs (ELK/Filebeat) pour obtenir la preuve applicative en plus de la preuve réseau, et compléter le tableau du §7 pour les pivots N2/N3 (E6 à E14, E10) encore marqués <span class="pending">à ajouter</span> — aucune capture actuelle ne montre de signature spécifique à ces services ; à vérifier si l'attaquant a pivoté au-delà de la reconnaissance et des 3 N1.</li>
+<li>Récupérer, via ELK/Filebeat, la preuve applicative des 3 pivots confirmés compromis par le rapport G10 (E7, E8, E11 — §6a) : Suricata ne peut structurellement pas les voir (angle mort intra-Docker), donc leur seule preuve possible est le log applicatif du conteneur (<code>search-srv01</code>, <code>cache-srv01</code>, <code>clients-data01</code>).</li>
 <li>Continuer à surveiller EveBox jusqu'à la fin de la fenêtre Phase 2 (Jour 4, 18h00) et compléter la dernière ligne du §6 (17/09 09:39, encore <span class="pending">en cours</span>).</li>
+<li>E10, E14, E12, E6, E9, E13 restent sans preuve d'attaque — cohérent avec les 3 chaînes signalées bloquées par G10 (§6a), pas une lacune de détection ; à ne réviser que si un rejeu ultérieur de l'attaquant les atteint avant 18h00.</li>
 </ul>
 </div>
 
